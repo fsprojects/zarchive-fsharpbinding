@@ -101,6 +101,10 @@
     <Compile Include="FSharpParser.fs" />
     <Compile Include="FSharpTextEditorCompletion.fs" />
     <Compile Include="FSharpResolverProvider.fs" />
+    <EmbeddedResource Include="Resources\fsharp-project-32.png" />
+    <EmbeddedResource Include="Resources\fsharp-project-console-32.png" />
+    <EmbeddedResource Include="Resources\fsharp-project-gui-32.png" />
+    <EmbeddedResource Include="Resources\fsharp-project-library-32.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
