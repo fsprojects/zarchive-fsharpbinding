@@ -1,0 +1,5 @@
+*.user*
+*.pidb
+*.suo
+bin/
+obj/
