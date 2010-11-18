@@ -4,3 +4,5 @@ bin/*
 repository/*
 *.suo
 Makefile
+*.user*
+*.pidb
