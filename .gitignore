@@ -1,5 +1,6 @@
-*.user*
-*.pidb
+src/obj/*
+src/Gui/obj/*
+bin/*
+repository/*
 *.suo
-bin/
-obj/
+Makefile
