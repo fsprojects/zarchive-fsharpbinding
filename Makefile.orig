@@ -107,5 +107,6 @@ package:
 	mkdir -p repository
 	cp bin/FSharpBinding.* bin/repository
 	cp src/Resources/FSharpBinding.addin.xml bin/repository
+	cp src/Resources/addin.info bin/repository
 	$(MDRUN) setup pack bin/repository/FSharpBinding.addin.xml -d:repository
 
