@@ -2,3 +2,6 @@ F# Language Binding for MonoDevelop
 Released under the Apache 2.0 License
 
 For more information visit http://functional-variations.net/monodevelop and http://tomasp.net/blog.
+
+Manually creating package file:
+To create an addin, pack the FSharpBinding.dll (from build's bin folder), FSharpBinding.Gui.dll (from build's bin folder), FSharpBinding.addin.xml (from FSharp.MonoDevelop/Resources) and addin.info (from FSharp.MonoDevelop/Resources) files to a zip file and change the extension to mpack.

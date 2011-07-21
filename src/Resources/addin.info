@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Addin id="FSharpBinding" namespace="MonoDevelop" name="F# Language Binding" author="Community" copyright="???" url="http://www.fsharp.net" description="F# Language Binding" category="Language bindings" version="2.6" flags="None">
+  <Runtime>
+    <Import assembly="FSharpBinding.dll" />
+    <Import assembly="FSharpBinding.Gui.dll" />
+  </Runtime>
+  <Dependencies>
+    <Addin id="Core" version="2.6" />
+    <Addin id="Ide" version="2.6" />
+    <Addin id="SourceEditor2" version="2.6" />
+  </Dependencies>
+  <!--
+	<Extension path="/MonoDevelop/ProjectModel/MD1SerializationMaps">
+		<SerializationMap resource="md1format.xml" />
+	</Extension>
+  -->
+  <!--
+  <Extension path="/MonoDevelop/ProjectModel/DomParser">
+    <Class class="MonoDevelop.FSharpBinding.DomParser" />
+  </Extension>
+  -->
+  <!-- F# interactive -->
+</Addin>
