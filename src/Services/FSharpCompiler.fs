@@ -47,7 +47,7 @@ module Reflection =
         | [] -> failwithf "No method '%s' with %d arguments found" name args.Length
         | _::_::_ -> failwithf "Multiple methods '%s' with %d arguments found" name args.Length
         | [:? ConstructorInfo as c] -> c.Invoke(args)
-        | [ m ] -> m.Invoke(instance, args) ) |> unbox<'R>
+        | [ m ] -> m.Invoke(instance, BindingFlags.ExactBinding, null, args, System.Globalization.CultureInfo.InvariantCulture) ) |> unbox<'R>
     else
       // When the 'o' object is 'System.Type', we access static properties
       let typ, flags, instance = 
