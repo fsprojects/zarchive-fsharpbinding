@@ -13,6 +13,7 @@ GTKDIR = INSERT_GTK_DIR
 GDKDIR = INSERT_GDK_DIR
 GLIBDIR = INSERT_GLIB_DIR
 MONO = INSERT_MONO
+MONO_ADDINS = INSERT_MONO_ADDINS
 MDRUN = $(MONO) $(MDROOT)/bin/mdrun.exe
 
 FSC = INSERT_FSHARP_COMPILER
@@ -57,8 +58,8 @@ FILES = \
 	src/FSharpResolverProvider.fs
 
 REFERENCES = \
-	-r:$(MONOBIN)/mscorlib.dll \
-	-r:System.dll -r:System.Xml.dll \
+	-r:System.dll -r:System.Xml.dll -r:Mono.Posix.dll -r:Mono.Cairo.dll \
+	-r:$(MONO_ADDINS)/Mono.Addins.dll \
 	-r:$(MDBIN)/MonoDevelop.Core.dll \
 	-r:$(MDBIN)/MonoDevelop.Ide.dll \
 	-r:$(MDBIN)/Mono.TextEditor.dll \
