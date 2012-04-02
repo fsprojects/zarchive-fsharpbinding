@@ -1,4 +1,18 @@
 F# Language Binding for MonoDevelop
 Released under the Apache 2.0 License
 
+Now works on Ubuntu with Monodevelop 2.8.2 from this PPA:
+
+  http://ppa.launchpad.net/keks9n/monodevelop-latest/ubuntu/
+
+Requires a custom install of F# for Mono 4.0 per items 1 and 2 of
+these instructions:
+
+  https://github.com/fsharp/fsharpbinding/issues/24#issuecomment-3786164
+
+Code completion works. Building works even though the first time after
+a clean produces an error message "Could not find support file
+.../FSharp.Core.dll", which does not occur on subsequent runs or
+builds.
+
 For more information visit http://functional-variations.net/monodevelop and http://tomasp.net/blog.
