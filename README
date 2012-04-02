@@ -10,9 +10,13 @@ these instructions:
 
   https://github.com/fsharp/fsharpbinding/issues/24#issuecomment-3786164
 
-Code completion works. Building works even though the first time after
-a clean produces an error message "Could not find support file
-.../FSharp.Core.dll", which does not occur on subsequent runs or
-builds.
+After installation, a symbolic link is required to eliminate the
+spurious error message "Could not find support file
+.../FSharp.Core.dll".
+
+  sudo ln -s /usr/lib/mono/4.0/FSharp.Core.dll /opt/monodevelop/lib/monodevelop/AddIns/BackendBindings/
+
+Code completion works. Sending code to F# Interactive does not work
+because extraneous metadata gets sent in addition to the code
 
 For more information visit http://functional-variations.net/monodevelop and http://tomasp.net/blog.
