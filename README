@@ -10,8 +10,8 @@ these instructions:
 
   https://github.com/fsharp/fsharpbinding/issues/24#issuecomment-3786164
 
-After installation, a symbolic link is required to eliminate the
-spurious error message "Could not find support file
+After building and installing this add-in, a symbolic link is required
+to eliminate the spurious error message "Could not find support file
 .../FSharp.Core.dll".
 
   sudo ln -s /usr/lib/mono/4.0/FSharp.Core.dll /opt/monodevelop/lib/monodevelop/AddIns/BackendBindings/
