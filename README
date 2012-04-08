@@ -13,6 +13,8 @@ these instructions:
 Code completion works. Building works even though the first time after
 a clean produces an error message "Could not find support file
 .../FSharp.Core.dll", which does not occur on subsequent runs or
-builds.
+builds. This step provides a fix:
+
+  sudo ln -s /usr/lib/mono/4.0/FSharp.Core.dll /opt/monodevelop/lib/monodevelop/AddIns/BackendBindings
 
 For more information visit http://functional-variations.net/monodevelop and http://tomasp.net/blog.
