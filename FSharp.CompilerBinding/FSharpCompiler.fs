@@ -1,8 +1,8 @@
-﻿
-// --------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------
 // Wrapper for the APIs in 'FSharp.Compiler.dll' and 'FSharp.Compiler.Server.Shared.dll'
 // The API is currently internal, so we call it using the (?) operator and Reflection
 // --------------------------------------------------------------------------------------
+#nowarn "44" // LoadWithPartialName is deprecated (but useful!)
 
 namespace Microsoft.FSharp.Compiler
 
@@ -12,14 +12,8 @@ open System.IO
 open System.Reflection
 open System.Text
 open System.Globalization
-open MonoDevelop.Projects
-open MonoDevelop.Ide.Gui
-open MonoDevelop.Ide
-open MonoDevelop.Core.Assemblies
-open MonoDevelop.Core
-open MonoDevelop.FSharp
-open MonoDevelop.FSharp.Reflection
-open Mono.Addins
+open FSharp.CompilerBinding
+open FSharp.CompilerBinding.Reflection
     
 // --------------------------------------------------------------------------------------
 // Assembly resolution in a script file - a workaround that replaces functionality
@@ -38,19 +32,19 @@ type FSharpCompiler(reqVersion:FSharpCompilerVersion) =
         elif nm.Version.ToString() <> ver.ToString() then failwith (sprintf "loaded %s, but had wrong version, wanted %s, got %s" nm.Name (ver.ToString()) (nm.Version.ToString()))
         else ass
     let tryVersion (ver:FSharpCompilerVersion) = 
-         Debug.WriteLine(sprintf "Resolution: Loading FSharp Compiler DLL version %A" ver)
+         Debug.tracef "Resolution" "Loading FSharp Compiler DLL version %A" ver
          // Somewhat surprisingly, Load() and LoadWithPartialName() can still return
          // assemblies with the wrong version, if the right version is not available....
          try 
            // Try getting the assemblies using the microsoft strong name
-           Debug.WriteLine("Resolution: Looking in GAC...")
+           Debug.tracef "Resolution" "Looking in GAC..."
            let asm = Assembly.Load("FSharp.Compiler, Version="+ver.ToString()+", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a") |> checkVersion ver
            let asm2 = Assembly.Load("FSharp.Compiler.Server.Shared, Version="+ver.ToString()+", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a") |> checkVersion ver
            asm,asm2,ver
          with _ -> 
            try 
              // Try getting the assemblies by partial name. 
-             Debug.WriteLine(sprintf "Resolution: Looking with partial name...")
+             Debug.tracef "Resolution" "Looking with partial name..."
              let asm = Assembly.LoadWithPartialName("FSharp.Compiler, Version="+ver.ToString()) |> checkVersion ver
              let asm2 = Assembly.LoadWithPartialName("FSharp.Compiler.Server.Shared, Version="+ver.ToString()) |> checkVersion ver
              asm,asm2,ver
@@ -59,7 +53,7 @@ type FSharpCompiler(reqVersion:FSharpCompilerVersion) =
              | None -> raise err
              | Some dir -> 
              // Try getting the assemblies by location
-             Debug.WriteLine(sprintf "Resolution: Looking in compiler directory '%s'..." dir)
+             Debug.tracef "Resolution" "Looking in compiler directory '%s'..." dir
              let asm = Assembly.LoadFrom(Path.Combine(dir, "FSharp.Compiler.dll")) |> checkVersion ver
              let asm2 = Assembly.LoadFrom(Path.Combine(dir, "FSharp.Compiler.Server.Shared.dll")) |> checkVersion ver
              
@@ -80,8 +74,12 @@ type FSharpCompiler(reqVersion:FSharpCompilerVersion) =
     let declarationSetType = asm.GetType("Microsoft.FSharp.Compiler.SourceCodeServices.DeclarationSet")
     let checkOptionsType = asm.GetType("Microsoft.FSharp.Compiler.SourceCodeServices.CheckOptions")
     let parserType = asm.GetType("Microsoft.FSharp.Compiler.Parser")
-    let interactiveServerType = asm2.GetType("Microsoft.FSharp.Compiler.Server.Shared.FSharpInteractiveServer")
+    let sourceTokenizerType = asm.GetType("Microsoft.FSharp.Compiler.SourceCodeServices.SourceTokenizer")
+    let tokenInformationType = asm.GetType("Microsoft.FSharp.Compiler.SourceCodeServices.TokenInformation")
     let fSharpCore = asm.GetReferencedAssemblies() |> Array.find (fun x -> x.Name = "FSharp.Core") |> fun a -> Assembly.Load(a)
+
+    let interactiveServerType = asm2.GetType("Microsoft.FSharp.Compiler.Server.Shared.FSharpInteractiveServer")
+    
     let fSharpValueType = fSharpCore.GetType("Microsoft.FSharp.Reflection.FSharpValue")
     let unitType = fSharpCore.GetType(typeof<unit>.FullName)
     let fsharpFuncType = fSharpCore.GetType("Microsoft.FSharp.Core.FSharpFunc`2")
@@ -107,6 +105,9 @@ type FSharpCompiler(reqVersion:FSharpCompilerVersion) =
     member __.NotifyFileTypeCheckStateIsDirtyType = 
         // only valid when version is 4.3.0.0
         asm.GetType("Microsoft.FSharp.Compiler.SourceCodeServices.NotifyFileTypeCheckStateIsDirty")
+    member __.SourceTokenizer = sourceTokenizerType
+    member __.TokenInformation = tokenInformationType
+    
 
 
     // We support multiple backend FSharp.Compiler.dll. 
@@ -149,12 +150,8 @@ type FSharpCompiler(reqVersion:FSharpCompilerVersion) =
 
     static member LatestAvailable = 
         let c = match FSharpCompilerVersion.LatestKnown with FSharp_2_0 -> v20 | FSharp_3_0 -> v30
-        try c.Force() with e -> Debug.WriteLine(sprintf "Compiler Error: %s" (e.ToString())); reraise()
-#if USE_FSHARP_COMPILER_TOKENIZATION
-    member __.SourceTokenizer = asm.GetType("Microsoft.FSharp.Compiler.SourceCodeServices.SourceTokenizer")
-    member __.TokenInformation = asm.GetType("Microsoft.FSharp.Compiler.SourceCodeServices.TokenInformation")
-#endif
-    
+        try c.Force() with e -> Debug.tracee "Exception" e; reraise()
+        
 module Parser = 
   
   /// Represents a token
@@ -187,7 +184,6 @@ module Server =
 
 module SourceCodeServices =
 
-#if USE_FSHARP_COMPILER_TOKENIZATION
   type TokenColorKind =
     | Comment = 2
     | Default = 0
@@ -227,12 +223,12 @@ module SourceCodeServices =
     member x.TriggerClass : TriggerClass = TriggerClass(wrapped?TriggerClass)
     member x.WithRightColumn(rightColumn:int) = 
       TokenInformation
-        ( FSharpCompiler.TokenInformation?``.ctor``
+        ( FSharpCompiler.LatestAvailable.TokenInformation?``.ctor``
             ( x.LeftColumn, rightColumn, int x.ColorClass, int x.CharClass,
               x.TriggerClass.Wrapped, x.Tag, x.TokenName ) )
     member x.WithTokenName(tokenName:string) = 
       TokenInformation
-        ( FSharpCompiler.TokenInformation?``.ctor``
+        ( FSharpCompiler.LatestAvailable.TokenInformation?``.ctor``
             ( x.LeftColumn, x.RightColumn, x.ColorClass, x.CharClass,
               x.TriggerClass.Wrapped, x.Tag, tokenName ) )
     
@@ -247,10 +243,10 @@ module SourceCodeServices =
       optInfo, newstate
       
   type SourceTokenizer(defines:string list, source:string) =
-    let wrapped = FSharpCompiler.SourceTokenizer?``.ctor``(defines, source)
+    let wrapped = FSharpCompiler.LatestAvailable.SourceTokenizer?``.ctor``(defines, source)
     member x.CreateLineTokenizer(line:string) = 
       LineTokenizer(wrapped?CreateLineTokenizer(line))
-#endif    
+
   // ------------------------------------------------------------------------------------
 
   module Array = 
@@ -379,13 +375,60 @@ module SourceCodeServices =
     member x.WithOptions(options:string[]) =
       CheckOptions.Create
         ( x.ProjectFileName, x.ProjectFileNames, options, x.IsIncompleteTypeCheckEnvironment, x.UseScriptResolutionRules, x.LoadTime  )
+
+  type DeclarationItemKind =
+    | NamespaceDecl
+    | ModuleFileDecl
+    | ExnDecl
+    | ModuleDecl
+    | TypeDecl
+    | MethodDecl
+    | PropertyDecl
+    | FieldDecl
+    | OtherDecl    
+
+
+  /// A start-position/end-position pair
+  type Range = Position * Position
+
+  /// Represents an item to be displayed in the navigation bar
+  type DeclarationItem(wrapped:obj) =     
+    member x.Name : string = wrapped?Name
+    member x.UniqueName : string = wrapped?UniqueName
+    member x.Glyph : int = wrapped?Glyph
+    member x.Kind : DeclarationItemKind =
+      failwith "!"
+    member x.Range : Range = wrapped?Range
+    member x.BodyRange : Range = wrapped?BodyRange
+    member x.IsSingleTopLevel : bool = wrapped?IsSingleTopLevel
+  
+  /// Represents top-level declarations (that should be in the type drop-down)
+  /// with nested declarations (that can be shown in the member drop-down)
+  type TopLevelDeclaration(wrapped:obj) =
+    member x.Declaration = DeclarationItem(wrapped?Declaration)
+    member x.Nested = 
+      let (nested:obj) = wrapped?Nested
+      let (tmp : obj[]) = Array.zeroCreate nested?Length
+      System.Array.Copy(nested :?> System.Array, tmp, (nested?Length : int))
+      [| for t in tmp -> DeclarationItem(t) |]
+
+  /// Represents result of 'GetNavigationItems' operation - this contains
+  /// all the members and currently selected indices. First level correspond to
+  /// types & modules and second level are methods etc.
+  type NavigationItems(wrapped:obj) =
+    member x.Declarations =
+      let (decls:obj) = wrapped?Declarations
+      let tmp : obj[] = Array.zeroCreate decls?Length
+      System.Array.Copy(decls :?> System.Array, tmp, (decls?Length : int))
+      [| for t in tmp -> TopLevelDeclaration(t) |]
       
   type UntypedParseInfo(wrapped:obj) =
     member x.Wrapped = wrapped
     /// Name of the file for which this information were created
-    //abstract FileName                       : string
+    member x.FileName : string = wrapped?FileName
     /// Get declaraed items and the selected item at the specified location
-    //abstract GetNavigationItems             : unit -> NavigationItems
+    member x.GetNavigationItems() = 
+      NavigationItems(wrapped?GetNavigationItems())
     /// Return the inner-most range associated with a possible breakpoint location
     //abstract ValidateBreakpointLocation : Position -> Range option
     /// When these files change then the build is invalid
@@ -441,7 +484,7 @@ module SourceCodeServices =
       let names = fsc.MakeList(typeof<string>, names)
       FindDeclResult(wrapped?GetDeclarationLocation(pos, line, names, tokentag, isDeclaration))
 
-        // member GetF1Keyword : Position * string * Names -> string option
+    // member GetF1Keyword : Position * string * Names -> string option
     // member GetMethods : Position * string * Names option * (*tokentag:*)int -> MethodOverloads
 
   type ErrorInfo(wrapped:obj) =
@@ -449,7 +492,8 @@ module SourceCodeServices =
     member x.EndLine : int = wrapped?EndLine
     member x.StartColumn : int = wrapped?StartColumn
     member x.EndColumn : int = wrapped?EndColumn
-    member x.Severity : Severity = if wrapped?Severity?IsError then Error else Warning
+    member x.Severity : Severity = 
+      if wrapped?Severity?IsError then Error else Warning
     member x.Message : string = wrapped?Message
     member x.Subcategory : string = wrapped?Subcategory
   
