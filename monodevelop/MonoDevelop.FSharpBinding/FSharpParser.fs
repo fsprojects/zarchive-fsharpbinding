@@ -4,6 +4,7 @@ open System
 open System.Diagnostics
 open System.IO
 open MonoDevelop.Ide
+open MonoDevelop.Ide.TypeSystem
 open MonoDevelop.Ide.Gui
 open MonoDevelop.Core
 open MonoDevelop.Ide.TypeSystem
@@ -15,7 +16,7 @@ type FSharpParsedDocument(fileName) =
 
 // An instance of this type is created by MonoDevelop (as defined in the .xml for the AddIn) 
 type FSharpParser() =
-  inherit AbstractTypeSystemParser()
+  //inherit AbstractTypeSystemParser()
   do Debug.WriteLine("Parsing: Creating FSharpParser")
         
   /// Holds the previous errors reported by a file. 
@@ -25,8 +26,8 @@ type FSharpParser() =
   /// scheduled a new ReparseDocument() to update the errors.
   let prevContent = System.Collections.Generic.Dictionary<string,string>()
 
-  interface ITypeSystemParser with
-   override x.Parse(storeAst:bool, fileName:string, content:System.IO.TextReader, proj:MonoDevelop.Projects.Project) =
+  //interface ITypeSystemParser with
+  member x.Parse(storeAst:bool, fileName:string, content:System.IO.TextReader, proj:MonoDevelop.Projects.Project) =
     let fileContent = content.ReadToEnd()
     Debug.WriteLine("Parsing: Update in FSharpParser.Parse")
   

@@ -38,73 +38,87 @@ type internal FSharpErrorCompletionData(exn:exn) =
     override x.Icon =  new MonoDevelop.Core.IconId("md-event")
 
 /// Provide information to the 'method overloads' windows that comes up when you type '('
-type ParameterDataProvider(nameStart: int, meths: MethodOverloads) = 
-    interface IParameterDataProvider with 
-        member x.Count = meths.Methods.Length
+type ParameterDataProvider(nameStart: int) = 
+    inherit MonoDevelop.Ide.CodeCompletion.ParameterDataProvider(nameStart)
+    //interface IParameterDataProvider with 
 
-        // Get the index into the file where the parameter completion was triggered
-        member x.StartOffset = nameStart
+    let mutable meths: MethodOverloads = new MethodOverloads()
 
-        /// Returns the markup to use to represent the specified method overload
-        /// in the parameter information window.
-        member x.GetHeading (overload:int, parameterMarkup:string[], currentParameter:int) = 
-            let meth = meths.Methods.[overload]
-            let text = TipFormatter.formatTip  meth.Description 
-            let lines = text.Split [| '\n';'\r' |]
+    member x.Meths
+        //with get() = meths 
+        with set v = meths <- v
 
-            // Try to highlight the current parameter in bold. Hack apart the text based on (, comma, and ), then
-            // put it back together again.
-            //
-            // @todo This will not be perfect when the text contains generic types with more than one type parameter
-            // since they will have extra commas. 
+    override x.get_Count() = meths.Methods.Length
 
-            let text = if lines.Length = 0 then meths.Name else  lines.[0]
-            let textL = text.Split '('
-            if textL.Length <> 2 then text else
-            let text0 = textL.[0]
-            let text1 = textL.[1]
-            let text1L = text1.Split ')'
-            if text1L.Length <> 2 then text else
-            let text10 = text1L.[0]
-            let text11 = text1L.[1]
-            let text10L =  text10.Split ','
-            let text10L = text10L |> Array.mapi (fun i x -> if i = currentParameter then "<b>" + x + "</b>" else x)
-            textL.[0] + "(" + String.Join(",", text10L) + ")" + text11
+    // Get the index into the file where the parameter completion was triggered
+    //member x.StartOffset = nameStart
 
-        /// Get the lower part of the text for the display of an overload
-        member x.GetDescription (overload:int, currentParameter:int) = 
-            let meth = meths.Methods.[overload]
-            let text = TipFormatter.formatTip  meth.Description 
-            let lines = text.Split([| '\n';'\r' |])
-            let lines = if lines.Length <= 1 then [| "" |] else lines.[1..] 
-            let param = 
-                meth.Parameters |> Array.mapi (fun i param -> 
-                    let paramDesc = 
-                        // Sometimes the parameter decription is hidden in the XML docs
-                        match TipFormatter.extractParamTip param.Name meth.Description  with 
-                        | Some tip -> tip
-                        | None -> param.Description
-                    let name = param.Name
-                    let name = if i = currentParameter then  "<b>" + name + "</b>" else name
-                    let text = name + ": " + GLib.Markup.EscapeText  paramDesc
-                    text
-                    )
-            String.Join("\n\n", Array.append lines param)
+    /// Returns the markup to use to represent the specified method overload
+    /// in the parameter information window.
+    member x.GetHeading (overload:int, parameterMarkup:string[], currentParameter:int) = 
+        let meth = meths.Methods.[overload]
+        let text = TipFormatter.formatTip  meth.Description 
+        let lines = text.Split [| '\n';'\r' |]
+
+        // Try to highlight the current parameter in bold. Hack apart the text based on (, comma, and ), then
+        // put it back together again.
+        //
+        // @todo This will not be perfect when the text contains generic types with more than one type parameter
+        // since they will have extra commas. 
+
+        let text = if lines.Length = 0 then meths.Name else  lines.[0]
+        let textL = text.Split '('
+        if textL.Length <> 2 then text else
+        let text0 = textL.[0]
+        let text1 = textL.[1]
+        let text1L = text1.Split ')'
+        if text1L.Length <> 2 then text else
+        let text10 = text1L.[0]
+        let text11 = text1L.[1]
+        let text10L =  text10.Split ','
+        let text10L = text10L |> Array.mapi (fun i x -> if i = currentParameter then "<b>" + x + "</b>" else x)
+        textL.[0] + "(" + String.Join(",", text10L) + ")" + text11
+
+    /// Get the lower part of the text for the display of an overload
+    member x.GetDescription (overload:int, currentParameter:int) = 
+        let meth = meths.Methods.[overload]
+        let text = TipFormatter.formatTip  meth.Description 
+        let lines = text.Split([| '\n';'\r' |])
+        let lines = if lines.Length <= 1 then [| "" |] else lines.[1..] 
+        let param = 
+            meth.Parameters |> Array.mapi (fun i param -> 
+                let paramDesc = 
+                    // Sometimes the parameter decription is hidden in the XML docs
+                    match TipFormatter.extractParamTip param.Name meth.Description  with 
+                    | Some tip -> tip
+                    | None -> param.Description
+                let name = param.Name
+                let name = if i = currentParameter then  "<b>" + name + "</b>" else name
+                let text = name + ": " + GLib.Markup.EscapeText  paramDesc
+                text
+                )
+        String.Join("\n\n", Array.append lines param)
         
-        // Returns the text to use to represent the specified parameter
-        member x.GetParameterDescription (overload:int, paramIndex:int) = 
-            let meth = meths.Methods.[overload]
-            let param = meth.Parameters.[paramIndex]
-            param.Name 
+    // Returns the text to use to represent the specified parameter
+    member x.GetParameterDescription (overload:int, paramIndex:int) = 
+        let meth = meths.Methods.[overload]
+        let param = meth.Parameters.[paramIndex]
+        param.Description 
         
-        // Returns the number of parameters of the specified method
-        member x.GetParameterCount (overload:int) = 
-            let meth = meths.Methods.[overload]
-            meth.Parameters.Length
+    // Returns the number of parameters of the specified method
+    override x.GetParameterName(overload:int, paramIndex:int) = 
+        let meth = meths.Methods.[overload]
+        let param = meth.Parameters.[paramIndex]
+        param.Name 
+
+    // Returns the number of parameters of the specified method
+    override x.GetParameterCount (overload:int) = 
+        let meth = meths.Methods.[overload]
+        meth.Parameters.Length
         
-        // @todo should return 'true' for param-list methods
-        member x.AllowParameterList (overload: int) = 
-            false
+    // @todo should return 'true' for param-list methods
+    override x.AllowParameterList (overload: int) = 
+        false
 
 /// Implements text editor extension for MonoDevelop that shows F# completion    
 type FSharpTextEditorCompletion() =
@@ -117,7 +131,7 @@ type FSharpTextEditorCompletion() =
   override x.Initialize() = base.Initialize()
 
   /// Provide parameter and method overload information when you type '(', ',' or ')'
-  override x.HandleParameterCompletion(context:CodeCompletionContext, completionChar:char) : IParameterDataProvider =
+  override x.HandleParameterCompletion(context:CodeCompletionContext, completionChar:char) (*: IParameterDataProvider*) =
     try
      if (completionChar <> '(' && completionChar <> ',' && completionChar <> ')' ) then null else
       let doc = x.Document
@@ -142,7 +156,9 @@ type FSharpTextEditorCompletion() =
       | None -> null 
       | Some meths -> 
       
-      new ParameterDataProvider (startOffset, meths) :> _ 
+        let pdp = new ParameterDataProvider (startOffset) 
+        pdp.Meths <- meths
+        pdp :> _ 
     with _ -> null
         
   override x.KeyPress (key, keyChar, modifier) =

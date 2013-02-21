@@ -27,10 +27,10 @@
 	</Runtime>
 
 	<Dependencies>
-		<Addin id="Core" version="3.0.5"/>
-		<Addin id="Ide" version="3.0.5"/>
-		<Addin id="SourceEditor2" version="3.0.5"/>
-		<Addin id="Refactoring" version="3.0.5"/>
+		<Addin id="Core" version="4.0"/>
+		<Addin id="Ide" version="4.0"/>
+		<Addin id="SourceEditor2" version="4.0"/>
+		<Addin id="Refactoring" version="4.0"/>
         </Dependencies>
 
     <!-- This is the F# 2.0 targets file. This seems the best choice at the moment -->
