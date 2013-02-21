@@ -256,7 +256,7 @@ module internal Generator =
         "System.Configuration"; "System.Web.Mobile"; "System.Web.RegularExpressions"; 
         "System.Web.Services"; "System.Windows.Forms"; "System.Core";
         "PresentationCore"; "PresentationFramework"; "WindowsBase"; "WindowsFormsIntegration"]
-      |> List.map ( fun n -> lazy(try Some(System.Reflection.Assembly.LoadWithPartialName(n)) with _ -> None); );
+      |> List.map ( fun n -> lazy(try Some(System.Reflection.Assembly.Load(n)) with _ -> None); ); // WithPartialName
 
     let dict = new Dictionary<string, Type>();
 

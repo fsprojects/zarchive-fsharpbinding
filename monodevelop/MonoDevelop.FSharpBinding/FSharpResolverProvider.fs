@@ -101,29 +101,29 @@ type internal FSharpLanguageItemWindow(tooltip: string) as this =
 
 type FSharpLanguageItemTooltipProvider() = 
     let p = new MonoDevelop.SourceEditor.LanguageItemTooltipProvider() 
-    interface ITooltipProvider with 
+    //interface ITooltipProvider with 
     
-        member x.GetItem (editor, offset) =  p.GetItem(editor,offset)
+    member x.GetItem (editor, offset) =  p.GetItem(editor,offset)
 
-        member x.CreateTooltipWindow (editor, offset, modifierState, item) = 
-            let doc = IdeApp.Workbench.ActiveDocument
-            if (doc = null) then null else
-            match item.Item with 
-            | :? FSharpLocalResolveResult as titem -> 
-                let tooltip = TipFormatter.formatTipWithHeader(titem.DataTip) 
-                let result = new FSharpLanguageItemWindow (tooltip)
-                result :> Gtk.Window
-            | _ -> null
+    member x.CreateTooltipWindow (editor, offset, modifierState, item : TooltipItem) = 
+        let doc = IdeApp.Workbench.ActiveDocument
+        if (doc = null) then null else
+        match item.Item with 
+        | :? FSharpLocalResolveResult as titem -> 
+            let tooltip = TipFormatter.formatTipWithHeader(titem.DataTip) 
+            let result = new FSharpLanguageItemWindow (tooltip)
+            result :> Gtk.Window
+        | _ -> null
     
-        member x.GetRequiredPosition (editor, tipWindow, requiredWidth, xalign) = 
-            match tipWindow with 
-            | :? FSharpLanguageItemWindow as win -> 
-                requiredWidth <- win.SetMaxWidth win.Screen.Width
-                xalign <- 0.5
-            | _ -> ()
+    member x.GetRequiredPosition (editor, tipWindow : Gtk.Window, requiredWidth, xalign) = 
+        match tipWindow with 
+        | :? FSharpLanguageItemWindow as win -> 
+            win.SetMaxWidth win.Screen.Width |> ignore //requiredWidth <-
+            //xalign <- 0.5 // ???
+        | _ -> ()
 
-        member x.IsInteractive (editor, tipWindow) =  
-            false
+    member x.IsInteractive (editor, tipWindow) =  
+        false
 #endif
     
 /// Implements "resolution" - looks for tool-tips at current locations
