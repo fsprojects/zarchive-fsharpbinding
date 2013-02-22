@@ -1,8 +1,13 @@
 @echo off
-set MSBUILD=%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe
+if %PROCESSOR_ARCHITECTURE%==x86 (
+	set MSBuild="%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
+	set MDROOT="%ProgramFiles%\MonoDevelop"
+) else (
+	set MSBUILD=%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe
+	set MDROOT="%ProgramFiles(x86)%\MonoDevelop"
+)
 %MSBUILD% ..\FSharp.CompilerBinding\FSharp.CompilerBinding.fsproj /p:Configuration=Debug
 %MSBUILD% MonoDevelop.FSharpBinding\MonoDevelop.FSharp.windows.fsproj /p:Configuration=Debug
-set MDROOT="%ProgramFiles(x86)%\MonoDevelop"
 rmdir /s /q pack
 mkdir pack\windows\Debug
 %MDROOT%\bin\mdtool.exe setup pack bin\windows\Debug\FSharpBinding.windows.addin.xml -d:pack\windows\Debug
