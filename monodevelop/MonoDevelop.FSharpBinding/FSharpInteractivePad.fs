@@ -14,8 +14,12 @@ open MonoDevelop.Components.Commands
 open MonoDevelop.Core
 open MonoDevelop.Ide
 open MonoDevelop.Ide.Gui
-
+open MonoDevelop.Projects
 open MonoDevelop.FSharp
+
+open Microsoft.Build.Framework
+open Microsoft.Build.Tasks
+open Microsoft.Build.Utilities
 
 type FSharpCommands = 
   | ShowFSharpInteractive = 0
@@ -81,9 +85,11 @@ type FSharpInteractivePad() =
 
   //let handler = 
   do Debug.WriteLine ("InteracivePad: created!")
-  do view.Destroyed.Add (fun _ ->       Debug.WriteLine ("Interactive: view destroyed"))
-  do IdeApp.Exiting.Add (fun _ ->       Debug.WriteLine ("Interactive: app exiting!!"))
-  do IdeApp.Exited.Add (fun _ ->       Debug.WriteLine ("Interactive: app exited!!"))
+#if DEBUG
+  do view.Destroyed.Add (fun _ -> Debug.WriteLine ("Interactive: view destroyed"))
+  do IdeApp.Exiting.Add (fun _ -> Debug.WriteLine ("Interactive: app exiting!!"))
+  do IdeApp.Exited.Add  (fun _ -> Debug.WriteLine ("Interactive: app exited!!"))
+#endif
   member x.Shutdown()  = 
     do Debug.WriteLine (sprintf "Interactive: x.Shutdown()!")
     !session |> Option.iter (fun ses -> ses.Kill())
@@ -103,12 +109,28 @@ type FSharpInteractivePad() =
       x.UpdateFont()    
       view.ShadowType <- Gtk.ShadowType.None
       view.ShowAll()
-
+      
+      match view.Child with
+      | :? Gtk.TextView as v -> 
+            v.PopulatePopup.Add(fun (args) -> 
+                                    let item = new Gtk.MenuItem(GettextCatalog.GetString("Reset"))
+                                    item.Activated.Add(fun _ -> x.RestartFsi())
+                                    item.Show()
+                                    args.Menu.Add(item))
+      | _ -> ()
+                            
       let toolbar = container.GetToolbar(Gtk.PositionType.Right);
+
       let buttonClear = new DockToolButton("gtk-clear")
       buttonClear.Clicked.Add(fun _ -> view.Clear())
       buttonClear.TooltipText <- GettextCatalog.GetString("Clear")
       toolbar.Add(buttonClear)
+      
+      let buttonRestart = new DockToolButton("gtk-refresh")
+      buttonRestart.Clicked.Add(fun _ -> x.RestartFsi())
+      buttonRestart.TooltipText <- GettextCatalog.GetString("Reset")
+      toolbar.Add(buttonRestart)
+      
       toolbar.ShowAll()
       
     member x.RedrawContent() = ()
@@ -162,6 +184,37 @@ type FSharpInteractivePad() =
       let file = IdeApp.Workbench.ActiveDocument.FileName.ToString()
       CompilerArguments.supportedExtension(IO.Path.GetExtension(file))
       
+  member x.LoadReferences() =
+    Console.WriteLine("FSI:  #LoadReferences")
+    let project = IdeApp.Workbench.ActiveDocument.Project :?> DotNetProject
+    
+    let coreReference (assy: string)= 
+        assy.Contains "mscorlib" || assy.Contains "FSharp.Core"
+
+    let references = project.References 
+                     |> Seq.map (fun item -> TaskItem(item.Reference) :> ITaskItem )
+                     |> Seq.toArray
+    
+    let resolveRef = 
+       ResolveAssemblyReference(Assemblies = references,
+                                Silent = true,
+                                FindDependencies = true,
+                                FindRelatedFiles = true,  
+                                SearchPaths = [| "{CandidateAssemblyFiles}";
+                                                 "{HintPathFromItem}";
+                                                 "{TargetFrameworkDirectory}";
+                                                 "{AssemblyFolders}";
+                                                 "{GAC}";
+                                                 "{RawFileName}" |] )
+
+    if resolveRef.Execute() then
+        Array.concat [resolveRef.ResolvedDependencyFiles; resolveRef.ResolvedFiles]
+        |> Array.filter (fun i -> not (i.GetMetadata("FusionName") |> coreReference )) 
+        |> Array.map (fun i -> i.ItemSpec)
+        |> Array.rev
+        |> Array.iter (fun ref -> sendCommand ( sprintf "#r @\"%s\" " ref) false)
+    else view.WriteOutput "Error: Could not resolve assembly references."
+      
   static member CurrentPad =  
     let existing = 
       try IdeApp.Workbench.GetPad<FSharpInteractivePad>()
@@ -175,7 +228,6 @@ type FSharpInteractivePad() =
 
   static member CurrentFsi = 
     FSharpInteractivePad.CurrentPad.Content :?> FSharpInteractivePad
-
 
 type ShowFSharpInteractive() =
   inherit CommandHandler()
@@ -202,6 +254,17 @@ type SendLine() =
   override x.Run() =
     Debug.WriteLine (sprintf "Interactive: Send line to F# interactive invoked!")
     FSharpInteractivePad.CurrentFsi.SendLine()
+    FSharpInteractivePad.CurrentPad.BringToFront(false)
+  override x.Update(info:CommandInfo) =
+    let fsi = FSharpInteractivePad.CurrentFsi
+    info.Enabled <- true
+    info.Visible <- fsi.IsInsideFSharpFile
+    
+type SendReferences() =
+  inherit CommandHandler()
+  override x.Run() =
+    Debug.WriteLine (sprintf "Interactive: Load references in F# interactive invoked!")
+    FSharpInteractivePad.CurrentFsi.LoadReferences()
     FSharpInteractivePad.CurrentPad.BringToFront(false)
   override x.Update(info:CommandInfo) =
     let fsi = FSharpInteractivePad.CurrentFsi
