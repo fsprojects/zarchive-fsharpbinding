@@ -61,7 +61,6 @@
     <EmbeddedResource Include="icons.fsharp-file-icon.png" />
     <EmbeddedResource Include="icons.fsharp-project-icon.png" />
     <EmbeddedResource Include="icons.fsharp-script-icon.png" />
-    <EmbeddedResource Include="FSharpSyntaxMode.xml" />
 
     <None Include="templates.EmptyFSharpSource.xft.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -192,5 +191,10 @@
       <HintPath>../lib/fsharp/FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Framework" />
   </ItemGroup>
 </Project>
