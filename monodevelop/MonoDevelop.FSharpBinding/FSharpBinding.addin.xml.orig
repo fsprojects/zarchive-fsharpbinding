@@ -30,33 +30,42 @@
   <!-- New projects will be created with this targets file. When opened with Visual Studio 2012, it will ask for a project -->
   <!-- upgrade and replace with the F# 3.0 targets file. Project files with the F# 3.0 targets file will also work on Mono if F# 3.0 is -->
   <!-- available. -->
-  <Extension path="/MonoDevelop/ProjectModel/MSBuildItemTypes">
+  
+<Extension path="/MonoDevelop/ProjectModel/MSBuildItemTypes">
     <DotNetProject extension="fsproj" guid="{4925A630-B079-445d-BCD4-3A9C94FE9307}" import="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" language="F#" resourceHandler="MonoDevelop.FSharp.FSharpResourceIdBuilder"/>
   </Extension>
-  <Extension path="/MonoDevelop/Ide/GlobalOptionsDialog/Other">
+  
+<Extension path="/MonoDevelop/Ide/GlobalOptionsDialog/Other">
     <Section _label="F# Settings" class="MonoDevelop.FSharp.FSharpSettingsPanel" id="FSharpSettings"/>
   </Extension>
-  <Extension path="/MonoDevelop/TypeSystem/Parser">
+  
+<Extension path="/MonoDevelop/TypeSystem/Parser">
     <Parser class="MonoDevelop.FSharp.FSharpParser" mimeType="text/x-fsharp"/>
   </Extension>
-  <Extension path="/MonoDevelop/SourceEditor2/TooltipProviders">
+  
+<Extension path="/MonoDevelop/SourceEditor2/TooltipProviders">
     <Class class="MonoDevelop.FSharp.FSharpLanguageItemTooltipProvider" id="LanguageItem"/>
   </Extension>
-  <Extension path="/MonoDevelop/Ide/TextEditorResolver">
+  
+<Extension path="/MonoDevelop/Ide/TextEditorResolver">
     <Resolver class="MonoDevelop.FSharp.FSharpResolverProvider" mimeType="text/x-fsharp"/>
   </Extension>
-  <Extension path="/MonoDevelop/ProjectModel/SerializableClasses">
+  
+<Extension path="/MonoDevelop/ProjectModel/SerializableClasses">
     <DataType class="MonoDevelop.FSharp.FSharpCompilerParameters"/>
   </Extension>
-  <Extension path="/MonoDevelop/Ide/FileFilters">
+  
+<Extension path="/MonoDevelop/Ide/FileFilters">
     <FileFilter _label="F# Source Files" extensions="*.fs;*.fsi;*.fsx;*.fsscript" id="F#" insertbefore="AllFiles"/>
   </Extension>
-  <Extension path="/MonoDevelop/Ide/FileTemplates">
+  
+<Extension path="/MonoDevelop/Ide/FileTemplates">
     <FileTemplate file="templates.EmptyFSharpSource.xft.xml" id="EmptyFSharpSource"/>
     <FileTemplate file="templates.EmptyFSharpScript.xft.xml" id="EmptyFSharpScript"/>
     <FileTemplate file="templates.AssemblyInfo.xft.xml" id="FSharpAssemblyInfo"/>
   </Extension>
-  <Extension path="/MonoDevelop/Ide/ProjectTemplates">
+  
+<Extension path="/MonoDevelop/Ide/ProjectTemplates">
     <ProjectTemplate file="templates.FSharpConsoleProject.xpt.xml" id="FSharpConsoleProject"/>
     <ProjectTemplate file="templates.FSharpLibraryProject.xpt.xml" id="FSharpLibraryProject"/>
     <ProjectTemplate file="templates.FSharpTutorialProject.xpt.xml" id="FSharpTutorialProject"/>
@@ -68,28 +77,33 @@
       <ProjectTemplate file="templates.FSharpProjectMvc4Razor.xpt.xml" id="FSharpMvc4Project"/>
     </Condition>
   </Extension>
-  <Extension path="/MonoDevelop/ProjectModel/SerializableClasses">
+  
+<Extension path="/MonoDevelop/ProjectModel/SerializableClasses">
     <DataType class="MonoDevelop.FSharp.FSharpCompilerParameters"/>
     <DataType class="MonoDevelop.FSharp.FSharpProjectParameters"/>
   </Extension>
-  <Extension path="/MonoDevelop/ProjectModel/Gui/ItemOptionPanels/Build/Compiler">
+  
+<Extension path="/MonoDevelop/ProjectModel/Gui/ItemOptionPanels/Build/Compiler">
     <Condition id="ActiveLanguage" value="F#">
       <Panel _label="Compiler" class="MonoDevelop.FSharp.CodeGenerationPanel" id="FSharpCodeGenerationPanel"/>
     </Condition>
   </Extension>
-  <Extension path="/MonoDevelop/ProjectModel/Gui/ItemOptionPanels/Build/General">
+  
+<Extension path="/MonoDevelop/ProjectModel/Gui/ItemOptionPanels/Build/General">
     <Condition id="ActiveLanguage" value="F#">
       <Panel _label="Build Order" class="MonoDevelop.FSharp.BuildOrderPanel" id="FSharpBuildOrderPanel"/>
     </Condition>
   </Extension>
-  <Extension path="/MonoDevelop/Core/StockIcons">
+  
+<Extension path="/MonoDevelop/Core/StockIcons">
     <StockIcon resource="icons.fsharp-icon-32.png" stockid="md-fs-logo32"/>
     <StockIcon resource="icons.fsharp-script-32.png" stockid="md-fs-script32"/>
     <StockIcon resource="icons.fsharp-file-icon.png" stockid="md-fs-file"/>
     <StockIcon resource="icons.fsharp-script-icon.png" stockid="md-fs-script"/>
     <StockIcon resource="icons.fsharp-project-icon.png" stockid="md-fs-project"/>
   </Extension>
-  <Extension path="/MonoDevelop/Core/MimeTypes">
+  
+<Extension path="/MonoDevelop/Core/MimeTypes">
     <MimeType _description="F# Source File" icon="md-fs-file" id="text/x-fsharp" isText="true">
       <File pattern="*.fs"/>
     </MimeType>
@@ -103,23 +117,30 @@
       <File pattern="*.fsi"/>
     </MimeType>
   </Extension>
-  <Extension path="/MonoDevelop/ProjectModel/LanguageBindings">
+  
+<Extension path="/MonoDevelop/ProjectModel/LanguageBindings">
     <LanguageBinding class="MonoDevelop.FSharp.FSharpLanguageBinding" id="F#" supportedextensions=".fs,.fsi,.fsx,.fsscript"/>
   </Extension>
-  <Extension path="/MonoDevelop/Ide/TextEditorExtensions">
+  
+<Extension path="/MonoDevelop/Ide/TextEditorExtensions">
     <Class class="MonoDevelop.FSharp.FSharpTextEditorCompletion" fileExtensions=".fs,.fsi,.fsx,.fsscript"/>
   </Extension>
-  <Extension path="/MonoDevelop/ProjectModel/ProjectServiceExtensions">
+  
+<Extension path="/MonoDevelop/ProjectModel/ProjectServiceExtensions">
     <Class class="MonoDevelop.FSharp.FSharpProjectServiceExtension"/>
   </Extension>
+  
   <!-- F# interactive -->
-  <Extension path="/MonoDevelop/Ide/Pads">
+  
+<Extension path="/MonoDevelop/Ide/Pads">
     <Pad _label="F# Interactive" class="MonoDevelop.FSharp.FSharpInteractivePad" defaultLayout="*" defaultPlacement="Bottom" icon="md-fs-project" id="MonoDevelop.FSharp.FSharpInteractivePad"/>
   </Extension>
-  <Extension path="/MonoDevelop/Ide/Pads/ProjectPad">
+  
+<Extension path="/MonoDevelop/Ide/Pads/ProjectPad">
     <NodeBuilder class="MonoDevelop.FSharp.FSharpProjectFileNodeExtension"/>
   </Extension>
-  <Extension path="/MonoDevelop/Ide/Commands">
+  
+<Extension path="/MonoDevelop/Ide/Commands">
     <Category _name="F# Integration" id="F# Integration">
       <Command _description="Show F# Interactive pad." 
         _label="F# Interactive" 
@@ -148,12 +169,14 @@
         shortcut="Ctrl|Alt|P"/>
     </Category>
   </Extension>
-  <Extension path="/MonoDevelop/SourceEditor2/ContextMenu/Editor">
+  
+<Extension path="/MonoDevelop/SourceEditor2/ContextMenu/Editor">
     <CommandItem id="MonoDevelop.FSharp.FSharpCommands.SendSelection"/>
     <CommandItem id="MonoDevelop.FSharp.FSharpCommands.SendLine"/>
     <CommandItem id="MonoDevelop.FSharp.FSharpCommands.SendReferences"/>
   </Extension>
-  <Extension path="/MonoDevelop/Ide/MainMenu/Edit">
+  
+<Extension path="/MonoDevelop/Ide/MainMenu/Edit">
     <CommandItem id="MonoDevelop.FSharp.FSharpCommands.SendSelection"/>
     <CommandItem id="MonoDevelop.FSharp.FSharpCommands.SendLine"/>
     <CommandItem id="MonoDevelop.FSharp.FSharpCommands.SendReferences"/>
