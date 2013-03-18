@@ -122,14 +122,6 @@
     <LanguageBinding class="MonoDevelop.FSharp.FSharpLanguageBinding" id="F#" supportedextensions=".fs,.fsi,.fsx,.fsscript"/>
   </Extension>
   
-<Extension path="/MonoDevelop/SourceEditor2/CustomModes">
-    <SyntaxMode class="MonoDevelop.FSharp.FSharpSyntaxMode" mimeTypes="text/x-fsharp"/>
-  </Extension>
-  
-<Extension path="/MonoDevelop/SourceEditor2/SyntaxModes">
-    <Templates resource="FSharpSyntaxMode.xml"/>
-  </Extension>
-  
 <Extension path="/MonoDevelop/Ide/TextEditorExtensions">
     <Class class="MonoDevelop.FSharp.FSharpTextEditorCompletion" fileExtensions=".fs,.fsi,.fsx,.fsscript"/>
   </Extension>
@@ -137,7 +129,7 @@
 <Extension path="/MonoDevelop/ProjectModel/ProjectServiceExtensions">
     <Class class="MonoDevelop.FSharp.FSharpProjectServiceExtension"/>
   </Extension>
-  
+
   <!-- F# interactive -->
   
 <Extension path="/MonoDevelop/Ide/Pads">
