@@ -189,30 +189,42 @@ type FSharpInteractivePad() =
     let project = IdeApp.Workbench.ActiveDocument.Project :?> DotNetProject
     
     let coreReference (assy: string)= 
-        assy.Contains "mscorlib" || assy.Contains "FSharp.Core"
+        assy.Contains "mscorlib.dll" || assy.Contains "FSharp.Core.dll"
 
     let references = project.References 
                      |> Seq.map (fun item -> TaskItem(item.Reference) :> ITaskItem )
                      |> Seq.toArray
     
+    let emptyBuildEngine = 
+        { new IBuildEngine with
+            member be.BuildProjectFile(projectFileName, targetNames, globalProperties, argetOutputs) = true
+            member be.LogCustomEvent(e) = ()
+            member be.LogErrorEvent(e) = ()
+            member be.LogMessageEvent(e) = ()
+            member be.LogWarningEvent(e) = ()
+            member be.ColumnNumberOfTaskNode with get() = 1
+            member be.ContinueOnError with get() = true
+            member be.LineNumberOfTaskNode with get() = 1
+            member be.ProjectFileOfTaskNode with get() = "" }
+            
     let resolveRef = 
-       ResolveAssemblyReference(Assemblies = references,
+       ResolveAssemblyReference(BuildEngine = emptyBuildEngine,
+                                Assemblies = references,
                                 Silent = true,
                                 FindDependencies = true,
                                 FindRelatedFiles = true,  
-                                SearchPaths = [| "{CandidateAssemblyFiles}";
-                                                 "{HintPathFromItem}";
-                                                 "{TargetFrameworkDirectory}";
-                                                 "{AssemblyFolders}";
-                                                 "{GAC}";
+                                SearchPaths = [| "{CandidateAssemblyFiles}"
+                                                 "{HintPathFromItem}"
+                                                 "{TargetFrameworkDirectory}"
+                                                 "{AssemblyFolders}"
+                                                 "{GAC}"
                                                  "{RawFileName}" |] )
 
     if resolveRef.Execute() then
-        Array.concat [resolveRef.ResolvedDependencyFiles; resolveRef.ResolvedFiles]
-        |> Array.filter (fun i -> not (i.GetMetadata("FusionName") |> coreReference )) 
-        |> Array.map (fun i -> i.ItemSpec)
-        |> Array.rev
-        |> Array.iter (fun ref -> sendCommand ( sprintf "#r @\"%s\" " ref) false)
+        let references = Array.concat [resolveRef.ResolvedFiles; resolveRef.ResolvedDependencyFiles]
+                         |> Array.filter (fun i -> not (i.ItemSpec |> coreReference))
+                         |> Array.map (fun i -> i.ItemSpec)
+        for ref in references do sendCommand ( sprintf "#r @\"%s\" " ref) false
     else view.WriteOutput "Error: Could not resolve assembly references."
       
   static member CurrentPad =  
