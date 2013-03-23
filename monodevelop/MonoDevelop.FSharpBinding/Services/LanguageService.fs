@@ -27,7 +27,6 @@ open ICSharpCode.NRefactory.Editor
 
 open FSharp.CompilerBinding
 open MonoDevelop.FSharp
-open MonoDevelop.FSharp.MailBox
 
 open Microsoft.FSharp.Compiler.SourceCodeServices
 
@@ -587,7 +586,7 @@ type internal LanguageService private () =
                     with _ -> ()))
 
   // Mailbox of this 'LanguageService'
-  let mbox = SimpleMailboxProcessor.Start(fun mbox ->
+  let mbox = MailboxProcessor.Start(fun mbox ->
     
     // Tail-recursive loop that remembers the current state
     // (untyped and typed parse results)
