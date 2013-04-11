@@ -29,7 +29,7 @@ elif test "x$PKG_CONFIG" = "xno"; then
     PKG_CONFIG=`which pkg-config`
 fi
 
-MONODIR=`$PKG_CONFIG --variable=libdir mono`/mono/4.0
+MONODIR=/usr/lib/mono/4.0
 
 echo "Assuming Mono root directory." $MONODIR
 
