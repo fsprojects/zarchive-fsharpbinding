@@ -219,7 +219,7 @@ type internal IntelliSenseAgent() =
           [ for d in decls.Items do
             yield { Name = d.Name
                     Help = TipFormatter.formatTip d.DescriptionText } ]
-        Console.WriteLine(JsonConvert.SerializeObject(cs))
+        Console.WriteLine(JavaScriptConvert.SerializeObject(cs))
       | Text ->
         for d in decls.Items do Console.WriteLine(d.Name)
       printfn "<<EOF>>"

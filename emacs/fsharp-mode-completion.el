@@ -42,7 +42,7 @@
                  (concat (file-name-directory (or load-file-name buffer-file-name))
                          "bin/" fsharp-ac-executable))))
     (case system-type
-      (windows-nt exe)
+      (windows-nt (list exe))
       (otherwise (list "mono" exe)))))
 
 (defvar fsharp-ac-use-popup t
@@ -134,6 +134,7 @@ display in a help buffer instead.")
 
 (defun fsharp-ac/load-file (file)
   "Start the compiler binding for an individual F# script."
+  (fsharp-ac--log "/load-file\n")
   (when (fsharp-ac--script-file-p file)
     (if (file-exists-p file)
         (when (not (fsharp-ac--process-live-p))
@@ -143,6 +144,9 @@ display in a help buffer instead.")
 (defun fsharp-ac--load-after-save ()
   (remove-hook 'fsharp-ac--load-after-save 'local)
   (fsharp-ac/load-file (buffer-file-name)))
+
+(defun fsharp-ac--project-file-p (file)
+  (member (expand-file-name file) (mapcar 'expand-file-name fsharp-ac-project-files)))
 
 (defun fsharp-ac--valid-project-p (file)
   (and file
@@ -170,11 +174,13 @@ display in a help buffer instead.")
 
 (defun fsharp-ac--process-live-p ()
   "Check whether the background process is live"
+  (fsharp-ac--log "--process-live-p\n")
   (and fsharp-ac-completion-process
        (process-live-p fsharp-ac-completion-process)))
 
 (defun fsharp-ac/stop-process ()
   (interactive)
+  (fsharp-ac--log "/stop-process\n")
   (fsharp-ac-message-safely "Quitting fsharp completion process")
   (when (fsharp-ac--process-live-p)
     (log-psendstr fsharp-ac-completion-process "quit\n")
@@ -193,7 +199,7 @@ display in a help buffer instead.")
 (defun fsharp-ac/start-process ()
   "Launch the F# completion process in the background"
   (interactive)
-
+  (fsharp-ac--log "/start-process\n")
   (when (fsharp-ac--process-live-p)
     (kill-process fsharp-ac-completion-process))
 
@@ -201,6 +207,7 @@ display in a help buffer instead.")
   (fsharp-ac--reset-timer))
 
 (defun fsharp-ac--configure-proc ()
+  (fsharp-ac--log "--configure-proc\n")
   (let ((proc (let (process-connection-type)
                 (apply 'start-process "fsharp-complete" "*fsharp-complete*"
                        fsharp-ac-complete-command))))
@@ -279,7 +286,7 @@ The current buffer must be an F# file that exists on disk."
     (and file
          (fsharp-ac--process-live-p)
          (not ac-completing)
-         (or (member (expand-file-name file) fsharp-ac-project-files)
+         (or (fsharp-ac--project-file-p file)
              (string-match-p (rx (or "fsx" "fsscript"))
                              (file-name-extension file))))))
 
@@ -314,6 +321,7 @@ The current buffer must be an F# file that exists on disk."
 (defun fsharp-ac--ac-start (&rest ac-start-args)
   "Start completion, using only the F# completion source for intellisense."
   (interactive)
+  (fsharp-ac--log "--ac-start\n")
   (let ((ac-sources '(fsharp-ac-source))
         (ac-auto-show-menu t))
     (apply 'ac-start ac-start-args)))
@@ -488,6 +496,7 @@ around to the start of the buffer."
 (defconst fsharp-ac-eom "\n<<EOF>>\n")
 
 (defun fsharp-ac--get-msg (proc)
+  (fsharp-ac--log "-get-msg\n")
   (with-current-buffer (process-buffer proc)
     (goto-char (point-min))
     (let ((eofloc (search-forward fsharp-ac-eom nil t)))
@@ -498,6 +507,7 @@ around to the start of the buffer."
 
 (defun fsharp-ac-filter-output (proc str)
   "Filter output from the completion process and handle appropriately."
+  (fsharp-ac--log "filter-output\n")
   (fsharp-ac--log str)
 
   (with-current-buffer (process-buffer proc)
@@ -522,6 +532,9 @@ around to the start of the buffer."
     (setq msg (fsharp-ac--get-msg proc)))))
 
 (defun fsharp-ac-handle-completion (str)
+  (fsharp-ac--log "-handle-completion\n")
+  (fsharp-ac--log str)
+  (fsharp-ac--log "\n\n")
   (setq str
         (s-replace "DATA: completion" "" str))
   (let* ((json-array-type 'list)

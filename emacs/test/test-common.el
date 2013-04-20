@@ -116,7 +116,9 @@ When running tests in batch mode, tests should be loaded as -l arguments to emac
   (package-install-file (expand-file-name pkg)))
 
 (defun init-melpa ()
-  (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")))
+  (setq package-archives '(
+			   ;("melpa" . "http://melpa.milkbox.net/packages/")
+			   ))
   (package-initialize)
   (unless package-archive-contents
     (package-refresh-contents)))
