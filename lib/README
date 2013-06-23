@@ -7,3 +7,5 @@ ndesk-options -- binary release of 0.2.1
 
 fsautocomplete -- binary release so that MELPA can download it easily
                   to make installation out of the box
+
+newtonsoft.json -- binary release of 1.0
