@@ -25,7 +25,7 @@ RESULT=""
 osx_pkg_config=/Library/Frameworks/Mono.framework/Versions/Current/bin/pkg-config
 if test -e $osx_pkg_config; then
     PKG_CONFIG=$osx_pkg_config
-elif test "x$PKG_CONFIG" = "xno"; then
+else
     PKG_CONFIG=`which pkg-config`
 fi
 
