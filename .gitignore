@@ -9,6 +9,7 @@ MonoDevelop.FSharpBinding/_ReSharper.MonoDevelop.FSharp/*
 MonoDevelop.FSharpBinding/[Oo]bj/
 MonoDevelop.FSharpBinding/[Bb]in/
 monodevelop/pack/*
+monodevelop/Makefile
 repository/*
 *.suo
 *.pidb
