@@ -1,0 +1,3 @@
+[submodule "fsharp-refactor"]
+	path = fsharp-refactor
+	url = https://github.com/mono-soc-2013/fsharp-refactor.git
