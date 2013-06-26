@@ -11,6 +11,8 @@ For more information about F# see [The F# Software Foundation](http://fsharp.org
 
 The core component is the FSharp.CompilerBinding.dll. This is used by both fsautocomplete.exe, a command-line utility to sit behind Emacs, Vim and other editing environments, an the MonoDevelop components.
 
+Users of Windows XP wishing to use this project, please follow the installation process described [here](#installation-on-windows-xp).
+
 ### Basic Components - Building
 
 	./configure.sh
@@ -125,3 +127,54 @@ When developing generally use (c)
 
 The build is performed against the MonoDevelop binaries we depend on in dependencies/..., which have been 
 snarfed from MonoDevelop installs.
+
+## Installation on Windows XP
+
+Anyone attempting to experience F# on Windows XP will probably find it a rather difficult process, as Microsoft
+have not generally attempted to maintain backward compatibility between the various necessary .Net frameworks and
+F# components for operating systems prior to Vista.
+
+However, it is possible to get a viable Windows XP F#/Emacs development environment operational by a manual installation
+process as described in the following sections.
+
+### Clone Repo
+
+- Using your Git tool of choice, and the links at the top of this page, clone this repository to your local machine;
+do not have spaces or other special characters anywhere in the path
+- In the cloned repo, then checkout the `windows-xp` branch
+
+### Install Microsoft Software Tools
+
+The following items should be installed using the default locations proposed by the installers:
+
+- Install F# 2,0.0.0 Compiler for .Net 4.0 using the `InstallFSharp.msi` file from
+[Microsoft F#, April 2011 Community Technology Preview](http://www.microsoft.com/en-us/download/details.aspx?id=11100);
+verify that a directory `C:\Program Files\FSharp-2.0.0.0\v4.0\bin` now exists containing around 20 files
+- Check if you have .Net 4.0 installed by verifying that directory `C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319` exists
+containing a substantial number of files; if not, download and run the `dotNetFx40_Full_setup.exe` from
+[Microsoft .NET Framework 4 (Web Installer)](http://www.microsoft.com/en-GB/download/details.aspx?id=17851)
+
+### Install Open Source Software Tools
+
+The following items may be installed anywhere, but ensure no spaces or other special characters appear anywhere in the 
+resulting directory path:
+
+- Install Emacs 24.2 or later for Windows from http://ftp.gnu.org/gnu/emacs/windows/
+- Install GnuWin32 package `CoreUtils` from http://gnuwin32.sourceforge.net/packages.html
+- Install GnuWin32 package `Make` similarly 
+
+The installation directories for these tools do not need to be added to the system environment `PATH` variable.
+
+### Build the F# Autocomplete Server
+
+- In the root folder of the checkout, edit the `build.wxp.cmd` file and amend the `PATH` definition there to
+correspond to the earlier GnuWin32 installation, then save the file
+- In a command prompt console window in the root folder of the checkout, execute the `build.wxp.cmd` command file
+- After successful build, verify the new file `bin\fsautocomplete.exe` exists
+- From the command prompt, execute the new file `bin\fsautocomplete.exe`
+- Type `help` then carriage return as input to the running fsautocomplete executable
+- Verify twenty lines or so of help output is produced
+- Type `quit` then carriage return to exit the program
+
+This completes the first stage of the installation: now proceed to the F# emacs installation described
+[here](emacs/README.md#installation-on-windows-xp).

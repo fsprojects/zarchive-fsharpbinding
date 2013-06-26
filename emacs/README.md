@@ -13,7 +13,7 @@ The following features are under development:
 
 Requires Emacs 24+.
 
-## Installation
+## Installation excluding Windows XP
 
 ### Package
 
@@ -39,7 +39,7 @@ If you're not already using MELPA, add the following to your init.el:
 ### Manual installation
 
 1. Clone this repo and run `make install`:
-    ```
+    ```lisp
     git clone git://github.com/fsharp/fsharpbinding.git
     cd fsharpbinding/emacs
     make install
@@ -88,6 +88,102 @@ While a project is loaded, the following features will be available:
 
 In the event of any trouble, please open an issue on [Github](https://github.com/fsharp/fsharpbinding/) with the label `Emacs`.
 
+## Installation on Windows XP
+
+The following sections assume you have successfully completed the initial phase of Windows XP installation which
+creates the file `bin\fsautocomplete.exe`.
+
+### Installation of Dependencies
+
+Certain emacs package dependencies are required for proper operation, and these are installed as follows:
+
+- Edit your `.emacs` file to contain the following lines:
+
+```lisp
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+(unless package-archive-contents (package-refresh-contents))
+(package-initialize)
+
+;;; Install fsharp-mode dependencies
+(unless (package-installed-p 'popup) (package-install 'popup))
+(unless (package-installed-p 'pos-tip) (package-install 'pos-tip))
+(unless (package-installed-p 's) (package-install 's))
+(unless (package-installed-p 'dash) (package-install 'dash))
+(unless (package-installed-p 'auto-complete) (package-install 'auto-complete))
+
+(require 'auto-complete)
+(require 'auto-complete-config)
+(ac-config-default)
+
+``` 
+
+- Save and restart emacs, when the packages will be downloaded and installed in compiled form under
+`EMACS_HOME\.emacs.d\elpa`
+- If you encounter an error message about checksums or file sizes during package installation, this is most likely
+due to a false positive identification by your virus checker of the `auto-complete.tar` file as malware.
+In this event, go to the [melpa website](http://melpa.milkbox.net) and attempt to download the tar
+file from there, which will likely trigger a virus checker prompt which will permit you to override
+its judgement. Then, if you retry the installation with the override now recorded, it is likely to succeed.
+Should it continue to fail, you must then clone that project from its source site shown in the last column
+of the melpa page, ensuring Unix line endings (not Windows ones), and then subsitute the following lines for the
+offending one above:
+
+```lisp
+(unless (package-installed-p 'auto-complete) (package-install-file "?:/path-to/auto-complete/auto-complete.el"))
+(unless (package-installed-p 'auto-complete-config) (package-install-file "?:/path-to/auto-complete/auto-complete-config.el"))
+```  
+
+- When emacs starts successfully, execute the command `M-x list-packages`, and verify it shows about half-way down
+the list all the above packages as installed
+- Edit your `.emacs` file in emacs, and verify that it lists `AC` as an operative minor mode for that buffer,
+and similarly check that if you then type in `(se` in an empty space it shows a number of completions after a moment,
+together with their documentation
+- You are now free to comment out the `add-to-list` expression above, as it is not longer required once the packages
+are installed, and makes editor initialisation faster by eliminating a network fetch operation 
+
+### Testing Emacs F# Mode
+
+Proceed to verify the Emacs F# mode as follows:
+
+- Edit the file `emacs\run_tests.wxp.cmd` and amend the two lines showing the paths to the GnuWin32 and EmacsW32 
+installation directories to reflect the installation locations chosen during the initial phase of installation
+- Now exit all emacs instances
+- Reselect the existing command prompt window, or create one if necessary, and ensure the working directory is
+the root of this project, i.e. one level above the `emacs` folder
+- In that window, invoke the command file `emacs\run_tests.wxp.cmd` 
+- View the resulting output to verify that around 40 unit tests are executed successfully, and then that an
+emacs instance is launched which runs around six further integration tests successfully, then exit that emacs
+
+### Completion of emacs configuration 
+   
+Complete the configuration of your emacs environment as follows:
+
+- Edit your `.emacs` file and add the following lines below the `(ac-config-default)` line shown above:
+    
+```lisp
+(push "C:\\Program Files\\FSharp-2.0.0.0\\v4.0\\bin" exec-path)
+(push "C:\\WINDOWS\\Microsoft.NET\\Framework\\v4.0.30319" exec-path)
+(push "D:\\libraries\\fs\\fsharpbinding\\bin" exec-path)
+(push "D:\\software\\gnuwin32\\bin" exec-path)
+
+(add-to-list 'load-path "D:/libraries/fs/fsharpbinding/emacs")
+(autoload 'fsharp-mode "fsharp-mode" "Major mode for editing F# code." t)
+(add-to-list 'auto-mode-alist '("\\.fs[iylx]?$" . fsharp-mode))
+(require 'fsharp-mode)
+
+(setq inferior-fsharp-program "\"C:\\Program Files\\FSharp-2.0.0.0\\v4.0\\bin\\Fsi.exe\"")
+
+;; (setq fsharp-ac-debug t)
+;; (setq fsharp-ac-verbose t)
+```
+
+- Amend the third, fourth, and fifth code lines above to correspond to your actual installation directories
+- You can leave the last two lines above commented - uncomment them if required for diagnostic purposes
+- Save your `.emacs` file and restart emacs
+- You should now be able to do F# development with full autocomplete capabilities
+- Development of multi-source file projects could be started by cloning the `test/Test1` folder and editing the `Test1.fsproj` XML file as necessary  
+
 ## Configuration
 
 ### Compiler and REPL paths
@@ -95,13 +191,6 @@ In the event of any trouble, please open an issue on [Github](https://github.com
 The F# compiler and interpreter should be set to good defaults for your
 OS as long as the relevant executables can be found on your PATH. If you
 have a non-standard setup you may need to configure these paths manually.
-
-On Windows:
-
-```lisp
-(setq inferior-fsharp-program "\"c:\\Path\To\Fsi.exe\"")
-(setq fsharp-compiler "\"c:\\Path\To\Fsc.exe\"")
-```
 
 On Unix-like systems, you must use the *--readline-* flag to ensure F#
 Interactive will work correctly with Emacs. Typically `fsi` and `fsc` are

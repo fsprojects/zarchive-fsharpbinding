@@ -35,13 +35,15 @@
 ;;; Compilation
 
 (defvar fsharp-compile-command
-  (or (executable-find "fsharpc")
-      (executable-find "fsc"))
+  (shell-quote-argument
+   (or (executable-find "fsharpc")
+       (executable-find "fsc")))
   "The program used to compile F# source files.")
 
 (defvar fsharp-build-command
-  (or (executable-find "xbuild")
-      (executable-find "msbuild"))
+  (shell-quote-argument
+   (or (executable-find "xbuild")
+       (executable-find "msbuild")))
   "The command used to build F# projects and solutions.")
 
 (defvar fsharp-compiler nil

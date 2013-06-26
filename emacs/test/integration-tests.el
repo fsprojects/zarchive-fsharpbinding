@@ -1,7 +1,9 @@
 
 (defun init-melpa ()
   (setq package-archives
-        '(("melpa"       . "http://melpa.milkbox.net/packages/")))
+        '(
+	  ;("melpa"       . "http://melpa.milkbox.net/packages/")
+	  ))
   (package-initialize)
   (unless package-archive-contents
     (package-refresh-contents)))
@@ -12,6 +14,7 @@
       (package-install package))))
 
 (defun load-fsharp-mode ()
+  (setq fsharp-ac-debug t)
   (unless (functionp 'fsharp-mode)
     (let ((testmode (getenv "TESTMODE")))
       (cond
@@ -67,8 +70,8 @@
      (with-timeout (waittime)
        (while (null fsharp-ac-project-files)
          (sleep-for 1)))
-     (should (string-match-p "Test1/Program.fs" (mapconcat 'identity fsharp-ac-project-files "")))
-     (should (string-match-p "Test1/FileTwo.fs" (mapconcat 'identity fsharp-ac-project-files ""))))))
+     (should (string-match-p "Test1/Program.fs" (mapconcat 'expand-file-name fsharp-ac-project-files "")))
+     (should (string-match-p "Test1/FileTwo.fs" (mapconcat 'expand-file-name fsharp-ac-project-files ""))))))
 
 
 (ert-deftest check-completion ()
@@ -126,7 +129,7 @@
            (while (eq nil tiptext)
              (sleep-for 1)))
          (should
-          (string-match-p "val func : x:int -> int\n\nFull name: Program.X.func"
+          (string-match-p "val func : int -> int\n\nFull name: Program.X.func"
                           tiptext)))))))
 
 (ert-deftest check-errors ()
@@ -146,8 +149,9 @@
        (sleep-for 1))
      (should (eq (overlay-get (car (overlays-at (point))) 'face)
                  'fsharp-error-face))
-     (should (string= (overlay-get (car (overlays-at (point))) 'help-echo)
-                      "Unexpected keyword 'fun' in binding. Expected incomplete structured construct at or before this point or other token.")))))
+     (should (string-prefix-p "Unexpected keyword 'fun'"
+			      (overlay-get (car (overlays-at (point))) 'help-echo))))))
+
 
 (ert-deftest check-script-tooltip ()
   "Check we can request a tooltip from a script"
@@ -168,5 +172,5 @@
              (accept-process-output fsharp-ac-completion-process sleeptime)))
          (should (stringp tiptext))
          (should
-          (string-match-p "val funky : x:int -> int\n\nFull name: Script.XA.funky"
+          (string-match-p "val funky : int -> int\n\nFull name: Script.XA.funky"
                           tiptext)))))))
