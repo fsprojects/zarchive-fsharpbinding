@@ -373,7 +373,24 @@ type internal TypedParseResult(info:TypeCheckInfo) =
     let crackSymbolText (offset:int, doc:Mono.TextEditor.TextDocument) = 
     
         let loc, line, col, currentLine, lineStr = preCrack (offset, doc)
-    
+
+        //we dont want to do return identifiers for a comment line
+        let comment = lineStr.IndexOf("//")
+        if comment >= 0 && comment < col then None else
+
+        //we dont want identifiers within (* ... *)
+        let leftComment = lineStr.IndexOf("(*", 0)
+        let rightComment = lineStr.IndexOf("*)", col)
+        if leftComment >0 && rightComment >0 then None else
+        
+        //We dont want to return identifiers in comments
+        let leftString = lineStr.IndexOf("\"", 0)
+        let rightString = lineStr.IndexOf("\"", col)
+        let token = FsParser.tagOfToken(FsParser.token.IDENT("")) 
+        if leftString >0 && rightString >0 then
+           //We know this is a string so use a string identifier
+           Some(line,col,lineStr,["System"; "String"],"String",token) else
+        
         let lookBack = Parsing.createBackStringReader lineStr (col-1)
         let lookForw = Parsing.createForwardStringReader lineStr col
     
@@ -396,10 +413,10 @@ type internal TypedParseResult(info:TypeCheckInfo) =
         Debug.WriteLine(sprintf "Result: Crack symbol text at %d:%d (offset %d - %d)\nIdentifier: %A (Current: %s) \nLine string: %s"  
                               line col currentLine.Offset currentLine.EndOffset identIsland currentIdent lineStr)
 
-        let token = FsParser.tagOfToken(FsParser.token.IDENT("")) 
         match identIsland with
         | [] | [ "" ] -> None
-        | _ -> Some (line,col,lineStr,identIsland,currentIdent,token)
+        | _ -> Debug.WriteLine(sprintf "identIsland: %A" identIsland)
+               Some (line,col,lineStr,identIsland,currentIdent,token)
         
     /// Crack the info prior to a '(' or ',' once the method tip trigger '(' shows
     let crackSymbolTextAtGetMethodsTrigger (offset:int, doc:Mono.TextEditor.TextDocument) = 
