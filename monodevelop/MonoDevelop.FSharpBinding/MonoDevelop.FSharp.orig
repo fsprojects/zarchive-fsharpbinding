@@ -117,6 +117,10 @@
     <Compile Include="FSharpResolverProvider.fs" />
     <Compile Include="FSharpProjectServiceExtension.fs" />
     <Compile Include="FSharpProjectFileNodeExtension.fs" />
+    <Compile Include="FSharpRefactor\FSharpRefactoring.fs" />
+    <Compile Include="FSharpRefactor\RenameRefactoring.fs" />
+    <Compile Include="FSharpRefactor\AddArgumentRefactoring.fs" />
+    <Compile Include="FSharpRefactor\ExtractFunctionRefactoring.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="pango-sharp">
@@ -190,6 +194,13 @@
     <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>../lib/fsharp/FSharp.Core.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <ProjectReference Include="..\..\fsharp-refactor\FSharpRefactor\FSharpRefactor.fsproj">
+        <Project>{611A68B4-9B6A-4675-BF3C-6BCCAEA09BEF}</Project>
+        <Name>FSharpRefactor</Name>
+    </ProjectReference>
+    <Reference Include="FSharp.Compiler">
+        <HintPath>..\..\fsharp-refactor\lib\FSharp.Compiler.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
