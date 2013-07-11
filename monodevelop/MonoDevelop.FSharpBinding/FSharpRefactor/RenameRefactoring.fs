@@ -53,3 +53,6 @@ type RenameRefactoring() as self =
     override self.Run(options) =
         let itemDialog = new FSharpRenameItemDialog(options, self)
         MessageService.ShowCustomDialog(itemDialog) |> ignore
+
+    override self.GetMenuDescription(options) =
+        self.Name
