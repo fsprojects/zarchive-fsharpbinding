@@ -10,7 +10,6 @@ open MonoDevelop.Ide.Gui.Content
 open MonoDevelop.Projects.Text
 open MonoDevelop.Core.ProgressMonitoring
 open Mono.TextEditor
-open Microsoft.FSharp.Compiler.Range
 
 open MonoDevelop.FSharpRefactor.FSharpRefactoring
 open FSharpRefactor.Engine.Ast
@@ -26,13 +25,6 @@ type FSharpRenameItemDialog(options:RefactoringOptions, rename:RenameRefactoring
 type RenameRefactoring() as self =
     inherit MonoDevelop.Refactoring.Rename.RenameRefactoring()
 
-    let rename (source:string) (position:pos) (newName:string) =
-        let tree = (Ast.Parse source).Value
-        let identifier = FindIdentifier source position
-        let declarationIdentifier =
-            TryFindIdentifierDeclaration (makeScopeTrees tree) identifier.Value
-        Rename.DoRename source tree declarationIdentifier.Value newName
-
     do
         self.Name <- "Rename (F#)"
 
@@ -43,11 +35,9 @@ type RenameRefactoring() as self =
     override self.PerformChanges(options, properties) =
         let renameProperties =
             properties :?> MonoDevelop.Refactoring.Rename.RenameRefactoring.RenameProperties
-        let position =
-            mkPos options.Location.Line (options.Location.Column-1)
+        let position = options.Location.Line, options.Location.Column
         let refactorSource =
-            fun source _ ->
-                rename source position renameProperties.NewName
+            Rename.Transform (position, renameProperties.NewName)
         PerformChanges (options, properties) refactorSource
 
     override self.Run(options) =

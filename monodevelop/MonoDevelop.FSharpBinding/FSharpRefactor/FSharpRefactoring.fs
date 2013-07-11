@@ -10,7 +10,6 @@ open MonoDevelop.Ide.Gui.Content
 open MonoDevelop.Projects.Text
 open MonoDevelop.Core.ProgressMonitoring
 open Mono.TextEditor
-open Microsoft.FSharp.Compiler.Range
 
 open FSharpRefactor.Engine.Ast
 open FSharpRefactor.Engine.CodeAnalysis.RangeAnalysis
