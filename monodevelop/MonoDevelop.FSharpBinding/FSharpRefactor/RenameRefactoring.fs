@@ -28,19 +28,27 @@ type RenameRefactoring() as self =
         IsValid options (Rename.IsValid (Some position, None))
 
     override self.PerformChanges(options, properties) =
-        let renameProperties =
-            properties :?> MonoDevelop.Refactoring.Rename.RenameRefactoring.RenameProperties
+        let newName = properties :?> string
         let position = options.Location.Line, options.Location.Column
         let refactorSource =
-            Rename.Transform (position, renameProperties.NewName)
+            Rename.Transform (position, newName)
         PerformChanges (options, properties) refactorSource
 
     override self.Run(options) =
         let position = GetPosition options
+        let source, _ = GetSourceAndFilename options
+        let oldName = FindIdentifierName source position
         let renameIsValid name = 
             IsValid options (Rename.IsValid (Some position, Some name))
+        let getErrorMessage name =
+            GetErrorMessage options (Rename.GetErrorMessage (Some position, Some name))
         let itemDialog =
-            new RefactoringParametersDialog(self, options, new Func<string, bool>(renameIsValid))
+            new RefactoringParametersDialog(
+                self, 
+                options, 
+                oldName,
+                new Func<string, bool>(renameIsValid), 
+                new Func<string, string>(getErrorMessage))
         MessageService.ShowCustomDialog(itemDialog) |> ignore
 
     override self.GetMenuDescription(options) =

@@ -17,14 +17,23 @@ open FSharpRefactor.Engine.CodeAnalysis.ScopeAnalysis
 open FSharpRefactor.Refactorings
 
 module FSharpRefactoring =
-    let IsValid (options:RefactoringOptions) (isSourceValid:string -> string -> bool) =
+    let GetSourceAndFilename (options:RefactoringOptions) =
         let doc = options.Document
-        let wholeFileChange = new TextReplaceChange()
-        let filename = options.Document.FileName.ToString()
+        let filename = doc.FileName.ToString()
         let source = doc.GetContent<ITextFile>().Text
+        source, filename
 
+    let IsValid options (isSourceValid:string -> string -> bool) =
+        let source, filename = GetSourceAndFilename options
         options.MimeType = "text/x-fsharp"
         |> (&&) (isSourceValid source filename)
+        
+    let GetErrorMessage options (getErrorMessage:string -> string -> string option) =
+        let source, filename = GetSourceAndFilename options
+        match getErrorMessage source filename with
+            | None -> ""
+            | Some message -> message
+
 
     let PerformChanges(options:RefactoringOptions, properties) (refactorSource:string -> string -> string) =
         let filename = options.Document.FileName.ToString()
