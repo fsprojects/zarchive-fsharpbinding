@@ -11,20 +11,15 @@ open MonoDevelop.Projects.Text
 open MonoDevelop.Core.ProgressMonitoring
 open Mono.TextEditor
 
+open MonoDevelop.FSharp.Gui
 open MonoDevelop.FSharpRefactor.FSharpRefactoring
 open FSharpRefactor.Engine.Ast
 open FSharpRefactor.Engine.CodeAnalysis.RangeAnalysis
 open FSharpRefactor.Engine.CodeAnalysis.ScopeAnalysis
 open FSharpRefactor.Refactorings
 
-type FSharpRenameItemDialog(options:RefactoringOptions, rename:RenameRefactoring) as self =
-    inherit RenameItemDialog(options, rename)
-    do
-        self.Title <- "Rename (F#)"
-
 type RenameRefactoring() as self =
-    inherit MonoDevelop.Refactoring.Rename.RenameRefactoring()
-
+    inherit RefactoringOperation()
     do
         self.Name <- "Rename (F#)"
 
@@ -41,7 +36,11 @@ type RenameRefactoring() as self =
         PerformChanges (options, properties) refactorSource
 
     override self.Run(options) =
-        let itemDialog = new FSharpRenameItemDialog(options, self)
+        let position = GetPosition options
+        let renameIsValid name = 
+            IsValid options (Rename.IsValid (Some position, Some name))
+        let itemDialog =
+            new RefactoringParametersDialog(self, options, new Func<string, bool>(renameIsValid))
         MessageService.ShowCustomDialog(itemDialog) |> ignore
 
     override self.GetMenuDescription(options) =
