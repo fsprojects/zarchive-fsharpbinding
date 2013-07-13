@@ -60,8 +60,18 @@ else
   echo "Assumed MonoDevelop version " $MDVERSION4
 fi
 
+# Find mdtool path
+PATHS=( "$MDDIR/../.." "$MDDIR/../../bin" )
+searchpaths "mdtool" mdtool PATHS[@]
+MDTOOL="$RESULT/mdtool"
+echo "Successfully found mdtool." $MDTOOL
+
 
 # ------------------------------------------------------------------------------
 # Write Makefile
 
-sed -e "s,INSERT_MDROOT,$MDDIR,g" -e "s,INSERT_MDVERSION3,$MDVERSION3,g" -e "s,INSERT_MDVERSION4,$MDVERSION4,g" Makefile.orig > Makefile
+sed -e "s,INSERT_MDROOT,$MDDIR,g" \
+    -e "s,INSERT_MDVERSION3,$MDVERSION3,g" \
+    -e "s,INSERT_MDVERSION4,$MDVERSION4,g" \
+    -e "s,INSERT_MDTOOL,$MDTOOL,g" \
+    Makefile.orig > Makefile
