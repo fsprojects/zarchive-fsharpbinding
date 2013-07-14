@@ -184,6 +184,7 @@ namespace MonoDevelop.FSharp.Gui
 			this.imageError.Hide ();
 			this.Show ();
 			this.entry1.Changed += new global::System.EventHandler (this.OnEntryChanged);
+			this.entry2.Changed += new global::System.EventHandler (this.OnEntryChanged);
 			this.buttonPreview.Clicked += new global::System.EventHandler (this.OnPreviewClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnOkClicked);
 		}

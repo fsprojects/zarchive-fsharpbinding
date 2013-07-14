@@ -38,33 +38,37 @@ namespace MonoDevelop.FSharp.Gui
 				labels [i].LabelProp = parameterNames [i];
 			}
 		}
+		
+		private String[] Parameters
+		{
+			get { return new String[2] { entry1.Text, entry2.Text }; }
+		}
 
 		protected void OnOkClicked (object sender, EventArgs e)
 		{
-			string newName = entry1.Text;
+			var properties = Parameters;
 			((Widget)this).Destroy ();
-			List<Change> changes = this.refactoring.PerformChanges (options, newName);
+			List<Change> changes = this.refactoring.PerformChanges (options, properties);
 			IProgressMonitor monitor = IdeApp.Workbench.ProgressMonitors.GetBackgroundProgressMonitor (this.Title, null);
 			RefactoringService.AcceptChanges (monitor, changes);
 		}
 
 		protected void OnPreviewClicked (object sender, EventArgs e)
 		{
-			string newName = entry1.Text;
+			var properties = Parameters;
 			((Widget)this).Destroy ();
-			List<Change> changes = refactoring.PerformChanges (options, newName);
+			List<Change> changes = refactoring.PerformChanges (options, properties);
 			MessageService.ShowCustomDialog (new RefactoringPreviewDialog (changes));
 		}
 
 		protected void OnEntryChanged (object sender, EventArgs e)
 		{
-			bool isValid = validateParameters (new String[1] { entry1.Text });
+			bool isValid = validateParameters (Parameters);
 			buttonOk.Sensitive = isValid;
 			buttonPreview.Sensitive = isValid;
 			imageError.Visible = !isValid;
 			imageValid.Visible = isValid;
-			labelErrorMessage.Text = isValid ? "" : getErrorMessage (new String[1] { entry1.Text });
+			labelErrorMessage.Text = isValid ? "" : getErrorMessage (Parameters);
 		}
 	}
 }
-

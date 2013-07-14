@@ -28,10 +28,10 @@ type RenameRefactoring() as self =
         IsValid options (Rename.IsValid (Some position, None))
 
     override self.PerformChanges(options, properties) =
-        let newName = properties :?> string
+        let parameters = properties :?> string array
         let position = options.Location.Line, options.Location.Column
         let refactorSource =
-            Rename.Transform (position, newName)
+            Rename.Transform (position, parameters.[0])
         PerformChanges (options, properties) refactorSource
 
     override self.Run(options) =
