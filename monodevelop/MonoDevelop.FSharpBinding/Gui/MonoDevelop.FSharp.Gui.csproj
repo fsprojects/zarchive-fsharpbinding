@@ -80,6 +80,7 @@
     <Compile Include="gtk-gui\MonoDevelop.FSharp.Gui.RefactoringParametersDialog.cs" />
     <Compile Include="RenameParametersDialog.cs" />
     <Compile Include="AddArgumentParametersDialog.cs" />
+    <Compile Include="ExtractFunctionParametersDialog.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
