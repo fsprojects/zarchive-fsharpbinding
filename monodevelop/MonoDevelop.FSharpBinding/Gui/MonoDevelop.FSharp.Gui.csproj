@@ -78,6 +78,7 @@
     <Compile Include="gtk-gui\MonoDevelop.FSharp.Gui.FSharpBuildOrderWidget.cs" />
     <Compile Include="gtk-gui\MonoDevelop.FSharp.Gui.FSharpSettingsWidget.cs" />
     <Compile Include="gtk-gui\MonoDevelop.FSharp.Gui.RefactoringParametersDialog.cs" />
+    <Compile Include="RenameParametersDialog.cs" />
     <Compile Include="AddArgumentParametersDialog.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
