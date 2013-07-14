@@ -12,31 +12,45 @@ namespace MonoDevelop.FSharp.Gui
 	{
 		RefactoringOperation refactoring;
 		RefactoringOptions options;
-		Func<String, bool> validateName;
-		Func<String, String> getErrorMessage;
+		Entry[] entries;
+		Func<String[], bool> validateParameters;
+		Func<String[], String> getErrorMessage;
 
-		public RefactoringParametersDialog (RefactoringOperation refactoring, RefactoringOptions options, String oldName, Func<String, bool> validateName, Func<String, String> getErrorMessage)
+		public RefactoringParametersDialog (RefactoringOperation refactoring,
+		                                    RefactoringOptions options,
+		                                    String[] parameterNames,
+		                                    String[] defaultValues,
+		                                    Func<String[], bool> validateParameters,
+		                                    Func<String[], String> getErrorMessage)
 		{
 			this.refactoring = refactoring;
 			this.options = options;
-			this.validateName = validateName;
+			this.validateParameters = validateParameters;
 			this.getErrorMessage = getErrorMessage;
 			this.Build ();
-			entry.Text = oldName;
+
+			this.entries = new Entry[2] { entry1, entry2 };
+			var parameters = new HBox[2] { hbox1, hbox2 };
+			var labels = new Label[2] { label1, label2 };
+			for (int i = 0; i<parameterNames.Length; i++) {
+				parameters [i].Show ();
+				entries [i].Text = defaultValues [i];
+				labels [i].LabelProp = parameterNames [i];
+			}
 		}
 
 		protected void OnOkClicked (object sender, EventArgs e)
 		{
-			string newName = entry.Text;
+			string newName = entry1.Text;
 			((Widget)this).Destroy ();
-			List<Change> changes = refactoring.PerformChanges (options, newName);
+			List<Change> changes = this.refactoring.PerformChanges (options, newName);
 			IProgressMonitor monitor = IdeApp.Workbench.ProgressMonitors.GetBackgroundProgressMonitor (this.Title, null);
 			RefactoringService.AcceptChanges (monitor, changes);
 		}
 
 		protected void OnPreviewClicked (object sender, EventArgs e)
 		{
-			string newName = entry.Text;
+			string newName = entry1.Text;
 			((Widget)this).Destroy ();
 			List<Change> changes = refactoring.PerformChanges (options, newName);
 			MessageService.ShowCustomDialog (new RefactoringPreviewDialog (changes));
@@ -44,12 +58,12 @@ namespace MonoDevelop.FSharp.Gui
 
 		protected void OnEntryChanged (object sender, EventArgs e)
 		{
-			bool isValid = validateName (entry.Text);
+			bool isValid = validateParameters (new String[1] { entry1.Text });
 			buttonOk.Sensitive = isValid;
 			buttonPreview.Sensitive = isValid;
 			imageError.Visible = !isValid;
 			imageValid.Visible = isValid;
-			labelErrorMessage.Text = isValid ? "" : getErrorMessage (entry.Text);
+			labelErrorMessage.Text = isValid ? "" : getErrorMessage (new String[1] { entry1.Text });
 		}
 	}
 }

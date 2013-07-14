@@ -5,9 +5,9 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
+    <widget-library name="../../../dependencies/monodevelop.4.0/AddIns/MonoDevelop.Refactoring/MonoDevelop.Refactoring.dll" />
+    <widget-library name="../../../dependencies/monodevelop.4.0/bin/MonoDevelop.Ide.dll" />
     <widget-library name="../../../bin/Debug/FSharpBinding.Gui.dll" internal="true" />
-    <widget-library name="MonoDevelop.Refactoring, Version=2.6.0.0, Culture=neutral" />
-    <widget-library name="MonoDevelop.Ide, Version=2.6.0.0, Culture=neutral" />
   </import>
   <widget class="Gtk.Bin" id="MonoDevelop.FSharp.Gui.FSharpCompilerOptionsWidget" design-size="300 300">
     <property name="MemberName" />
@@ -783,9 +783,10 @@
             <child>
               <widget class="Gtk.HBox" id="hbox1">
                 <property name="MemberName" />
+                <property name="Visible">False</property>
                 <property name="Spacing">6</property>
                 <child>
-                  <widget class="Gtk.Label" id="labelParameter">
+                  <widget class="Gtk.Label" id="label1">
                     <property name="MemberName" />
                     <property name="LabelProp" translatable="yes">New na_me:</property>
                     <property name="UseUnderline">True</property>
@@ -798,7 +799,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.Entry" id="entry">
+                  <widget class="Gtk.Entry" id="entry1">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
                     <property name="IsEditable">True</property>
@@ -820,6 +821,43 @@
             </child>
             <child>
               <widget class="Gtk.HBox" id="hbox2">
+                <property name="MemberName" />
+                <property name="Visible">False</property>
+                <property name="Spacing">6</property>
+                <child>
+                  <widget class="Gtk.Label" id="label2">
+                    <property name="MemberName" />
+                    <property name="LabelProp" translatable="yes">label1</property>
+                  </widget>
+                  <packing>
+                    <property name="Position">0</property>
+                    <property name="AutoSize">True</property>
+                    <property name="Expand">False</property>
+                    <property name="Fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="Gtk.Entry" id="entry2">
+                    <property name="MemberName" />
+                    <property name="CanFocus">True</property>
+                    <property name="IsEditable">True</property>
+                    <property name="InvisibleChar">•</property>
+                  </widget>
+                  <packing>
+                    <property name="Position">1</property>
+                    <property name="AutoSize">True</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="Position">1</property>
+                <property name="AutoSize">True</property>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="Gtk.HBox" id="hbox3">
                 <property name="MemberName" />
                 <property name="Spacing">6</property>
                 <child>
@@ -860,7 +898,7 @@
                 </child>
               </widget>
               <packing>
-                <property name="Position">1</property>
+                <property name="Position">2</property>
                 <property name="AutoSize">True</property>
                 <property name="Expand">False</property>
                 <property name="Fill">False</property>

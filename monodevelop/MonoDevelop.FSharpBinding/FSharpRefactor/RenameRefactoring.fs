@@ -43,7 +43,7 @@ type RenameRefactoring() as self =
         let getErrorMessage name =
             GetErrorMessage options (Rename.GetErrorMessage (Some position, Some name))
         let itemDialog =
-            new RefactoringParametersDialog(
+            new RenameParametersDialog(
                 self, 
                 options, 
                 oldName,
