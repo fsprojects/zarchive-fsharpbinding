@@ -788,8 +788,9 @@
                 <child>
                   <widget class="Gtk.Label" id="label1">
                     <property name="MemberName" />
-                    <property name="LabelProp" translatable="yes">New na_me:</property>
+                    <property name="LabelProp" translatable="yes">label1</property>
                     <property name="UseUnderline">True</property>
+                    <property name="MnemonicWidget">entry1</property>
                   </widget>
                   <packing>
                     <property name="Position">0</property>
@@ -827,7 +828,9 @@
                 <child>
                   <widget class="Gtk.Label" id="label2">
                     <property name="MemberName" />
-                    <property name="LabelProp" translatable="yes">label1</property>
+                    <property name="LabelProp" translatable="yes">label2</property>
+                    <property name="UseUnderline">True</property>
+                    <property name="MnemonicWidget">entry2</property>
                   </widget>
                   <packing>
                     <property name="Position">0</property>

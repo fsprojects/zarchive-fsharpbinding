@@ -44,7 +44,7 @@ namespace MonoDevelop.FSharp.Gui
 			// Container child hbox1.Gtk.Box+BoxChild
 			this.label1 = new global::Gtk.Label ();
 			this.label1.Name = "label1";
-			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("New na_me:");
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("label1");
 			this.label1.UseUnderline = true;
 			this.hbox1.Add (this.label1);
 			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.label1]));
@@ -72,7 +72,8 @@ namespace MonoDevelop.FSharp.Gui
 			// Container child hbox2.Gtk.Box+BoxChild
 			this.label2 = new global::Gtk.Label ();
 			this.label2.Name = "label2";
-			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("label1");
+			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("label2");
+			this.label2.UseUnderline = true;
 			this.hbox2.Add (this.label2);
 			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.label2]));
 			w5.Position = 0;
@@ -179,7 +180,9 @@ namespace MonoDevelop.FSharp.Gui
 			}
 			this.DefaultWidth = 365;
 			this.DefaultHeight = 153;
+			this.label1.MnemonicWidget = this.entry1;
 			this.hbox1.Hide ();
+			this.label2.MnemonicWidget = this.entry2;
 			this.hbox2.Hide ();
 			this.imageError.Hide ();
 			this.Show ();
