@@ -29,7 +29,6 @@ type AddArgumentRefactoring() as self =
 
     override self.Run(options) =
         let position = GetPosition options
-        let source, _ = GetSourceAndFilename options
         let addArgumentIsValid name value = 
             IsValid options
                     (AddArgument.IsValid (Some position, Some name, Some value))
