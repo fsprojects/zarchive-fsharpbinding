@@ -13,9 +13,10 @@ open Mono.TextEditor
 
 open MonoDevelop.FSharp.Gui
 open MonoDevelop.FSharpRefactor.FSharpRefactoring
+open FSharpRefactor.Engine
 open FSharpRefactor.Engine.Ast
-open FSharpRefactor.Engine.CodeAnalysis.RangeAnalysis
-open FSharpRefactor.Engine.CodeAnalysis.ScopeAnalysis
+open FSharpRefactor.Engine.RangeAnalysis
+open FSharpRefactor.Engine.ScopeAnalysis
 open FSharpRefactor.Refactorings
 
 type RenameRefactoring() as self =
@@ -36,8 +37,8 @@ type RenameRefactoring() as self =
 
     override self.Run(options) =
         let position = GetPosition options
-        let source, _ = GetSourceAndFilename options
-        let oldName = FindIdentifierName source position
+        let project = GetProject options
+        let oldName = FindIdentifierName project project.CurrentFile position
         let renameIsValid name = 
             IsValid options (Rename.IsValid (Some position, Some name))
         let getErrorMessage name =

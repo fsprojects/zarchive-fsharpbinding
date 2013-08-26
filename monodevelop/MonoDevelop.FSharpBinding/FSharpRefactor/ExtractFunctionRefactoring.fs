@@ -9,7 +9,7 @@ open MonoDevelop.Projects.Text
 open MonoDevelop.FSharp.Gui
 open MonoDevelop.FSharpRefactor.FSharpRefactoring
 open FSharpRefactor.Engine.Ast
-open FSharpRefactor.Engine.CodeAnalysis.RangeAnalysis
+open FSharpRefactor.Engine.RangeAnalysis
 open FSharpRefactor.Refactorings
 
 type ExtractFunctionRefactoring() as self =
