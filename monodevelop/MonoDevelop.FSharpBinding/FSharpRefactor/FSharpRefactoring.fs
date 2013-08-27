@@ -37,21 +37,23 @@ module FSharpRefactoring =
     let GetProject (options:RefactoringOptions) =
         if Option.isNone project || (shouldUpdate project.Value options)
         then
-            let doc = options.Document
             let fsFiles = getFsFiles options
-            let filename = doc.FileName.ToString()
-            let source = doc.GetContent<ITextFile>().Text
-            let getOffset (line, col) =
+            let openDocuments = IdeApp.Workbench.Documents
+            let getOffset (source:string) (line, col) =
                 source.Split('\n')
                 |> Seq.take (line-1) 
                 |> Seq.fold (fun s l -> s + (String.length l)) 0
                 |> (+) (col + line - 1)
-            let lazyTypedInfo =
+            let applyIfOpen f file =
+                let document = Seq.tryFind (fun (d:Document) -> d.FileName.ToString() = file) openDocuments
+                Option.map f document
+            let lazyTypedInfo (document:Document) =
                 lazy
+                    let source = document.GetContent<ITextFile>().Text
                     let typedInfo =
-                        LanguageService.Service.GetTypedParseResult(doc.FileName, source, doc.Project, IdeApp.Workspace.ActiveConfiguration, timeout = ServiceSettings.blockingTimeout)
+                        LanguageService.Service.GetTypedParseResult(document.FileName, source, document.Project, IdeApp.Workspace.ActiveConfiguration, timeout = ServiceSettings.blockingTimeout)
                     let getDeclarationLocation position names =
-                        let result = typedInfo.GetDeclarationLocation(getOffset position, new TextDocument(source))
+                        let result = typedInfo.GetDeclarationLocation(getOffset source position, new TextDocument(source))
                         match result with
                             | Microsoft.FSharp.Compiler.SourceCodeServices.DeclFound(line, col, filename) -> Some ((line+1, col), filename)
                             | Microsoft.FSharp.Compiler.SourceCodeServices.DeclNotFound -> None
@@ -59,10 +61,15 @@ module FSharpRefactoring =
                         { new ITypedInfo with member self.GetDeclarationLocation (position, names) = getDeclarationLocation position names }
                     { typedInfo = iTypedInfo
                       contents = source }
-                    
+                
+            let filesAndContents =
+                Seq.map (applyIfOpen (fun (d:Document) -> (d.GetContent<ITextFile>().Text))) fsFiles
+                |> Seq.zip fsFiles
+                |> Seq.toArray                    
             let lazyTypedInfos = 
-                Seq.map (fun f -> if f = filename then Some lazyTypedInfo else None) fsFiles |> Seq.toArray
-            project <- Some (new Project(filename, Seq.map (fun f -> f, if f = filename then Some source else None) fsFiles |> Seq.toArray, Set.empty, lazyTypedInfos))
+                Seq.map (applyIfOpen lazyTypedInfo) fsFiles |> Seq.toArray
+            
+            project <- Some (new Project(options.Document.FileName.ToString(), filesAndContents, Set.empty, lazyTypedInfos))
         
         project.Value
 
