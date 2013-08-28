@@ -5,6 +5,7 @@ open MonoDevelop.Projects
 open MonoDevelop.Components.Commands
 open MonoDevelop.Refactoring
 open MonoDevelop.Refactoring.Rename
+open MonoDevelop.Core
 open MonoDevelop.Ide
 open MonoDevelop.Ide.Gui
 open MonoDevelop.Ide.Gui.Content
@@ -31,45 +32,51 @@ module FSharpRefactoring =
         |> Seq.filter (fun f -> f.Extension = ".fs")
         |> Seq.map (fun f -> f.ToString())
 
-    let shouldUpdate project options =
-        false //FIXME
-                
-    let GetProject (options:RefactoringOptions) =
-        if Option.isNone project || (shouldUpdate project.Value options)
-        then
-            let fsFiles = getFsFiles options
-            let openDocuments = IdeApp.Workbench.Documents
-            let getOffset (source:string) (line, col) =
-                source.Split('\n')
-                |> Seq.take (line-1) 
-                |> Seq.fold (fun s l -> s + (String.length l)) 0
-                |> (+) (col + line - 1)
-            let applyIfOpen f file =
-                let document = Seq.tryFind (fun (d:Document) -> d.FileName.ToString() = file) openDocuments
-                Option.map f document
-            let lazyTypedInfo (document:Document) =
-                lazy
-                    let source = document.GetContent<ITextFile>().Text
-                    let typedInfo =
-                        LanguageService.Service.GetTypedParseResult(document.FileName, source, document.Project, IdeApp.Workspace.ActiveConfiguration, timeout = ServiceSettings.blockingTimeout)
-                    let getDeclarationLocation position names =
-                        let result = typedInfo.GetDeclarationLocation(getOffset source position, new TextDocument(source))
-                        match result with
-                            | Microsoft.FSharp.Compiler.SourceCodeServices.DeclFound(line, col, filename) -> Some ((line+1, col), filename)
-                            | Microsoft.FSharp.Compiler.SourceCodeServices.DeclNotFound -> None
-                    let iTypedInfo =
-                        { new ITypedInfo with member self.GetDeclarationLocation (position, names) = getDeclarationLocation position names }
-                    { typedInfo = iTypedInfo
-                      contents = source }
-                
-            let filesAndContents =
-                Seq.map (applyIfOpen (fun (d:Document) -> (d.GetContent<ITextFile>().Text))) fsFiles
-                |> Seq.zip fsFiles
-                |> Seq.toArray                    
-            let lazyTypedInfos = 
-                Seq.map (applyIfOpen lazyTypedInfo) fsFiles |> Seq.toArray
+    let makeProject options =
+        let fsFiles = getFsFiles options
+        let openDocuments = IdeApp.Workbench.Documents
+        let getOffset (source:string) (line, col) =
+            source.Split('\n')
+            |> Seq.take (line-1) 
+            |> Seq.fold (fun s l -> s + (String.length l)) 0
+            |> (+) (col + line - 1)
+        let applyIfOpen f file =
+            let document = Seq.tryFind (fun (d:Document) -> d.FileName.ToString() = file) openDocuments
+            Option.map f document
+        let lazyTypedInfo (document:Document) =
+            lazy
+                let source = document.GetContent<ITextFile>().Text
+                let typedInfo =
+                    LanguageService.Service.GetTypedParseResult(document.FileName, source, document.Project, IdeApp.Workspace.ActiveConfiguration, timeout = 1000000)
+                let getDeclarationLocation position names =
+                    let result = typedInfo.GetDeclarationLocation(getOffset source position, new TextDocument(source))
+                    match result with
+                        | Microsoft.FSharp.Compiler.SourceCodeServices.DeclFound(line, col, filename) -> Some ((line+1, col), filename)
+                        | Microsoft.FSharp.Compiler.SourceCodeServices.DeclNotFound -> None
+                let iTypedInfo =
+                    { new ITypedInfo with member self.GetDeclarationLocation (position, names) = getDeclarationLocation position names }
+                { typedInfo = iTypedInfo
+                  contents = source }
             
-            project <- Some (new Project(options.Document.FileName.ToString(), filesAndContents, Set.empty, lazyTypedInfos))
+        let filesAndContents =
+            Seq.map (applyIfOpen (fun (d:Document) -> (d.GetContent<ITextFile>().Text))) fsFiles
+            |> Seq.zip fsFiles
+            |> Seq.toArray
+        let lazyTypedInfos = 
+            Seq.map (applyIfOpen lazyTypedInfo) fsFiles |> Seq.toArray
+        new Project(options.Document.FileName.ToString(), filesAndContents, Set.empty, lazyTypedInfos)
+        
+    let GetProject (options:RefactoringOptions) =
+        if Option.isNone project
+        then
+            let updateProject fileEventArgs =
+                project <- Some (makeProject options)
+
+            FileService.FileChanged.Add(updateProject)
+            FileService.FileCreated.Add(updateProject)
+            FileService.FileRenamed.Add(updateProject)
+            FileService.FileRemoved.Add(updateProject)
+            updateProject ()
         
         project.Value
 
