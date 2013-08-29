@@ -26,8 +26,8 @@ open FSharpRefactor.Refactorings
 module FSharpRefactoring =
     let mutable project = None
     
-    let getFsFiles (options:RefactoringOptions) =
-        options.Document.Project.Files.GetAll()
+    let getFsFiles () =
+        IdeApp.Workbench.ActiveDocument.Project.Files.GetAll()
         |> Seq.map (fun f -> f.FilePath)
         |> Seq.filter (fun f -> f.Extension = ".fs")
         |> Seq.map (fun f -> f.ToString())
@@ -35,8 +35,8 @@ module FSharpRefactoring =
     let GetFilename (options:RefactoringOptions) =
         options.Document.FileName.ToString()
 
-    let makeProject options =
-        let fsFiles = getFsFiles options
+    let makeProject () =
+        let fsFiles = getFsFiles ()
         let openDocuments = IdeApp.Workbench.Documents
         let getOffset (source:string) (line, col) =
             source.Split('\n')
@@ -73,7 +73,7 @@ module FSharpRefactoring =
         if Option.isNone project
         then
             let updateProject fileEventArgs =
-                project <- Some (makeProject options)
+                project <- Some (makeProject ())
 
             FileService.FileChanged.Add(updateProject)
             FileService.FileCreated.Add(updateProject)
@@ -84,7 +84,8 @@ module FSharpRefactoring =
         project.Value
 
     let IsValid (options:RefactoringOptions) (isSourceValid:Project -> string -> bool) =
-        (options.MimeType = "text/x-fsharp") && (isSourceValid (GetProject options) (GetFilename options))
+        let filename = GetFilename options  
+        (options.MimeType = "text/x-fsharp") && (isSourceValid (GetProject options) filename)
         
     let GetErrorMessage options (getErrorMessage:Project -> string -> string option) =
         let filename = GetFilename options
