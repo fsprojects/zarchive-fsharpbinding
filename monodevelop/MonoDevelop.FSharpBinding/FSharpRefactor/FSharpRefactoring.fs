@@ -32,6 +32,9 @@ module FSharpRefactoring =
         |> Seq.filter (fun f -> f.Extension = ".fs")
         |> Seq.map (fun f -> f.ToString())
 
+    let GetFilename (options:RefactoringOptions) =
+        options.Document.FileName.ToString()
+
     let makeProject options =
         let fsFiles = getFsFiles options
         let openDocuments = IdeApp.Workbench.Documents
@@ -64,7 +67,7 @@ module FSharpRefactoring =
             |> Seq.toArray
         let lazyTypedInfos = 
             Seq.map (applyIfOpen lazyTypedInfo) fsFiles |> Seq.toArray
-        new Project(options.Document.FileName.ToString(), filesAndContents, Set.empty, lazyTypedInfos)
+        new Project(filesAndContents, Set.empty, lazyTypedInfos)
         
     let GetProject (options:RefactoringOptions) =
         if Option.isNone project
@@ -80,18 +83,19 @@ module FSharpRefactoring =
         
         project.Value
 
-    let IsValid (options:RefactoringOptions) (isSourceValid:Project -> bool) =
-        (options.MimeType = "text/x-fsharp") && (isSourceValid (GetProject options))
+    let IsValid (options:RefactoringOptions) (isSourceValid:Project -> string -> bool) =
+        (options.MimeType = "text/x-fsharp") && (isSourceValid (GetProject options) (GetFilename options))
         
-    let GetErrorMessage options (getErrorMessage:Project -> string option) =
+    let GetErrorMessage options (getErrorMessage:Project -> string -> string option) =
+        let filename = GetFilename options
         let project = GetProject options
-        match getErrorMessage project with
+        match getErrorMessage project filename with
             | None -> ""
             | Some message -> message
 
-    let PerformChanges(options:RefactoringOptions, properties) (refactor:Project -> Project) =
+    let PerformChanges(options:RefactoringOptions, properties) (refactor:Project -> string -> Project) =
         let project = GetProject options
-        let updatedProject = refactor project
+        let updatedProject = refactor project (GetFilename options)
         let wholeFileChange filename =
             let wholeFileChange = new TextReplaceChange()
             wholeFileChange.FileName <- filename

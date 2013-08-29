@@ -38,7 +38,8 @@ type RenameRefactoring() as self =
     override self.Run(options) =
         let position = GetPosition options
         let project = GetProject options
-        let oldName = FindIdentifierName project project.CurrentFile position
+        let filename = GetFilename options
+        let oldName = FindIdentifierName project filename position
         let renameIsValid name = 
             IsValid options (Rename.IsValid (Some position, Some name))
         let getErrorMessage name =
