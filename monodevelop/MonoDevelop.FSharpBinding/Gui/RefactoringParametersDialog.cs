@@ -1,4 +1,5 @@
 using System;
+using System.Timers;
 using Gtk;
 using MonoDevelop.Refactoring;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace MonoDevelop.FSharp.Gui
 		Entry[] entries;
 		Func<String[], bool> validateParameters;
 		Func<String[], String> getErrorMessage;
+		private Timer timer = new Timer(500);
 
 		public RefactoringParametersDialog (RefactoringOperation refactoring,
 		                                    RefactoringOptions options,
@@ -32,11 +34,13 @@ namespace MonoDevelop.FSharp.Gui
 			this.entries = new Entry[2] { entry1, entry2 };
 			var parameters = new HBox[2] { hbox1, hbox2 };
 			var labels = new Label[2] { label1, label2 };
-			for (int i = 0; i<parameterNames.Length; i++) {
+			for (int i = 0; i<parameterNames.Length; i++)
+			{
 				parameters [i].Show ();
 				entries [i].Text = defaultValues [i];
 				labels [i].LabelProp = parameterNames [i];
 			}
+			timer.Elapsed += checkValidity;
 		}
 		
 		private String[] Parameters
@@ -61,14 +65,23 @@ namespace MonoDevelop.FSharp.Gui
 			MessageService.ShowCustomDialog (new RefactoringPreviewDialog (changes));
 		}
 
-		protected void OnEntryChanged (object sender, EventArgs e)
-		{
+		private void checkValidity (object o, ElapsedEventArgs e) {
+			timer.Stop ();
+			labelErrorMessage.Text = "Checking validity...";
 			bool isValid = validateParameters (Parameters);
 			buttonOk.Sensitive = isValid;
 			buttonPreview.Sensitive = isValid;
 			imageError.Visible = !isValid;
 			imageValid.Visible = isValid;
 			labelErrorMessage.Text = isValid ? "" : getErrorMessage (Parameters);
+		}
+
+		protected void OnEntryChanged (object sender, EventArgs e)
+		{
+			timer.Stop ();
+			buttonOk.Sensitive = false;
+			buttonPreview.Sensitive = false;
+			timer.Start ();
 		}
 	}
 }
