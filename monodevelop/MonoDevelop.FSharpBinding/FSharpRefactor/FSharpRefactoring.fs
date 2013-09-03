@@ -67,6 +67,7 @@ module FSharpRefactoring =
             |> Seq.toArray
         let lazyTypedInfos = 
             Seq.map (applyIfOpen lazyTypedInfo) fsFiles |> Seq.toArray
+            //Seq.map (fun _ -> None) fsFiles |> Seq.toArray
         new Project(filesAndContents, Set.empty, lazyTypedInfos)
         
     let GetProject (options:RefactoringOptions) =
@@ -105,13 +106,15 @@ module FSharpRefactoring =
             wholeFileChange.InsertedText <-
                 updatedProject.GetContents filename
             wholeFileChange :> Change
-        Collections.Generic.List<Change>(Seq.map wholeFileChange updatedProject.UpdatedFiles)
-
-    let GetPosition (options:RefactoringOptions) =
-        options.Location.Line, options.Location.Column
+        Collections.Generic.List<Change>(Seq.map wholeFileChange updatedProject.UpdatedFiles)        
 
     let GetSelectionRange (options:RefactoringOptions) =
         let source = options.Document.GetContent<ITextFile>().Text
         let textDocument = new TextDocument(source)
         let region = options.Document.Editor.SelectionRange.GetRegion(textDocument)
         (region.BeginLine, region.BeginColumn), (region.EndLine, region.EndColumn)
+        
+    let GetPosition (options:RefactoringOptions) =
+        let position, _ = GetSelectionRange options
+        position
+        

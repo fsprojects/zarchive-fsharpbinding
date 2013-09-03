@@ -30,7 +30,7 @@ type RenameRefactoring() as self =
 
     override self.PerformChanges(options, properties) =
         let parameters = properties :?> string array
-        let position = options.Location.Line, options.Location.Column
+        let position = GetPosition options
         let refactorSource =
             Rename.Transform (position, parameters.[0])
         PerformChanges (options, properties) refactorSource
