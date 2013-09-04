@@ -56,6 +56,7 @@ namespace MonoDevelop.FSharp.Gui
 			this.entry1.CanFocus = true;
 			this.entry1.Name = "entry1";
 			this.entry1.IsEditable = true;
+			this.entry1.ActivatesDefault = true;
 			this.entry1.InvisibleChar = '•';
 			this.hbox1.Add (this.entry1);
 			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.entry1]));
@@ -84,6 +85,7 @@ namespace MonoDevelop.FSharp.Gui
 			this.entry2.CanFocus = true;
 			this.entry2.Name = "entry2";
 			this.entry2.IsEditable = true;
+			this.entry2.ActivatesDefault = true;
 			this.entry2.InvisibleChar = '•';
 			this.hbox2.Add (this.entry2);
 			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.entry2]));

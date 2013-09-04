@@ -41,6 +41,7 @@ namespace MonoDevelop.FSharp.Gui
 				labels [i].LabelProp = parameterNames [i];
 			}
 			timer.Elapsed += checkValidity;
+			this.DefaultResponse = ResponseType.Ok;
 		}
 		
 		private String[] Parameters
