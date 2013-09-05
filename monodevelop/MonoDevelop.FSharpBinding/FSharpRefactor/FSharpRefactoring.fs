@@ -24,7 +24,7 @@ open FSharpRefactor.Engine.ScopeAnalysis
 open FSharpRefactor.Refactorings
 
 module FSharpRefactoring =
-    let mutable project = None
+    let mutable projectAndName = None
     
     let getFsFiles () =
         IdeApp.Workbench.ActiveDocument.Project.Files.GetAll()
@@ -68,13 +68,15 @@ module FSharpRefactoring =
         let lazyTypedInfos = 
             Seq.map (applyIfOpen lazyTypedInfo) fsFiles |> Seq.toArray
             //Seq.map (fun _ -> None) fsFiles |> Seq.toArray
-        new Project(filesAndContents, Set.empty, lazyTypedInfos)
+        new Project(filesAndContents, Set.empty, lazyTypedInfos), IdeApp.Workbench.ActiveDocument.Project.FileName
         
     let GetProject (options:RefactoringOptions) =
-        if Option.isNone project
+        let currentProjectFile = IdeApp.Workbench.ActiveDocument.Project.FileName
+        let previousProjectFile = Option.map snd projectAndName
+        if Option.isNone projectAndName || (currentProjectFile <> previousProjectFile.Value)
         then
             let updateProject fileEventArgs =
-                project <- Some (makeProject ())
+                projectAndName <- Some (makeProject ())
 
             FileService.FileChanged.Add(updateProject)
             FileService.FileCreated.Add(updateProject)
@@ -82,7 +84,7 @@ module FSharpRefactoring =
             FileService.FileRemoved.Add(updateProject)
             updateProject ()
         
-        project.Value
+        fst projectAndName.Value
 
     let IsValid (options:RefactoringOptions) (isSourceValid:Project -> string -> bool) =
         let filename = GetFilename options  
