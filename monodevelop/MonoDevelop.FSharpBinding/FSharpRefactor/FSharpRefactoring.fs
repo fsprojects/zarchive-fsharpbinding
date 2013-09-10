@@ -66,8 +66,8 @@ module FSharpRefactoring =
             |> Seq.zip fsFiles
             |> Seq.toArray
         let lazyTypedInfos = 
-            Seq.map (applyIfOpen lazyTypedInfo) fsFiles |> Seq.toArray
-            //Seq.map (fun _ -> None) fsFiles |> Seq.toArray
+//            Seq.map (applyIfOpen lazyTypedInfo) fsFiles |> Seq.toArray
+            Seq.map (fun _ -> None) fsFiles |> Seq.toArray
         new Project(filesAndContents, Set.empty, lazyTypedInfos), IdeApp.Workbench.ActiveDocument.Project.FileName
         
     let GetProject (options:RefactoringOptions) =
