@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Timers;
 using Gtk;
 using MonoDevelop.Refactoring;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using MonoDevelop.Refactoring.Rename;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
+using MonoDevelop.Ide.Gui;
 
 namespace MonoDevelop.FSharp.Gui
 {
@@ -49,6 +51,17 @@ namespace MonoDevelop.FSharp.Gui
 			get { return new String[2] { entry1.Text, entry2.Text }; }
 		}
 
+		private void saveChanges(List<Change> changes) {
+			var changedFiles =
+				(from change in changes
+				 select ((TextReplaceChange)change).FileName);
+			foreach (Document d in IdeApp.Workbench.Documents) {
+				if (changedFiles.Contains (d.FileName.ToString ())) {
+					d.Save ();
+				}
+			}
+		}
+
 		protected void OnOkClicked (object sender, EventArgs e)
 		{
 			var properties = Parameters;
@@ -56,6 +69,7 @@ namespace MonoDevelop.FSharp.Gui
 			List<Change> changes = this.refactoring.PerformChanges (options, properties);
 			IProgressMonitor monitor = IdeApp.Workbench.ProgressMonitors.GetBackgroundProgressMonitor (this.Title, null);
 			RefactoringService.AcceptChanges (monitor, changes);
+			saveChanges (changes);
 		}
 
 		protected void OnPreviewClicked (object sender, EventArgs e)
@@ -64,6 +78,7 @@ namespace MonoDevelop.FSharp.Gui
 			((Widget)this).Destroy ();
 			List<Change> changes = refactoring.PerformChanges (options, properties);
 			MessageService.ShowCustomDialog (new RefactoringPreviewDialog (changes));
+			saveChanges (changes);
 		}
 
 		private void checkValidity (object o, ElapsedEventArgs e) {
