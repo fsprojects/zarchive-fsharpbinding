@@ -11,6 +11,8 @@ open MonoDevelop.Ide.Gui.Content
 open MonoDevelop.Projects
 open Microsoft.FSharp.Compiler
 
+open MonoDevelop.FSharpRefactor.FSharpRefactoring
+
 type FSharpLanguageBinding() =
   static let LanguageName = "F#"
 
@@ -33,7 +35,9 @@ type FSharpLanguageBinding() =
              doc.Editor.TabsToSpaces <- true
              doc.ReparseDocument())
 
-    
+      IdeApp.Workbench.ActiveDocumentChanged.Add(fun _ ->
+        if IdeApp.Workbench.ActiveDocument <> null then
+            (GetProject()).PopulateCache(IdeApp.Workbench.ActiveDocument.FileName.ToString()))
   
   // ----------------------------------------------------------------------------
   // Keep the platforms combo of CodeGenerationPanelWidget in sync with this list

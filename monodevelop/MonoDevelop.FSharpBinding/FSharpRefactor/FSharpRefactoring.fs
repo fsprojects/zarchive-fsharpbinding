@@ -70,7 +70,7 @@ module FSharpRefactoring =
             Seq.map (fun _ -> None) fsFiles |> Seq.toArray
         new Project(filesAndContents, Set.empty, lazyTypedInfos), IdeApp.Workbench.ActiveDocument.Project.FileName
         
-    let GetProject (options:RefactoringOptions) =
+    let GetProject () =
         let currentProjectFile = IdeApp.Workbench.ActiveDocument.Project.FileName
         let previousProjectFile = Option.map snd projectAndName
         if Option.isNone projectAndName || (currentProjectFile <> previousProjectFile.Value)
@@ -88,17 +88,17 @@ module FSharpRefactoring =
 
     let IsValid (options:RefactoringOptions) (isSourceValid:Project -> string -> bool) =
         let filename = GetFilename options  
-        (options.MimeType = "text/x-fsharp") && (isSourceValid (GetProject options) filename)
+        (options.MimeType = "text/x-fsharp") && (isSourceValid (GetProject ()) filename)
         
     let GetErrorMessage options (getErrorMessage:Project -> string -> string option) =
         let filename = GetFilename options
-        let project = GetProject options
+        let project = GetProject ()
         match getErrorMessage project filename with
             | None -> ""
             | Some message -> message
 
     let PerformChanges(options:RefactoringOptions, properties) (refactor:Project -> string -> Project) =
-        let project = GetProject options
+        let project = GetProject ()
         let updatedProject = refactor project (GetFilename options)
         let wholeFileChange filename =
             let wholeFileChange = new TextReplaceChange()
