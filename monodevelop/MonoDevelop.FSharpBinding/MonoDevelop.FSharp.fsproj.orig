@@ -99,6 +99,10 @@
     <Compile Include="Services\LanguageService.fs" />
     <Compile Include="Services\CompilerService.fs" />
     <Compile Include="Services\InteractiveSession.fs" />
+    <Compile Include="FSharpRefactor\FSharpRefactoring.fs" />
+    <Compile Include="FSharpRefactor\RenameRefactoring.fs" />
+    <Compile Include="FSharpRefactor\AddArgumentRefactoring.fs" />
+    <Compile Include="FSharpRefactor\ExtractFunctionRefactoring.fs" />
     <Compile Include="FSharpInteractivePad.fs" />
     <Compile Include="FSharpOptionsPanels.fs" />
     <Compile Include="FSharpLanguageBinding.fs" />
@@ -108,10 +112,6 @@
     <Compile Include="FSharpResolverProvider.fs" />
     <Compile Include="FSharpProjectServiceExtension.fs" />
     <Compile Include="FSharpProjectFileNodeExtension.fs" />
-    <Compile Include="FSharpRefactor\FSharpRefactoring.fs" />
-    <Compile Include="FSharpRefactor\RenameRefactoring.fs" />
-    <Compile Include="FSharpRefactor\AddArgumentRefactoring.fs" />
-    <Compile Include="FSharpRefactor\ExtractFunctionRefactoring.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="pango-sharp">
