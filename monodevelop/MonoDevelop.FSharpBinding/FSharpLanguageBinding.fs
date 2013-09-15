@@ -35,9 +35,13 @@ type FSharpLanguageBinding() =
              doc.Editor.TabsToSpaces <- true
              doc.ReparseDocument())
 
+      IdeApp.ProjectOperations.CurrentProjectChanged.Add(fun _ ->
+        if IdeApp.Workbench.ActiveDocument <> null then
+            GetProject().StartBackgroundCompile())
+
       IdeApp.Workbench.ActiveDocumentChanged.Add(fun _ ->
         if IdeApp.Workbench.ActiveDocument <> null then
-            (GetProject()).PopulateCache(IdeApp.Workbench.ActiveDocument.FileName.ToString()))
+            GetProject().PopulateCache(IdeApp.Workbench.ActiveDocument.FileName.ToString()))
   
   // ----------------------------------------------------------------------------
   // Keep the platforms combo of CodeGenerationPanelWidget in sync with this list
