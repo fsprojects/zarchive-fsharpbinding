@@ -4,14 +4,13 @@
 #   run 'make install' to compile and install the plugin against the installed version of MonoDevelop detected by ./configure.sh
 #   run 'make pack-all' to create a deployment binary packages for the known set of supported MonoDevelop versions
 
-VERSION=3.2.15
+VERSION=INSERT_VERSION
 
-MDTOOL = $(MONO) 'INSERT_MDTOOL'
+MDTOOL = mono 'INSERT_MDROOT/bin/mdtool.exe'
 
-# (MDVERSION3, MDVERSION4) can be set to something like (3.0.4, 3.0.4.7) to compile
+# (MDVERSION4) can be set to something like (3.0.4, 3.0.4.7) to compile
 # against the dependencies/... binaries for a specific version of MonoDevelop. This allows
 # us to prepare new editions of the binding for several different versions of MonoDevelop.
-MDVERSION3=INSERT_MDVERSION3
 MDVERSION4=INSERT_MDVERSION4
 
 ifeq ($(USE_KNOWN_BINARIES),true)
@@ -32,7 +31,7 @@ endif
 
 all: pack
 
-build: MonoDevelop.FSharpBinding/MonoDevelop.FSharp.$(MDTAG).fsproj MonoDevelop.FSharpBinding/FSharpBinding.$(MDTAG).addin.xml
+build: MonoDevelop.FSharpBinding/MonoDevelop.FSharp.$(MDTAG).fsproj MonoDevelop.FSharpBinding/FSharpBinding.addin.xml
 	rm -fr bin/$(MDTAG)/$(config)/packages
 	mkdir -p bin/$(MDTAG)/$(config)/packages
 	cp -pr dependencies/AspNetMvc4 bin/$(MDTAG)/$(config)/packages/AspNetMvc4
@@ -43,7 +42,7 @@ pack: build
 	cp -pr bin/$(config)/* bin/$(MDTAG)/$(config)/
 	-rm -fr pack/$(VERSION)/$(MDTAG)/$(config)
 	@-mkdir -p pack/$(VERSION)/$(MDTAG)/$(config)
-	$(MDTOOL) setup pack bin/$(MDTAG)/$(config)/FSharpBinding.$(MDTAG).addin.xml -d:pack/$(VERSION)/$(MDTAG)/$(config)
+	$(MDTOOL) setup pack bin/$(MDTAG)/$(config)/FSharpBinding.dll -d:pack/$(VERSION)/$(MDTAG)/$(config)
 
 add-libraries:
 	mkdir /Applications/MonoDevelop.app/Contents/MacOS/lib/monodevelop/AddIns/AspNetMvc4
@@ -59,70 +58,17 @@ uninstall:
 	$(MDTOOL) setup uninstall MonoDevelop.FSharpBinding
 
 packs: build-support
-	$(MAKE) USE_KNOWN_BINARIES=true MDVERSION3=4.0 MDVERSION4=4.0 config=Release pack
-	# $(MAKE) USE_KNOWN_BINARIES=true MDVERSION3=3.0.3 MDVERSION4=3.0.3.2 config=Release pack
-	# $(MAKE) USE_KNOWN_BINARIES=true MDVERSION3=3.0.4 MDVERSION4=3.0.4.7 config=Release pack
-	# $(MAKE) USE_KNOWN_BINARIES=true MDVERSION3=3.0.5 MDVERSION4=3.0.5 config=Release pack
-	# $(MAKE) USE_KNOWN_BINARIES=true MDVERSION3=3.0.6 MDVERSION4=3.0.6 config=Release pack
-	# $(MAKE) USE_KNOWN_BINARIES=true MDVERSION3=3.1.1 MDVERSION4=3.1.1 config=Release pack
+	$(MAKE) USE_KNOWN_BINARIES=true MDVERSION4=4.0 config=Release pack
 
 # Used by continuous integration.
 builds: 
-	$(MAKE) USE_KNOWN_BINARIES=true MDVERSION3=4.0 MDVERSION4=4.0 config=Release build
-	# $(MAKE) USE_KNOWN_BINARIES=true MDVERSION3=3.0.3 MDVERSION4=3.0.3.2 config=Release build
-	# $(MAKE) USE_KNOWN_BINARIES=true MDVERSION3=3.0.4 MDVERSION4=3.0.4.7 config=Release build
-	# $(MAKE) USE_KNOWN_BINARIES=true MDVERSION3=3.0.5 MDVERSION4=3.0.5 config=Release build
-	# $(MAKE) USE_KNOWN_BINARIES=true MDVERSION3=3.0.6 MDVERSION4=3.0.6 config=Release build
-	# $(MAKE) USE_KNOWN_BINARIES=true MDVERSION3=3.1.1 MDVERSION4=3.1.1 config=Release build
+	$(MAKE) USE_KNOWN_BINARIES=true MDVERSION4=4.0 config=Release build
 
 clean:
 	-rm -fr bin
 	-rm -fr pack
-	-rm -fr MonoDevelop.FSharpBinding/FSharpBinding.*.addin.xml
+	-rm -fr MonoDevelop.FSharpBinding/FSharpBinding.addin.xml
 	-rm -fr MonoDevelop.FSharpBinding/MonoDevelop.FSharp.*.fsproj
 	-rm -fr MonoDevelop.FSharpBinding/obj
 	(cd MonoDevelop.FSharpBinding/Gui && xbuild MonoDevelop.FSharp.Gui.csproj /target:Clean)
-
-
-# Apply the known binding versions and MonoDevelop versions to the project file
-MonoDevelop.FSharpBinding/MonoDevelop.FSharp.$(MDTAG).fsproj: MonoDevelop.FSharpBinding/MonoDevelop.FSharp.orig
-	sed \
-		-e "s,INSERT_FSPROJ_MDROOT,$(MDROOT),g" \
-		-e "s,INSERT_FSPROJ_MDVERSION3,$(MDVERSION3),g" \
-		-e "s,INSERT_FSPROJ_MDVERSION4,$(MDVERSION4),g" \
-		-e "s,INSERT_FSPROJ_MDTAG,$(MDTAG),g" \
-		$< > $@
-
-# Apply the known binding versions and MonoDevelop versions to the addin description
-MonoDevelop.FSharpBinding/FSharpBinding.$(MDTAG).addin.xml: MonoDevelop.FSharpBinding/FSharpBinding.addin.xml.orig
-	sed \
-		-e "s,INSERT_FSPROJ_VERSION,$(VERSION),g" \
-		-e "s,INSERT_FSPROJ_MDVERSION3,$(MDVERSION3),g" \
-		-e "s,INSERT_FSPROJ_MDVERSION4,$(MDVERSION4),g" \
-		-e "s,INSERT_FSPROJ_MDTAG,$(MDTAG),g" \
-		$< > $@
-
-# Update the files for use on Windows
-MonoDevelop.FSharpBinding/MonoDevelop.FSharp.windows.fsproj: MonoDevelop.FSharpBinding/MonoDevelop.FSharp.orig
-	sed \
-		-e "s,INSERT_FSPROJ_MDROOT,c:\\\\Program Files (x86)\\\\MonoDevelop,g" \
-		-e "s,INSERT_FSPROJ_MDVERSION3,$(MDVERSION3),g" \
-		-e "s,INSERT_FSPROJ_MDVERSION4,$(MDVERSION4),g" \
-		-e "s,INSERT_FSPROJ_MDTAG,windows,g" \
-		$< > $@
-
-
-# Update the files for use on Windows
-MonoDevelop.FSharpBinding/FSharpBinding.windows.addin.xml: MonoDevelop.FSharpBinding/FSharpBinding.addin.xml.orig
-	sed \
-		-e "s,INSERT_FSPROJ_VERSION,$(VERSION),g" \
-		-e "s,INSERT_FSPROJ_MDVERSION3,$(MDVERSION3),g" \
-		-e "s,INSERT_FSPROJ_MDVERSION4,$(MDVERSION4),g" \
-		-e "s,INSERT_FSPROJ_MDTAG,windows,g" \
-		$< > $@
-
-build-support: MonoDevelop.FSharpBinding/MonoDevelop.FSharp.windows.fsproj MonoDevelop.FSharpBinding/FSharpBinding.windows.addin.xml \
-	MonoDevelop.FSharpBinding/MonoDevelop.FSharp.$(MDTAG).fsproj MonoDevelop.FSharpBinding/FSharpBinding.$(MDTAG).addin.xml
-
-
 

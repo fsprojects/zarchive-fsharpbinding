@@ -15,7 +15,6 @@ open MonoDevelop.Core
 open MonoDevelop.Ide
 open MonoDevelop.Ide.Gui
 open MonoDevelop.Projects
-
 open MonoDevelop.FSharp
 
 [<AutoOpen>]
@@ -35,94 +34,123 @@ module ColorHelpers =
     let hslToGdk (c:HslColor) : Gdk.Color = HslColor.op_Implicit(c)
      
     let cairoToGdk = cairoToHsl >> hslToGdk
-        
+
+[<AutoOpen>]
+module EventHandlerHelpers = 
+  type IDelegateEvent<'Del when 'Del :> Delegate> with
+    member this.Subscribe handler =
+      do this.AddHandler(handler)
+      { new IDisposable with 
+          member x.Dispose() =
+            this.RemoveHandler(handler) }
+
 type FSharpCommands = 
   | ShowFSharpInteractive = 0
   | SendSelection = 1
   | SendLine = 2
-  
-type FSharpInteractivePad() =
-  let mutable view = new ConsoleView()
-  let mutable prompting = false
-  let mutable lastCommand = ""
-  let mutable currentPath = ""
-  let mutable enterHandler = { new IDisposable with member x.Dispose() = () }
 
+type KillIntent = 
+  | Restart
+  | Kill
+  | NoIntent // Unexpected kill, or from #q/#quit, so we prompt  
+
+type FSharpInteractivePad() =
+  let view = new ConsoleView()
+  let mutable killIntent = NoIntent
+  let mutable isPrompting = false
+  let mutable activeDoc : IDisposable option = None
+  
+  let isInsideFSharpFile () = 
+    if IdeApp.Workbench.ActiveDocument = null ||
+       IdeApp.Workbench.ActiveDocument.FileName.FileName = null then false
+    else
+      let file = IdeApp.Workbench.ActiveDocument.FileName.ToString()
+      CompilerArguments.supportedExtension(Path.GetExtension(file))
+
+  let getCorrectDirectory () = 
+    if IdeApp.Workbench.ActiveDocument <> null && isInsideFSharpFile() then
+      let doc = IdeApp.Workbench.ActiveDocument.FileName.ToString()
+      if doc <> null then Path.GetDirectoryName(doc) |> Some else None
+    else None
+
+  let setupSession() = 
+    let ses = InteractiveSession()
+    let textReceived = ses.TextReceived.Subscribe(fun t -> view.WriteOutput t )
+    let promptReady = ses.PromptReady.Subscribe(fun () -> view.Prompt true )
+    ses.Exited.Add(fun e -> 
+      textReceived.Dispose()
+      promptReady.Dispose()
+      if killIntent = NoIntent then
+        DispatchService.GuiDispatch(fun () ->
+          Debug.WriteLine (sprintf "Interactive: process stopped")
+          view.WriteOutput("\nSession termination detected. Press Enter to restart."))
+        isPrompting <- true
+      elif killIntent = Restart then 
+        DispatchService.GuiDispatch view.Clear
+      killIntent <- NoIntent)
+    ses.StartReceiving()
+    // Make sure we're in the correct directory after a start/restart. No ActiveDocument event then.
+    getCorrectDirectory() |> Option.iter (fun path -> ses.SendCommand("#silentCd @\"" + path + "\";;"))
+    ses
+    
+  let session = ref (Some(setupSession()))
+
+  let sendCommand (str:string) = 
+     session := match !session with 
+                | None -> Some (setupSession())
+                | s -> s
+     !session |> Option.iter (fun s -> s.SendCommand(str))
+
+  let resetFsi intent = 
+    killIntent <- intent
+    !session |> Option.iter (fun ses -> ses.Kill())
+    if intent = Restart then session := Some (setupSession())
+  
   let AddSourceToSelection selection =
      let stap = IdeApp.Workbench.ActiveDocument.Editor.SelectionRange.Offset
      let line = IdeApp.Workbench.ActiveDocument.Editor.OffsetToLineNumber(stap)
      let file = IdeApp.Workbench.ActiveDocument.FileName
-     String.Format("# {0} \"{1}\"\n{2}" ,line,file.FullPath,selection)  
+     String.Format("# {0} \"{1}\"\n{2}\n" ,line,file.FullPath,selection)  
 
-  let rec setupReleaseHandler (ea:Gtk.KeyReleaseEventArgs) =
-    enterHandler.Dispose()
-    enterHandler <- view.Child.KeyReleaseEvent.Subscribe releaseHandler
-  
-  and releaseHandler (ea:Gtk.KeyReleaseEventArgs) =
-    if ea.Event.Key = Key.Return && view.InputLine = "" then  
-      Debug.WriteLine (sprintf "Interactive: Handling enter for empty line")
-      sendCommand "" true
-  
-  and session = 
-    ref (Some(setupSession()))
+  let ensureCorrectDirectory _ =
+    getCorrectDirectory()
+    |> Option.iter (fun path -> sendCommand ("#silentCd @\"" + path + "\";;") )
     
-  and setupSession() = 
-    enterHandler.Dispose()
-    let ses = InteractiveSession()
-    ses.Exited.Add(fun e -> 
+  let consoleInputHandler (cie : ConsoleInputEventArgs) = 
+    if isPrompting then 
+      isPrompting <- false
       session := None
-      currentPath <- ""
-      prompting <- false
-      DispatchService.GuiDispatch(fun () ->
-        Debug.WriteLine (sprintf "Interactive: process stopped")
-        if lastCommand = "#q;;" || lastCommand = "#quit;;" then
-          enterHandler <- view.Child.KeyReleaseEvent.Subscribe setupReleaseHandler
-        else
-          enterHandler <- view.Child.KeyReleaseEvent.Subscribe releaseHandler
-        view.WriteOutput("\nSession termination detected. Press Enter to restart.")
-        view.Prompt(true)
-        view.Prompt(true) ))
-    ses.TextReceived.Add(fun t -> 
-      view.WriteOutput(t)
-      if prompting then view.Prompt(true) )
-    ses.PromptReady.Add(fun () -> 
-      if not prompting then view.Prompt(true); prompting <- true)
-    ses.StartReceiving()
-    ses
+      sendCommand ""
+    elif cie.Text.EndsWith(";;") then 
+      sendCommand cie.Text
     
-  and sendCommand (str:string) fromPrompt = 
-    if view <> null then
-      match !session with
-      | Some(session) when str <> "" -> 
-          lastCommand <- str.Trim()
-          session.SendCommand(str)
-          prompting <- false
-      | Some(_) -> ()
-      | _ -> session := Some(setupSession())
-
   //let handler = 
-  do Debug.WriteLine ("InteracivePad: created!")
+  do Debug.WriteLine ("InteractivePad: created!")
   #if DEBUG
-  do view.Destroyed.Add (fun _ ->       Debug.WriteLine ("Interactive: view destroyed"))
-  do IdeApp.Exiting.Add (fun _ ->       Debug.WriteLine ("Interactive: app exiting!!"))
-  do IdeApp.Exited.Add (fun _ ->       Debug.WriteLine ("Interactive: app exited!!"))
+  do view.Destroyed.Add (fun _ -> Debug.WriteLine ("Interactive: view destroyed"))
+  do IdeApp.Exiting.Add (fun _ -> Debug.WriteLine ("Interactive: app exiting!!"))
+  do IdeApp.Exited.Add  (fun _ -> Debug.WriteLine ("Interactive: app exited!!"))
   #endif
+
   member x.Shutdown()  = 
     do Debug.WriteLine (sprintf "Interactive: x.Shutdown()!")
-    !session |> Option.iter (fun ses -> ses.Kill())
-
+    resetFsi Kill
+ 
   interface MonoDevelop.Ide.Gui.IPadContent with
     member x.Dispose() =
       Debug.WriteLine ("Interactive: disposing pad...")
+      activeDoc |> Option.iter (fun ad -> ad.Dispose())
       x.Shutdown()
 
     member x.Control : Gtk.Widget = view :> Gtk.Widget
   
     member x.Initialize(container:MonoDevelop.Ide.Gui.IPadWindow) = 
-      view.ConsoleInput.Add(fun cie -> sendCommand cie.Text true)
+      view.ConsoleInput.Add consoleInputHandler
       view.Child.KeyPressEvent.Add(fun ea ->
         if ea.Event.State &&& ModifierType.ControlMask = ModifierType.ControlMask && ea.Event.Key = Key.period then
-          !session |> Option.iter (fun s -> s.Interrupt()) )
+          !session |> Option.iter (fun s -> s.Interrupt()))
+      activeDoc <- IdeApp.Workbench.ActiveDocumentChanged.Subscribe ensureCorrectDirectory |> Some
+
       x.UpdateFont()   
 
       view.ShadowType <- Gtk.ShadowType.None
@@ -139,7 +167,7 @@ type FSharpInteractivePad() =
       
       x.UpdateColors()
                             
-      let toolbar = container.GetToolbar(Gtk.PositionType.Right);
+      let toolbar = container.GetToolbar(Gtk.PositionType.Right)
 
       let buttonClear = new DockToolButton("gtk-clear")
       buttonClear.Clicked.Add(fun _ -> view.Clear())
@@ -155,30 +183,27 @@ type FSharpInteractivePad() =
       
     member x.RedrawContent() = ()
   
-  member x.RestartFsi() =
-    !session |> Option.iter (fun ses -> ses.Kill())
-    session := None
-    sendCommand "" false
+  member x.RestartFsi() = resetFsi Restart
     
   member x.UpdateColors() =
     match view.Child with
-      | :? Gtk.TextView as v -> 
-            let colourStyles = Mono.TextEditor.Highlighting.SyntaxModeService.GetColorStyle(MonoDevelop.Ide.IdeApp.Preferences.ColorScheme)
-            
-            let (_, shouldMatch) = PropertyService.Get<string>("FSharpBinding.MatchWitThemePropName", "false") |> System.Boolean.TryParse
-            let themeTextColour = colourStyles.PlainText.Foreground |> cairoToGdk
-            let themeBackColour = colourStyles.PlainText.Background |> cairoToGdk
-            if(shouldMatch) then
-                v.ModifyText(Gtk.StateType.Normal, themeTextColour)
-                v.ModifyBase(Gtk.StateType.Normal, themeBackColour)
-            else
-                let textColour = PropertyService.Get<string>("FSharpBinding.TextColorPropName", "#000000") 
-                                    |> ColorHelpers.strToColor
-                let backColour = PropertyService.Get<string>("FSharpBinding.BaseColorPropName", "#FFFFFF") 
-                                    |> ColorHelpers.strToColor
-                v.ModifyText(Gtk.StateType.Normal, textColour)
-                v.ModifyBase(Gtk.StateType.Normal, backColour)
-      | _ -> ()
+    | :? Gtk.TextView as v -> 
+          let colourStyles = Mono.TextEditor.Highlighting.SyntaxModeService.GetColorStyle(MonoDevelop.Ide.IdeApp.Preferences.ColorScheme)
+          
+          let (_, shouldMatch) = PropertyService.Get<string>("FSharpBinding.MatchWitThemePropName", "false") |> System.Boolean.TryParse
+          let themeTextColour = colourStyles.PlainText.Foreground |> cairoToGdk
+          let themeBackColour = colourStyles.PlainText.Background |> cairoToGdk
+          if(shouldMatch) then
+              v.ModifyText(Gtk.StateType.Normal, themeTextColour)
+              v.ModifyBase(Gtk.StateType.Normal, themeBackColour)
+          else
+              let textColour = PropertyService.Get<string>("FSharpBinding.TextColorPropName", "#000000") 
+                                  |> ColorHelpers.strToColor
+              let backColour = PropertyService.Get<string>("FSharpBinding.BaseColorPropName", "#FFFFFF") 
+                                  |> ColorHelpers.strToColor
+              v.ModifyText(Gtk.StateType.Normal, textColour)
+              v.ModifyBase(Gtk.StateType.Normal, backColour)
+    | _ -> ()
     
   member x.UpdateFont() = 
     let fontName = DesktopService.DefaultMonospaceFont
@@ -186,29 +211,22 @@ type FSharpInteractivePad() =
     Debug.WriteLine (sprintf "Interactive: Loading font '%s'" fontName)
     let font = Pango.FontDescription.FromString(fontName)
     view.SetFont(font)
-    
-  member x.EnsureCorrectDirectory() =
-    if IdeApp.Workbench.ActiveDocument.FileName.FileName <> null then
-      let path = Path.GetDirectoryName(IdeApp.Workbench.ActiveDocument.FileName.ToString())
-      if currentPath <> path then
-        sendCommand ("#silentCd @\"" + path + "\";;") false
-        currentPath <- path
-        
+
   member x.SendSelection() = 
     if x.IsSelectionNonEmpty then
       let sel = IdeApp.Workbench.ActiveDocument.Editor.SelectedText
-      x.EnsureCorrectDirectory()
-      sendCommand (AddSourceToSelection sel) false
+      ensureCorrectDirectory()
+      sendCommand (AddSourceToSelection sel)
       
   member x.SendLine() = 
     if IdeApp.Workbench.ActiveDocument = null then () 
     else
-      x.EnsureCorrectDirectory()
+      ensureCorrectDirectory()
       let line = IdeApp.Workbench.ActiveDocument.Editor.Caret.Line
       let text = IdeApp.Workbench.ActiveDocument.Editor.GetLineText(line)
       let file = IdeApp.Workbench.ActiveDocument.FileName
-      let sel = String.Format("# {0} \"{1}\"\n{2}" ,line ,file.FullPath,text) 
-      sendCommand sel false
+      let sel = String.Format("# {0} \"{1}\"\n{2}\n" ,line ,file.FullPath,text) 
+      sendCommand sel
 
   member x.IsSelectionNonEmpty = 
     if IdeApp.Workbench.ActiveDocument = null || 
@@ -217,12 +235,7 @@ type FSharpInteractivePad() =
       let sel = IdeApp.Workbench.ActiveDocument.Editor.SelectedText
       not(String.IsNullOrEmpty(sel))
     
-  member x.IsInsideFSharpFile = 
-    if IdeApp.Workbench.ActiveDocument = null ||
-       IdeApp.Workbench.ActiveDocument.FileName.FileName = null then false
-    else
-      let file = IdeApp.Workbench.ActiveDocument.FileName.ToString()
-      CompilerArguments.supportedExtension(IO.Path.GetExtension(file))
+  member x.IsInsideFSharpFile = isInsideFSharpFile()
       
   member x.LoadReferences() =
     Debug.WriteLine("FSI:  #LoadReferences")
@@ -234,8 +247,8 @@ type FSharpInteractivePad() =
     
     let orderReferences = FSharp.CompilerBinding.OrderAssemblyReferences()
     let references = orderReferences.Order references
-    sendCommand references true
-    
+    ensureCorrectDirectory()
+    sendCommand references
       
   static member CurrentPad =  
     let existing = 
