@@ -10,7 +10,7 @@ MonoDevelop.FSharpBinding/[Oo]bj/
 MonoDevelop.FSharpBinding/[Bb]in/
 monodevelop/pack/*
 monodevelop/Makefile
-monodevelop/MonoDevelop.FSharpBinding/FSharpBinding.*.addin.xml
+monodevelop/MonoDevelop.FSharpBinding/FSharpBinding*.addin.xml
 monodevelop/MonoDevelop.FSharpBinding/MonoDevelop.FSharp.*.fsproj
 repository/*
 *.suo
