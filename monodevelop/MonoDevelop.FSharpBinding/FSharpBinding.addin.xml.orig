@@ -208,7 +208,7 @@
             id="MonoDevelop.FSharpRefactor.RenameRefactoring" 
             class="MonoDevelop.FSharpRefactor.RenameRefactoring" />
     </Extension>
-    <Extension path="/MonoDevelop/Refactoring/Refactorings">
+    <!--<Extension path="/MonoDevelop/Refactoring/Refactorings">
         <Class
             id="MonoDevelop.FSharpRefactor.AddArgumentRefactoring" 
             class="MonoDevelop.FSharpRefactor.AddArgumentRefactoring" />
@@ -217,5 +217,5 @@
         <Class
             id="MonoDevelop.FSharpRefactor.ExtractFunctionRefactoring" 
             class="MonoDevelop.FSharpRefactor.ExtractFunctionRefactoring" />
-    </Extension>
+    </Extension>-->
 </Addin>
