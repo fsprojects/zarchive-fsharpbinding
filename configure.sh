@@ -15,5 +15,7 @@ echo "Assuming Mono root directory." $MONODIR
 sed -e "s,INSERT_MONO_BIN,$MONODIR,g" Makefile.orig > Makefile
 
 # Configure fsharp-refactor as well
+git submodule init
+git submodule update
 cd fsharp-refactor
 ./autogen.sh $@
