@@ -18,7 +18,7 @@ namespace MonoDevelop.FSharp.Gui
 		Entry[] entries;
 		Func<String[], bool> validateParameters;
 		Func<String[], String> getErrorMessage;
-		private Timer timer = new Timer(500);
+		private Timer timer = new Timer (500);
 
 		public RefactoringParametersDialog (RefactoringOperation refactoring,
 		                                    RefactoringOptions options,
@@ -42,8 +42,11 @@ namespace MonoDevelop.FSharp.Gui
 				entries [i].Text = defaultValues [i];
 				labels [i].LabelProp = parameterNames [i];
 			}
+			timer.Stop ();
 			timer.Elapsed += checkValidity;
 			this.DefaultResponse = ResponseType.Ok;
+			entry1.SelectRegion (0, -1);
+			entry1.GrabFocus ();
 		}
 		
 		private String[] Parameters

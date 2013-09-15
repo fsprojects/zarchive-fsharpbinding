@@ -28,6 +28,8 @@ namespace MonoDevelop.FSharp.Gui
 			this.WindowPosition = ((global::Gtk.WindowPosition)(3));
 			this.Modal = true;
 			this.BorderWidth = ((uint)(6));
+			this.Resizable = false;
+			this.AllowGrow = false;
 			// Internal child MonoDevelop.FSharp.Gui.RefactoringParametersDialog.VBox
 			global::Gtk.VBox w1 = this.VBox;
 			w1.Name = "dialog1_VBox";

@@ -769,6 +769,8 @@
     <property name="WindowPosition">CenterAlways</property>
     <property name="Modal">True</property>
     <property name="BorderWidth">6</property>
+    <property name="Resizable">False</property>
+    <property name="AllowGrow">False</property>
     <property name="Buttons">3</property>
     <property name="HelpButton">False</property>
     <child internal-child="VBox">
