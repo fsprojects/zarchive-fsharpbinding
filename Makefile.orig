@@ -42,7 +42,7 @@ FSC_OPTS += --debug:pdbonly --optimize
 endif
 
 TARGETS = bin/FSharp.Core.dll bin/FSharp.CompilerBinding.dll bin/fsautocomplete.exe \
-		  bin/FSharp.Refactor.dll
+		  bin/FSharpRefactor.dll
 
 all: $(TARGETS)
 
@@ -58,10 +58,10 @@ bin/FSharp.Core.dll: $(MONOBIN)/FSharp.Core.dll
 	@-mkdir -p  bin
 	cp -p $(MONOBIN)/FSharp.Core.dll bin/FSharp.Core.dll
 
-bin/FSharp.Refactor.dll: fsharp-refactor/Makefile
+bin/FSharpRefactor.dll: fsharp-refactor/Makefile
 	@-mkdir -p  bin
 	make --directory=fsharp-refactor
-	cp -p fsharp-refactor/lib/FSharp.Refactor.dll bin
+	cp -p fsharp-refactor/bin/FSharpRefactor.dll bin
 
 clean:
 	-rm -fr bin
