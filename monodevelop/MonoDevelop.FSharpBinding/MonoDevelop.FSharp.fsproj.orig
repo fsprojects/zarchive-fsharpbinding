@@ -219,6 +219,10 @@
       <HintPath>..\lib\fsharp\FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <ProjectReference Include="..\..\fsharp-refactor\FSharpRefactor\FSharpRefactor.fsproj">
+        <Project>{611A68B4-9B6A-4675-BF3C-6BCCAEA09BEF}</Project>
+        <Name>FSharpRefactor</Name>
+    </ProjectReference>
     <Reference Include="FSharp.Compiler.Editor">
       <HintPath>packages\FSharp.Compiler.Editor.1.0.7\lib\net40\FSharp.Compiler.Editor.dll</HintPath>
     </Reference>
