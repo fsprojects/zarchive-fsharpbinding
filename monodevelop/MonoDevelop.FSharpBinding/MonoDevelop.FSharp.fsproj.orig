@@ -13,9 +13,9 @@
     <!-- disable this for now, xbuild hangs if it launches the terminate-and-stay-resident server -->
     <!-- <OtherFlags> /resident </OtherFlags> -->
     <UsePartialTypes>False</UsePartialTypes>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
-
-
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
@@ -29,6 +29,14 @@
     <OptimizeCode>false</OptimizeCode>
     <GenerateXmlDoc>false</GenerateXmlDoc>
     <GenerateTailCalls>false</GenerateTailCalls>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files (x86)\Xamarin Studio\bin\XamarinStudio.exe</StartProgram>
+    <StartWorkingDirectory>C:\Program Files (x86)\Xamarin Studio\bin</StartWorkingDirectory>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="Execute" command="&quot;/Applications/Xamarin Studio.app/Contents/MacOS/lib/monodevelop/bin/XamarinStudio.exe&quot;" workingdir="/Applications/Xamarin Studio.app/Contents/MacOS/lib/monodevelop/bin" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <Target Name="Clean">
     <RemoveDir Directories="..\bin\" />
@@ -48,13 +56,18 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')" />
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition="(!Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')) And (Exists('$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets'))" />
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="@(Mvc4Files)" DestinationFolder="$(OutputPath)\packages\AspNetMvc4" />
+  </Target>
+  <Target Name="AfterClean">
+    <RemoveDir Directories="$(OutputPath)\packages" />
+  </Target>
   <ItemGroup>
     <EmbeddedResource Include="icons.fsharp-icon-32.png" />
     <EmbeddedResource Include="icons.fsharp-script-32.png" />
     <EmbeddedResource Include="icons.fsharp-file-icon.png" />
     <EmbeddedResource Include="icons.fsharp-project-icon.png" />
     <EmbeddedResource Include="icons.fsharp-script-icon.png" />
-
     <None Include="templates.EmptyFSharpSource.xft.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -79,12 +92,10 @@
     <None Include="templates.FSharpProjectMvc4Razor.xpt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-
     <None Include="templates.FSharpProjectMvc4Razor.windows.xpt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="FSharpBinding.addin.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <Compile Include="PowerPack\CodeDomVisitor.fs" />
@@ -112,6 +123,21 @@
     <Compile Include="FSharpResolverProvider.fs" />
     <Compile Include="FSharpProjectServiceExtension.fs" />
     <Compile Include="FSharpProjectFileNodeExtension.fs" />
+    <Mvc4Files Include="..\dependencies\AspNetMvc4\System.Web.Helpers.dll">
+      <Link>System.Web.Helpers.dll</Link>
+    </Mvc4Files>
+    <Mvc4Files Include="..\dependencies\AspNetMvc4\System.Web.Mvc.dll">
+      <Link>System.Web.Mvc.dll</Link>
+    </Mvc4Files>
+    <Mvc4Files Include="..\dependencies\AspNetMvc4\System.Web.Razor.dll">
+      <Link>System.Web.Razor.dll</Link>
+    </Mvc4Files>
+    <Mvc4Files Include="..\dependencies\AspNetMvc4\System.Web.WebPages.dll">
+      <Link>System.Web.WebPages.dll</Link>
+    </Mvc4Files>
+    <Mvc4Files Include="..\dependencies\AspNetMvc4\System.Web.WebPages.Razor.dll">
+      <Link>System.Web.WebPages.Razor.dll</Link>
+    </Mvc4Files>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="pango-sharp">
@@ -134,7 +160,6 @@
       <Private>False</Private>
       <HintPath>../dependencies/gtk-sharp-2.0/glib-sharp.dll</HintPath>
     </Reference>
-
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -194,9 +219,9 @@
       <HintPath>..\lib\fsharp\FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <ProjectReference Include="..\..\fsharp-refactor\FSharpRefactor\FSharpRefactor.fsproj">
-        <Project>{611A68B4-9B6A-4675-BF3C-6BCCAEA09BEF}</Project>
-        <Name>FSharpRefactor</Name>
-    </ProjectReference>
+    <Reference Include="FSharp.Compiler.Editor">
+      <HintPath>packages\FSharp.Compiler.Editor.1.0.7\lib\net40\FSharp.Compiler.Editor.dll</HintPath>
+    </Reference>
   </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

@@ -51,9 +51,6 @@ type FSharpLanguageBinding() =
     member x.BlockCommentStartTag = "(*"
     member x.Language = LanguageName
     member x.SingleLineCommentTag = "//"
-    //member x.Parser = null
-    //member x.Refactorer = null
-
     member x.GetFileName(baseName) = new FilePath(baseName.ToString() + ".fs")
     member x.IsSourceCodeFile(fileName) = CompilerArguments.supportedExtension (Path.GetExtension (fileName.ToString()))
     
@@ -92,7 +89,6 @@ type FSharpLanguageBinding() =
       new FSharpProjectParameters() :> ProjectParameters
       
     override x.GetCodeDomProvider() : CodeDomProvider =
-        // null 
         // TODO: Simplify CodeDom provider to generate reasonable template
         // files at least for some MonoDevelop project types. Then we can recover:
         provider.Value :> CodeDomProvider

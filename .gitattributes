@@ -20,3 +20,7 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+*.sh text eol=lf
+Makefile.orig text eol=lf
+configure.sh text eol=lf

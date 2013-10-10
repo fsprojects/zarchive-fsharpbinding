@@ -1,10 +1,13 @@
 ﻿namespace MonoDevelop.FSharp
 
 open System
+open System.Reflection
 open System.IO
 open System.Diagnostics
 open MonoDevelop.Ide
 open MonoDevelop.Core
+open FSharp.CompilerBinding.Reflection
+open FSharp.CompilerBinding
 
 type InteractiveSession() =
   let server = "MonoDevelop" + Guid.NewGuid().ToString("n")
@@ -14,9 +17,9 @@ type InteractiveSession() =
   // Get F# Interactive path and command line args from settings
   let args = args + PropertyService.Get<string>("FSharpBinding.FsiArguments", "")
   let path = 
-    match PropertyService.Get<string>("FSharpBinding.FsiPath", "") with
+    match PropertyService.Get<_>("FSharpBinding.FsiPath", "") with
     | s when s <> "" -> s
-    | _ -> 
+    | _ ->
       match CompilerArguments.getDefaultInteractive() with
       | Some(s) -> s
       | None -> ""
@@ -37,10 +40,6 @@ type InteractiveSession() =
       Debug.WriteLine (sprintf "Interactive: Error %s" (e.ToString()))
       reraise()
     
-  let client = 
-      try Microsoft.FSharp.Compiler.Server.Shared.FSharpInteractiveServer.StartClient(server)
-      with e -> failwithf "oops! %A" e
-
   let textReceived = new Event<_>()  
   let promptReady = new Event<_>()  
   
@@ -58,7 +57,6 @@ type InteractiveSession() =
   
   member x.Interrupt() =
     Debug.WriteLine (sprintf "Interactive: Break!" )
-    client.Interrupt()
     
   member x.StartReceiving() = 
     fsiProcess.BeginOutputReadLine()  

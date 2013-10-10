@@ -12,12 +12,12 @@ monodevelop/pack/*
 monodevelop/Makefile
 monodevelop/MonoDevelop.FSharpBinding/FSharpBinding*.addin.xml
 monodevelop/MonoDevelop.FSharpBinding/MonoDevelop.FSharp.*.fsproj
+monodevelop/packages/*
 repository/*
 *.suo
 *.pidb
 *.userprefs
 *.user
-/Makefile
 *.dll
 *.pdb
 *.cache
@@ -33,4 +33,8 @@ emacs/tmp
 
 .DS_Store
 
-/monodevelop/configure-app.exe
+monodevelop/Makefile
+
+/monodevelop/MonoDevelop.FSharpBinding/FSharpBinding.addin.xml
+/monodevelop/MonoDevelop.FSharpBinding/MonoDevelop.FSharp.*.fsproj
+/monodevelop/MonoDevelop.FSharpBinding/packages

@@ -38,7 +38,7 @@ Requires MonoDevelop or Xamarin Studio 4.0.12 and later versions
 ### Installation
 
 First check install MonoDevelop/Xamarin Studio. Check if F# support is already installed using the AddIn manager.
-   MonoDevelop/Xxamarin Studio 
+   MonoDevelop/Xamarin Studio
         --> Add-in manager 
         --> Language Bindings 
 		--> Check for F# binding
@@ -47,7 +47,7 @@ If so, just use it, no installation is required.
 
 If not, install the F# Language Binding via the AddIn manager.
 
-   MonoDevelop/Xxamarin Studio 
+   MonoDevelop/Xamarin Studio
         --> Add-in manager 
         --> Gallery
         --> Language Bindings 
@@ -64,13 +64,21 @@ On Mac and Linux the template includes a copy of the basic ASP.NET MVC 4 core DL
 
 Normally you should get the binding from the repository. If you want to build and install it yourself and develop it, try this:
 
-Linux/Mac:
+
+#### Build on Linux/Mac:
+
+First get nuget.exe and install the required nuget packages:
+
+
+Now make:
+
 	cd monodevelop
 	./configure.sh 
 	make 
 	make install
 
-Windows (builds and installs the Debug version into Xamarin Studio - adjust as needed)
+#### Build on Windows (builds and installs the Debug version into Xamarin Studio - adjust as needed)
+
 	cd monodevelop
 	configure.bat
 	.\install-debug-xamarin-studio.bat
@@ -81,7 +89,7 @@ Windows (builds and installs the Debug version into Xamarin Studio - adjust as n
 
 Don't give up! Add an issue to [the issue tracker](https://github.com/fsharp/fsharpbinding/issues). You issue will be seen by the developers.
 
-Users of Windows XP wishing to use this project are advised to read the instruction in this [fork](https://github.com/satyagraha/fsharpbinding/tree/windows-xp)
+Users of Windows XP wishing to use this project are advised to read the instructions in this [fork](https://github.com/satyagraha/fsharpbinding/tree/windows-xp)
 
 ### Notes for Developers
 
@@ -102,9 +110,9 @@ To check things are working try a few different things somewhat at random:
 
 There are a couple of known issues, see https://github.com/fsharp/fsharpbinding/issues.
 
-On Windows, the configuration creates the file MonoDevelop.FSharpBinding\MonoDevelop.FSharp.windows.fsproj. 
-Be aware that this is not the original file, which is MonoDevelop.FSharp.fsproj.orig.  The windows file is 
-created automatically by the configuration script (configure.bat)
+On Windows, the configuration creates the file `MonoDevelop.FSharpBinding\MonoDevelop.FSharp.windows.fsproj`. 
+Be aware that this is not the original file, which is `MonoDevelop.FSharp.fsproj.orig`. The windows file is 
+created automatically by the configuration script (`configure.bat`)
 
 On Mac/Linux, please develop using  the 'Makefile' with Mono 3.0 and FSharp 3.0. 
 
@@ -118,12 +126,12 @@ or this command for Xamarin Studio:
 ```
 to enable some logging you can use
 
-  export FSHARPBINDING_LOGGING=*
+	export FSHARPBINDING_LOGGING=*
 
 On Windows you can generally use Visual Studio to help develop the binding. 
 You can start Xamarin Studio or MonoDevelop under the debugger using the normal technique:
 
-  devenv /debugexe "c:\Program Files (x86)\Xamarin Studio\bin\XamarinStudio.exe"
+	devenv /debugexe "c:\Program Files (x86)\Xamarin Studio\bin\XamarinStudio.exe"
 
 
 ## Notes for People Preparing Releases
