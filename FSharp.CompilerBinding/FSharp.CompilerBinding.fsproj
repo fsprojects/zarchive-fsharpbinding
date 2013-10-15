@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -31,18 +31,6 @@
     <Tailcalls>True</Tailcalls>
     <ConsolePause>False</ConsolePause>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="System" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\lib\mono.cecil\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.Compiler.Editor">
-      <HintPath>..\monodevelop\MonoDevelop.FSharpBinding\packages\FSharp.Compiler.Editor.1.0.7\lib\net40\FSharp.Compiler.Editor.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')" />
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition="(!Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')) And (Exists('$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets'))" />
   <ItemGroup>
@@ -50,5 +38,19 @@
     <Compile Include="Digraph.fs" />
     <Compile Include="OrderAssemblyReferences.fs" />
     <Compile Include="CompilerLocationUtils.fs" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="FSharp.Compiler.Editor">
+      <HintPath>..\packages\FSharp.Compiler.Editor.1.0.7\lib\net40\FSharp.Compiler.Editor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="System" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\lib\mono.cecil\Mono.Cecil.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
