@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -44,8 +44,13 @@
     <Compile Include="ProjectParser.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="Program.fs" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FSharp.Compiler.Editor">
+      <HintPath>..\packages\FSharp.Compiler.Editor.1.0.7\lib\net40\FSharp.Compiler.Editor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -61,9 +66,10 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.Compiler.Editor">
-      <HintPath>..\monodevelop\MonoDevelop.FSharpBinding\packages\FSharp.Compiler.Editor.1.0.7\lib\net40\FSharp.Compiler.Editor.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\FSharp.CompilerBinding\FSharp.CompilerBinding.fsproj">
+      <Project>{88F6940F-D300-474C-B2A7-E2ECD5B04B57}</Project>
+      <Name>FSharp.CompilerBinding</Name>
+    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the
        targets below and uncomment it.  Other similar extension points
@@ -71,10 +77,4 @@
        Name="BeforeBuild"> </Target> <Target Name="AfterBuild">
        </Target>
 	-->
-  <ItemGroup>
-    <ProjectReference Include="..\FSharp.CompilerBinding\FSharp.CompilerBinding.fsproj">
-      <Project>{88F6940F-D300-474C-B2A7-E2ECD5B04B57}</Project>
-      <Name>FSharp.CompilerBinding</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

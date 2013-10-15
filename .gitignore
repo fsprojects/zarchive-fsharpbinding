@@ -20,6 +20,7 @@ repository/*
 *.cache
 *~
 pack/*
+packages/*
 lib/NUnit.*
 lib/FsUnit.*
 
