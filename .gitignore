@@ -2,6 +2,9 @@
 [Bb]in/
 [Oo]bj/
 monodevelop/pack/*
+monodevelop/Makefile
+monodevelop/MonoDevelop.FSharpBinding/FSharpBinding*.addin.xml
+monodevelop/MonoDevelop.FSharpBinding/MonoDevelop.FSharp.*.fsproj
 monodevelop/packages/*
 repository/*
 *.suo

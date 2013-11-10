@@ -7,6 +7,7 @@
     <Import assembly="FSharp.CompilerBinding.dll" />
     <Import assembly="FSharpBinding.dll" />
     <Import assembly="FSharpBinding.Gui.dll" />
+    <Import assembly="FSharpRefactor.dll" />
     <Import assembly="FSharp.Compiler.Editor.dll" />
 
     <Import file = "templates.EmptyFSharpSource.xft.xml" />
@@ -200,4 +201,20 @@
     <CommandItem id = "MonoDevelop.FSharp.FSharpCommands.SendReferences" />
   </Extension>
 
+    <!-- fsharp-refactor -->
+    <Extension path="/MonoDevelop/Refactoring/Refactorings">
+        <Class
+            id="MonoDevelop.FSharpRefactor.RenameRefactoring" 
+            class="MonoDevelop.FSharpRefactor.RenameRefactoring" />
+    </Extension>
+    <!--<Extension path="/MonoDevelop/Refactoring/Refactorings">
+        <Class
+            id="MonoDevelop.FSharpRefactor.AddArgumentRefactoring" 
+            class="MonoDevelop.FSharpRefactor.AddArgumentRefactoring" />
+    </Extension>
+    <Extension path="/MonoDevelop/Refactoring/Refactorings">
+        <Class
+            id="MonoDevelop.FSharpRefactor.ExtractFunctionRefactoring" 
+            class="MonoDevelop.FSharpRefactor.ExtractFunctionRefactoring" />
+    </Extension>-->
 </Addin>

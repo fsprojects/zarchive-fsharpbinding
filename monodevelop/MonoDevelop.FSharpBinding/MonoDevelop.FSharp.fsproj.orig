@@ -110,6 +110,10 @@
     <Compile Include="Services\LanguageService.fs" />
     <Compile Include="Services\CompilerService.fs" />
     <Compile Include="Services\InteractiveSession.fs" />
+    <Compile Include="FSharpRefactor\FSharpRefactoring.fs" />
+    <Compile Include="FSharpRefactor\RenameRefactoring.fs" />
+    <Compile Include="FSharpRefactor\AddArgumentRefactoring.fs" />
+    <Compile Include="FSharpRefactor\ExtractFunctionRefactoring.fs" />
     <Compile Include="FSharpInteractivePad.fs" />
     <Compile Include="FSharpOptionsPanels.fs" />
     <Compile Include="FSharpLanguageBinding.fs" />
@@ -215,6 +219,10 @@
       <HintPath>..\lib\fsharp\FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <ProjectReference Include="..\..\fsharp-refactor\FSharpRefactor\FSharpRefactor.fsproj">
+        <Project>{611A68B4-9B6A-4675-BF3C-6BCCAEA09BEF}</Project>
+        <Name>FSharpRefactor</Name>
+    </ProjectReference>
     <Reference Include="FSharp.Compiler.Editor">
       <HintPath>packages\FSharp.Compiler.Editor.1.0.8\lib\net40\FSharp.Compiler.Editor.dll</HintPath>
     </Reference>
