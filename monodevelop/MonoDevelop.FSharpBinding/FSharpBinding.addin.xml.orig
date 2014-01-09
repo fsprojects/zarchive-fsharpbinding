@@ -8,6 +8,7 @@
     <Import assembly="FSharpBinding.dll" />
     <Import assembly="FSharpBinding.Gui.dll" />
     <Import assembly="FSharp.Compiler.Service.dll" />
+	<Import assembly="FantomasLib.dll" />
 
     <Import file = "templates.EmptyFSharpSource.xft.xml" />
     <Import file = "templates.EmptyFSharpScript.xft.xml" />
@@ -53,7 +54,19 @@
   <Extension path="/MonoDevelop/TypeSystem/Parser">
     <Parser class="MonoDevelop.FSharp.FSharpParser"  mimeType = "text/x-fsharp" />
   </Extension>
+  
+  	<Extension path = "/MonoDevelop/Ide/CodeFormatters">
+		<Formatter mimeType="text/x-fsharp" class="MonoDevelop.FSharp.Formatting.FSharpFormatter" />		
+	</Extension>
 
+	<Extension path = "/MonoDevelop/ProjectModel/PolicySets/Mono" >
+		<Policies resource="FSharpStylePolicy.xml" />
+	</Extension>
+	
+	<Extension path = "/MonoDevelop/ProjectModel/PolicySets" >
+		<Policies resource="FSharpFormattingPolicy.xml" />
+	</Extension>
+	
   <Extension path = "/MonoDevelop/SourceEditor2/TooltipProviders">
     <Class id="LanguageItem" class="MonoDevelop.FSharp.FSharpLanguageItemTooltipProvider" />
   </Extension>
