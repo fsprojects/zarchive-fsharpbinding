@@ -57,23 +57,29 @@ type FSharpFormatter() =
             Diagnostics.Debug.Assert(startPos.IsSome && endPos.IsSome, "Offsets are within valid ranges.")
             let r = Range.mkRange "/tmp.fsx" startPos.Value endPos.Value
             Debug.WriteLine("**Fantomas**: Try to format range {0}.", r)
-            // This is not going to be sufficient if Fantomas expands the range for valid F# code.
-            // It should be better to get handle of the document and replace the whole text
             let output =
                 try 
                     CodeFormatter.formatSourceString isFsiFile input config
                 with :? FormatException as ex ->
                     Debug.WriteLine("Error occurs: {0}", ex.Message)
                     input
-            let delta = input.Length - toOffset
-            output.[fromOffset..output.Length - delta - 1]
+            // Since Fantomas expands the range for valid F# code, we have to get 
+            // handle of the document and replace the whole text
+            let doc = IdeApp.Workbench.ActiveDocument
+            if doc <> null && doc.Editor <> null then
+                doc.Editor.Text <- output
+                null
+            else
+                Debug.WriteLine("**Fantomas**: Can't access active document.")
+                null
 
     let formatText (policyParent : PolicyContainer) (mimeTypeInheritanceChain : string seq) (input : string) formattingOption =
         let isFsiFile = 
-            if Seq.isEmpty mimeTypeInheritanceChain then false
+            let doc = IdeApp.Workbench.ActiveDocument
+            if doc = null then false 
             else 
-                let ext = Seq.head mimeTypeInheritanceChain
-                ext.ToLower() <> "text/x-fsharp"
+                let fileName = doc.FileName.ToString()
+                fileName.ToLower().EndsWith(".fsi")
         Debug.WriteLine("**Fantomas**: Is this an fsi file? {0}", isFsiFile)
         let textStylePolicy = policyParent.Get<TextStylePolicy>(mimeTypeInheritanceChain)
         let formattingPolicy = policyParent.Get<FSharpFormattingPolicy>(mimeTypeInheritanceChain)

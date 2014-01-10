@@ -18,5 +18,3 @@ type FSharpFormattingPolicyPanel() =
     override __.GetPolicy() =
         panel.CommitPendingChanges ()
         policy
-
-
