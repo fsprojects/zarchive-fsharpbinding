@@ -36,7 +36,11 @@ type FSharpFormatter() =
         let config = FormatConfig.Default
         match formattingOption with
         | Document -> 
-            defaultArg (CodeFormatter.tryFormatSourceString isFsiFile input config) input
+            try 
+                CodeFormatter.formatSourceString isFsiFile input config
+            with :? FormatException as ex ->
+                Debug.WriteLine("Error occurs: {0}", ex.Message)
+                input
 
         | Selection(fromOffset, toOffset) ->
             // Convert from offsets to line and column position
@@ -55,7 +59,12 @@ type FSharpFormatter() =
             Debug.WriteLine("**Fantomas**: Try to format range {0}.", r)
             // This is not going to be sufficient if Fantomas expands the range for valid F# code.
             // It should be better to get handle of the document and replace the whole text
-            let output = defaultArg (CodeFormatter.tryFormatSelectionFromString isFsiFile r input config) input
+            let output =
+                try 
+                    CodeFormatter.formatSourceString isFsiFile input config
+                with :? FormatException as ex ->
+                    Debug.WriteLine("Error occurs: {0}", ex.Message)
+                    input
             let delta = input.Length - toOffset
             output.[fromOffset..output.Length - delta - 1]
 
