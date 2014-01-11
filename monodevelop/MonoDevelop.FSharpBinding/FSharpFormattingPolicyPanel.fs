@@ -9,6 +9,7 @@ type FSharpFormattingPolicyPanel() =
     let mutable panel = new FSharpFormattingPolicyPanelWidget()
     override __.CreatePanelWidget() =
         panel <- new FSharpFormattingPolicyPanelWidget()
+        panel.Initialize()
         panel :> Widget
 
     override __.LoadFrom(p : FSharpFormattingPolicy) =

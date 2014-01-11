@@ -166,6 +166,7 @@
     <Reference Include="System.Xaml" />
     <Reference Include="mscorlib" />
     <Reference Include="Mono.Cairo" />
+    <Reference Include="Mono.Posix" />
     <Reference Include="Mono.Addins">
       <Private>False</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\Mono.Addins.dll</HintPath>

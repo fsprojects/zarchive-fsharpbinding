@@ -43,6 +43,7 @@ type FSharpFormatter() =
             | null, _ ->
                 let format = formattingPolicy.DefaultFormat
                 { FormatConfig.Default with
+                    IndentOnTryWith = format.IndentOnTryWith
                     ReorderOpenDeclaration = format.ReorderOpenDeclaration
                     SpaceAfterComma = format.SpaceAfterComma
                     SpaceAfterSemicolon = format.SpaceAfterSemicolon
@@ -59,6 +60,7 @@ type FSharpFormatter() =
                 { FormatConfig.Default with
                     PageWidth = textStylePolicy.FileWidth
                     IndentSpaceNum = textStylePolicy.IndentWidth
+                    IndentOnTryWith = format.IndentOnTryWith
                     ReorderOpenDeclaration = format.ReorderOpenDeclaration
                     SpaceAfterComma = format.SpaceAfterComma
                     SpaceAfterSemicolon = format.SpaceAfterSemicolon

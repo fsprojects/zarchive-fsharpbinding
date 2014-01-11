@@ -10,33 +10,38 @@ open MonoDevelop.Projects.Policies
 
 type FSharpFormattingSettings() = 
     [<ItemProperty>]
+    [<LocalizedCategory ("Layout")>]
+    [<LocalizedDisplayName ("Indent on try/with")>]
+    member val IndentOnTryWith = false with get, set
+
+    [<ItemProperty>]
     [<LocalizedCategory ("Refactoring")>]
-    [<LocalizedDisplayName ("Reorder open declarations")>]
+    [<LocalizedDisplayName ("Reorder open declaration")>]
     member val ReorderOpenDeclaration = false with get, set
 
     [<ItemProperty>]
     [<LocalizedCategory ("Spacing")>]
-    [<LocalizedDisplayName ("Space after commas")>]
+    [<LocalizedDisplayName ("Space after comma")>]
     member val SpaceAfterComma = true with get, set
 
     [<ItemProperty>]
     [<LocalizedCategory ("Spacing")>]
-    [<LocalizedDisplayName ("Space after semicolons")>]
+    [<LocalizedDisplayName ("Space after semicolon")>]
     member val SpaceAfterSemicolon = true with get, set
 
     [<ItemProperty>]
     [<LocalizedCategory ("Spacing")>]
-    [<LocalizedDisplayName ("Space around delimiters")>]
+    [<LocalizedDisplayName ("Space around delimiter")>]
     member val SpaceAroundDelimiter = true with get, set
 
     [<ItemProperty>]
     [<LocalizedCategory ("Spacing")>]
-    [<LocalizedDisplayName ("Space before arguments")>]
+    [<LocalizedDisplayName ("Space before argument")>]
     member val SpaceBeforeArgument = true with get, set
 
     [<ItemProperty>]
     [<LocalizedCategory ("Spacing")>]
-    [<LocalizedDisplayName ("Space before colons")>]
+    [<LocalizedDisplayName ("Space before colon")>]
     member val SpaceBeforeColon = true with get, set
 
     [<ItemProperty>]
