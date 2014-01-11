@@ -32,7 +32,7 @@ type FSharpFormattingSettings() =
     [<ItemProperty>]
     [<LocalizedCategory ("Spacing")>]
     [<LocalizedDisplayName ("Space before arguments")>]
-    member val SpaceBeforeArgument = false with get, set
+    member val SpaceBeforeArgument = true with get, set
 
     [<ItemProperty>]
     [<LocalizedCategory ("Spacing")>]
@@ -42,11 +42,12 @@ type FSharpFormattingSettings() =
     [<ItemProperty>]
     [<LocalizedCategory ("Syntax")>]
     [<LocalizedDisplayName ("Semicolon at End of Line")>]
-    member val SemicolonEndOfLine = true with get, set
+    member val SemicolonAtEndOfLine = false with get, set
 
     member x.Clone() =
         x.MemberwiseClone() :?> FSharpFormattingSettings
 
+[<AllowNullLiteral>]
 [<PolicyType ("F# formatting")>]
 type FSharpFormattingPolicy() =
     [<ItemProperty>]

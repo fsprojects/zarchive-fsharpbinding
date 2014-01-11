@@ -6,6 +6,7 @@ open MonoDevelop.Ide.Gui.Content
 open MonoDevelop.Ide
 open MonoDevelop.Projects.Policies
 open MonoDevelop.Ide.CodeFormatting
+open Mono.TextEditor
 open Fantomas
 open Fantomas.FormatConfig
 open Microsoft.FSharp.Compiler
@@ -19,6 +20,7 @@ type FormattingOption =
     | Selection of int * int
 
 type FSharpFormatter() = 
+    inherit AbstractAdvancedFormatter()
     let offsetToPos (positions : _ []) offset =
         let rec searchPos start finish = 
             if start >= finish then None
@@ -33,7 +35,38 @@ type FSharpFormatter() =
         searchPos 0 (positions.Length - 1)
 
     let format isFsiFile (textStylePolicy : TextStylePolicy) (formattingPolicy : FSharpFormattingPolicy) input formattingOption =
-        let config = FormatConfig.Default
+        let config = 
+            match textStylePolicy, formattingPolicy with
+            | null, null -> 
+                Debug.WriteLine("**Fantomas**: Fall back to default config")
+                FormatConfig.Default
+            | null, _ ->
+                let format = formattingPolicy.DefaultFormat
+                { FormatConfig.Default with
+                    ReorderOpenDeclaration = format.ReorderOpenDeclaration
+                    SpaceAfterComma = format.SpaceAfterComma
+                    SpaceAfterSemicolon = format.SpaceAfterSemicolon
+                    SpaceAroundDelimiter = format.SpaceAroundDelimiter
+                    SpaceBeforeArgument = format.SpaceBeforeArgument
+                    SpaceBeforeColon = format.SpaceBeforeColon 
+                    SemicolonAtEndOfLine = format.SemicolonAtEndOfLine }
+            | _, null ->
+                { FormatConfig.Default with
+                    PageWidth = textStylePolicy.FileWidth
+                    IndentSpaceNum = textStylePolicy.IndentWidth }
+            | _ ->
+                let format = formattingPolicy.DefaultFormat
+                { FormatConfig.Default with
+                    PageWidth = textStylePolicy.FileWidth
+                    IndentSpaceNum = textStylePolicy.IndentWidth
+                    ReorderOpenDeclaration = format.ReorderOpenDeclaration
+                    SpaceAfterComma = format.SpaceAfterComma
+                    SpaceAfterSemicolon = format.SpaceAfterSemicolon
+                    SpaceAroundDelimiter = format.SpaceAroundDelimiter
+                    SpaceBeforeArgument = format.SpaceBeforeArgument
+                    SpaceBeforeColon = format.SpaceBeforeColon 
+                    SemicolonAtEndOfLine = format.SemicolonAtEndOfLine }
+        Debug.WriteLine("**Fantomas**: Read config - \n{0}", sprintf "%A" config)
         match formattingOption with
         | Document -> 
             try 
@@ -67,7 +100,7 @@ type FSharpFormatter() =
             // handle of the document and replace the whole text
             let doc = IdeApp.Workbench.ActiveDocument
             if doc <> null && doc.Editor <> null then
-                doc.Editor.Text <- output
+                doc.Editor.Replace(0, doc.Editor.Length, output) |> ignore
                 null
             else
                 Debug.WriteLine("**Fantomas**: Can't access active document.")
@@ -78,22 +111,29 @@ type FSharpFormatter() =
             let doc = IdeApp.Workbench.ActiveDocument
             if doc = null then false 
             else 
-                let fileName = doc.FileName.ToString()
-                fileName.ToLower().EndsWith(".fsi")
+                doc.FileName.Extension.Equals(".fsi", StringComparison.OrdinalIgnoreCase)
         Debug.WriteLine("**Fantomas**: Is this an fsi file? {0}", isFsiFile)
         let textStylePolicy = policyParent.Get<TextStylePolicy>(mimeTypeInheritanceChain)
         let formattingPolicy = policyParent.Get<FSharpFormattingPolicy>(mimeTypeInheritanceChain)
 
         format isFsiFile textStylePolicy formattingPolicy input formattingOption
 
-    // We don't support on-the-fly formatting and smart indenting yet. 
-    // There's no point to use IAdvanceCodeFormatter.
-    interface ICodeFormatter with
-        member __.FormatText(policyParent, mimeTypeInheritanceChain, input) =
+    static member MimeType = "text/x-fsharp"
+
+    override __.SupportsOnTheFlyFormatting = false
+    override __.SupportsCorrectingIndent = false
+
+    override __.CorrectIndenting(policyParent : PolicyContainer, mimeTypeChain : string seq, data : TextEditorData, line : int) =
+        raise <| NotSupportedException()
+
+    override __.OnTheFlyFormat(doc : MonoDevelop.Ide.Gui.Document, startOffset : int, endOffset : int) =
+        raise <| NotSupportedException()
+
+    override __.FormatText(policyParent, mimeTypeInheritanceChain, input, fromOffset, toOffset) =
+        if fromOffset = 0 && toOffset = String.length input then 
             Debug.WriteLine("**Fantomas**: Formatting document")
             formatText policyParent mimeTypeInheritanceChain input Document
-
-        member __.FormatText(policyParent, mimeTypeInheritanceChain, input, fromOffset, toOffset) =
+        else
             Debug.WriteLine("**Fantomas**: Formatting selection")
             formatText policyParent mimeTypeInheritanceChain input (Selection(fromOffset, toOffset))
 
