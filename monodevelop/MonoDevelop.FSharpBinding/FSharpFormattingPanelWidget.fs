@@ -17,15 +17,57 @@ type FSharpFormattingPolicyPanelWidget() =
     let store = new ListStore (typedefof<string>, typedefof<FSharpFormattingSettings>)
     let mutable policy = FSharpFormattingPolicy()
 
-    member val private vbox2 : Gtk.VBox = null with get, set
-    member val private hbox1 : Gtk.HBox = null with get, set
-    member val private boxScopes : Gtk.VBox = null with get, set
-    member val private GtkScrolledWindow : Gtk.ScrolledWindow = null with get, set
-    member val private listView : Gtk.TreeView = null with get, set
-    member val private hbox2 : Gtk.HBox = null with get, set 
-    member val private vbox4 : Gtk.VBox = null with get, set
-    member val private tableScopes : Gtk.Table = null with get, set
-    member val private propertyGrid : PropertyGrid = null with get, set
+    let mutable vbox2 : Gtk.VBox = null
+    let mutable hbox1 : Gtk.HBox = null
+    let mutable boxScopes : Gtk.VBox = null
+    let mutable GtkScrolledWindow : Gtk.ScrolledWindow = null
+    let mutable listView : Gtk.TreeView = null
+    let mutable hbox2 : Gtk.HBox = null
+    let mutable vbox4 : Gtk.VBox = null
+    let mutable tableScopes : Gtk.Table = null
+    let mutable propertyGrid : PropertyGrid = null
+
+    let getName format =
+        if format = policy.DefaultFormat then
+            GettextCatalog.GetString ("Default")
+        else
+            let i = policy.Formats.IndexOf (format) + 1
+            String.Format(GettextCatalog.GetString ("Format #{0}"), i)
+
+    let updateCurrentName() =
+        let it : TreeIter ref = ref Unchecked.defaultof<_>
+        match listView.Selection.GetSelected(it) with
+        | true -> 
+             let s = store.GetValue(!it, 1) :?> FSharpFormattingSettings
+             store.SetValue (!it, 0, getName s)
+        | false -> ()
+
+    let fillFormat so =
+        match so with
+        | Some format ->
+            currentFormat <- format
+            propertyGrid.CurrentObject <- format
+        | None -> ()
+        updateCurrentName()
+        propertyGrid.Sensitive <- so.IsSome    
+
+    let handleListViewSelectionChanged _ =
+        let it : TreeIter ref = ref Unchecked.defaultof<_>
+        match listView.Selection.GetSelected(it) with
+        | true -> 
+            let format = store.GetValue(!it, 1) :?> FSharpFormattingSettings
+            fillFormat(Some format) 
+        | _ -> 
+            fillFormat(None)
+
+    let appendSettings format =
+        store.AppendValues(getName format, format) |> ignore
+
+    let update() =
+        store.Clear()
+        appendSettings(policy.DefaultFormat)
+        for s in policy.Formats do
+            appendSettings s
 
     member private this.Build() =
         Stetic.Gui.Initialize(this)
@@ -33,133 +75,99 @@ type FSharpFormattingPolicyPanelWidget() =
         Stetic.BinContainer.Attach (this) |> ignore
         this.Name <- "MonoDevelop.FSharp.Formatting.FSharpFormattingPolicyPanelWidget"
         // Container child MonoDevelop.Xml.Formatting.XmlFormattingPolicyPanelWidget.Gtk.Container+ContainerChild
-        this.vbox2 <- new Gtk.VBox ()
-        this.vbox2.Name <- "vbox2"
-        this.vbox2.Spacing <- 6
+        vbox2 <- new Gtk.VBox()
+        vbox2.Name <- "vbox2"
+        vbox2.Spacing <- 6
         // Container child vbox2.Gtk.Box+BoxChild
-        this.hbox1 <- new Gtk.HBox ()
-        this.hbox1.Name <- "hbox1"
-        this.hbox1.Spacing <- 6
+        hbox1 <- new Gtk.HBox()
+        hbox1.Name <- "hbox1"
+        hbox1.Spacing <- 6
         // Container child hbox1.Gtk.Box+BoxChild
-        this.boxScopes <- new Gtk.VBox ()
-        this.boxScopes.Name <- "boxScopes"
-        this.boxScopes.Spacing <- 6
+        boxScopes <- new Gtk.VBox()
+        boxScopes.Name <- "boxScopes"
+        boxScopes.Spacing <- 6
         // Container child boxScopes.Gtk.Box+BoxChild
-        this.GtkScrolledWindow <- new Gtk.ScrolledWindow ()
-        this.GtkScrolledWindow.Name <- "GtkScrolledWindow"
-        this.GtkScrolledWindow.ShadowType <- ShadowType.In
+        GtkScrolledWindow <- new Gtk.ScrolledWindow()
+        GtkScrolledWindow.Name <- "GtkScrolledWindow"
+        GtkScrolledWindow.ShadowType <- ShadowType.In
         // Container child GtkScrolledWindow.Gtk.Container+ContainerChild
-        this.listView <- new Gtk.TreeView ()
-        this.listView.CanFocus <- true
-        this.listView.Name <- "listView"
-        this.listView.HeadersVisible <- false
-        this.GtkScrolledWindow.Add (this.listView)
-        this.boxScopes.Add (this.GtkScrolledWindow)
-        let w2 = this.boxScopes.[this.GtkScrolledWindow] :?> Gtk.Box.BoxChild
+        listView <- new Gtk.TreeView()
+        listView.CanFocus <- true
+        listView.Name <- "listView"
+        listView.HeadersVisible <- false
+        GtkScrolledWindow.Add(listView)
+        boxScopes.Add(GtkScrolledWindow)
+        let w2 = boxScopes.[GtkScrolledWindow] :?> Gtk.Box.BoxChild
         w2.Position <- 0
         // Container child boxScopes.Gtk.Box+BoxChild
-        this.hbox2 <- new Gtk.HBox ()
-        this.hbox2.Name <- "hbox2"
-        this.hbox2.Spacing <- 6
-
-        this.boxScopes.Add (this.hbox2)
-        let w5 = this.boxScopes.[this.hbox2] :?> Gtk.Box.BoxChild
+        hbox2 <- new Gtk.HBox()
+        hbox2.Name <- "hbox2"
+        hbox2.Spacing <- 6
+        boxScopes.Add(hbox2)
+        let w5 = boxScopes.[hbox2] :?> Gtk.Box.BoxChild
         w5.Position <- 1
         w5.Expand <- false
         w5.Fill <- false
-        this.hbox1.Add (this.boxScopes)
-        let w6 = this.hbox1.[this.boxScopes] :?> Gtk.Box.BoxChild
+        hbox1.Add(boxScopes)
+        let w6 = hbox1.[boxScopes] :?> Gtk.Box.BoxChild
         w6.Position <- 0
         w6.Expand <- false
         w6.Fill <- false
 
         // Container child hbox1.Gtk.Box+BoxChild
-        this.vbox4 <- new Gtk.VBox ()
-        this.vbox4.Name <- "vbox4"
-        this.vbox4.Spacing <- 6
+        vbox4 <- new Gtk.VBox()
+        vbox4.Name <- "vbox4"
+        vbox4.Spacing <- 6
 
         // Container child vbox4.Gtk.Box+BoxChild
-        this.tableScopes <- new Gtk.Table ((uint32 3), (uint32 3), false)
-        this.tableScopes.Name <- "tableScopes"
-        this.tableScopes.RowSpacing <- (uint32 6)
-        this.tableScopes.ColumnSpacing <- (uint32 6)
-        this.vbox4.Add (this.tableScopes)
-        let w8 = this.vbox4.[this.tableScopes] :?> Gtk.Box.BoxChild
+        tableScopes <- new Gtk.Table(uint32 3, uint32 3, false)
+        tableScopes.Name <- "tableScopes"
+        tableScopes.RowSpacing <- uint32 6
+        tableScopes.ColumnSpacing <- uint32 6
+        vbox4.Add(tableScopes)
+        let w8 = vbox4.[tableScopes] :?> Gtk.Box.BoxChild
         w8.Position <- 1
         w8.Expand <- false
         w8.Fill <- false
         // Container child vbox4.Gtk.Box+BoxChild
-        this.propertyGrid <- new PropertyGrid ()
-        this.propertyGrid.Name <- "propertyGrid"
-        this.propertyGrid.ShowToolbar <- false
-        this.propertyGrid.ShowHelp <- false
-        this.vbox4.Add (this.propertyGrid)
-        let w9 = this.vbox4.[this.propertyGrid] :?> Gtk.Box.BoxChild
+        propertyGrid <- new PropertyGrid()
+        propertyGrid.Name <- "propertyGrid"
+        propertyGrid.ShowToolbar <- false
+        propertyGrid.ShowHelp <- false
+        vbox4.Add (propertyGrid)
+        let w9 = vbox4.[propertyGrid] :?> Gtk.Box.BoxChild
         w9.Position <- 2
-        this.hbox1.Add (this.vbox4)
-        let w10 = this.hbox1.[this.vbox4] :?> Gtk.Box.BoxChild
+        hbox1.Add(vbox4)
+        let w10 = hbox1.[vbox4] :?> Gtk.Box.BoxChild
         w10.Position <- 1
 
-        this.vbox2.Add (this.hbox1)
-        let w11 = this.vbox2.[this.hbox1] :?> Gtk.Box.BoxChild
+        vbox2.Add(hbox1)
+        let w11 = vbox2.[hbox1] :?> Gtk.Box.BoxChild
         w11.Position <- 0
 
-        this.Add (this.vbox2)
+        this.Add(vbox2)
         if this.Child <> null then
            this.Child.ShowAll()
-
-    member this.FillFormat(sf) =
-        match sf with
-        | Some format ->
-            currentFormat <- format
-            this.propertyGrid.CurrentObject <- format
-            this.propertyGrid.Sensitive <- true
-        | None ->
-            this.propertyGrid.Sensitive <- false    
-
-    member private this.HandleListViewSelectionChanged _ =
-        let it : TreeIter ref = ref Unchecked.defaultof<_>
-        match this.listView.Selection.GetSelected(it) with
-        | true -> 
-            let format = store.GetValue(!it, 1) :?> FSharpFormattingSettings
-            this.FillFormat(Some format) 
-        | _ -> 
-            this.FillFormat(None)
+        boxScopes.Hide()
 
     member this.Initialize() =
         this.Build()
 
-        this.propertyGrid.ShowToolbar <- false
-        this.propertyGrid.ShadowType <- ShadowType.In
+        propertyGrid.ShowToolbar <- false
+        propertyGrid.ShadowType <- ShadowType.In
 
-        this.listView.Model <- store
-        this.listView.Selection.Changed.Add(this.HandleListViewSelectionChanged)
+        listView.Model <- store
+        listView.Selection.Changed.Add(handleListViewSelectionChanged)
 
-    member this.CommitPendingChanges() = 
-        this.propertyGrid.CommitPendingChanges()
+    member __.CommitPendingChanges() = 
+        propertyGrid.CommitPendingChanges()
 
-    member this.GetName(format) =
-        if format = policy.DefaultFormat then
-            GettextCatalog.GetString ("Default")
-        else
-            let i = policy.Formats.IndexOf (format) + 1
-            String.Format(GettextCatalog.GetString ("Format #{0}"), i)
-
-    member this.AppendSettings format =
-        store.AppendValues (this.GetName format, format) |> ignore
-
-    member private this.Update() =
-        store.Clear()
-        this.AppendSettings (policy.DefaultFormat)
-        for s in policy.Formats do
-            this.AppendSettings s
-
-    member this.SetFormat(p : FSharpFormattingPolicy) =
+    member __.SetFormat(p : FSharpFormattingPolicy) =
         policy <- p
-        this.Update()
+        update()
         match store.GetIterFirst() with
         | true, it ->
-            this.listView.Selection.SelectIter(it)
+            listView.Selection.SelectIter(it)
         | _ -> ()
 
 

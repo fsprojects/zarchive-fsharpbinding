@@ -61,12 +61,9 @@
 
 	<Extension path = "/MonoDevelop/ProjectModel/PolicySets/Mono" >
 		<Policies resource="FSharpStylePolicy.xml" />
+    <Policies resource="FSharpFormattingPolicy.xml" />
 	</Extension>
 	
-	<Extension path = "/MonoDevelop/ProjectModel/PolicySets" >
-		<Policies resource="FSharpFormattingPolicy.xml" />
-	</Extension>
-
     <Extension path = "/MonoDevelop/ProjectModel/Gui/MimeTypePolicyPanels">
         <Panel id = "FSharpFormatting" _label = "F# Formatting" mimeType="text/x-fsharp" class = "MonoDevelop.FSharp.Formatting.FSharpFormattingPolicyPanel" />
     </Extension>

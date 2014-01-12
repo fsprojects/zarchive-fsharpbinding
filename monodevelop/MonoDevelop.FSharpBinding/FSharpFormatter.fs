@@ -34,7 +34,13 @@ type FSharpFormatter() =
         
         searchPos 0 (positions.Length - 1)
 
-    let format isFsiFile (textStylePolicy : TextStylePolicy) (formattingPolicy : FSharpFormattingPolicy) input formattingOption =
+    let format (doc : Gui.Document) (textStylePolicy : TextStylePolicy) (formattingPolicy : FSharpFormattingPolicy) input formattingOption =
+        let isFsiFile = 
+            if doc = null then false 
+            else 
+                doc.FileName.Extension.Equals(".fsi", StringComparison.OrdinalIgnoreCase)
+        Debug.WriteLine("**Fantomas**: Is this an fsi file? {0}", isFsiFile)
+
         let config = 
             match textStylePolicy, formattingPolicy with
             | null, null -> 
@@ -69,13 +75,16 @@ type FSharpFormatter() =
                     SpaceBeforeColon = format.SpaceBeforeColon 
                     SemicolonAtEndOfLine = format.SemicolonAtEndOfLine }
         Debug.WriteLine("**Fantomas**: Read config - \n{0}", sprintf "%A" config)
+
         match formattingOption with
         | Document -> 
-            try 
-                CodeFormatter.formatSourceString isFsiFile input config
-            with :? FormatException as ex ->
-                Debug.WriteLine("Error occurs: {0}", ex.Message)
-                input
+            let output =
+                try 
+                    CodeFormatter.formatSourceString isFsiFile input config
+                with :? FormatException as ex ->
+                    Debug.WriteLine("Error occurs: {0}", ex.Message)
+                    input
+            output
 
         | Selection(fromOffset, toOffset) ->
             // Convert from offsets to line and column position
@@ -84,41 +93,51 @@ type FSharpFormatter() =
                 |> Seq.map (fun s -> String.length s + 1)
                 |> Seq.scan (+) 0
                 |> Seq.toArray
-            let fromOffset = max 0 fromOffset
-            let toOffset = min input.Length toOffset
             Debug.WriteLine("**Fantomas**: Offsets from {0} to {1}", fromOffset, toOffset)
-            let startPos = offsetToPos positions fromOffset
-            let endPos = offsetToPos positions toOffset
+            let startPos = offsetToPos positions (max 0 fromOffset)
+            let endPos = offsetToPos positions (min input.Length toOffset)
             Diagnostics.Debug.Assert(startPos.IsSome && endPos.IsSome, "Offsets are within valid ranges.")
             let r = Range.mkRange "/tmp.fsx" startPos.Value endPos.Value
             Debug.WriteLine("**Fantomas**: Try to format range {0}.", r)
             let output =
                 try 
-                    CodeFormatter.formatSourceString isFsiFile input config
+                    CodeFormatter.formatSelectionFromString isFsiFile r input config
                 with :? FormatException as ex ->
                     Debug.WriteLine("Error occurs: {0}", ex.Message)
                     input
             // Since Fantomas expands the range for valid F# code, we have to get 
             // handle of the document and replace the whole text
-            let doc = IdeApp.Workbench.ActiveDocument
             if doc <> null && doc.Editor <> null then
-                doc.Editor.Replace(0, doc.Editor.Length, output) |> ignore
+                let editor = doc.Editor
+                let caretLine = editor.Caret.Line
+                let maxLine = editor.LineCount
+                let column = editor.Caret.Column
+                use undo = editor.OpenUndoGroup()
+                let version = editor.Version
+                let selected = editor.IsSomethingSelected
+                editor.Replace(0, editor.Length, output) |> ignore
+                let newMaxLine = doc.Editor.LineCount
+                if maxLine <> 0 then
+                    let newCaretLine = int ((float caretLine / float maxLine) * (float newMaxLine))
+                    let newCaretOffset = editor.LocationToOffset(newCaretLine, 0) + column
+                    let loc = editor.OffsetToLocation(newCaretOffset)
+                    editor.SetCaretTo(loc.Line, loc.Column)
+                    Debug.WriteLine("**Fantomas**: Set caret to line {0} column {1}.", loc.Line, loc.Column)
+                if selected then
+                    let newFromOffset = version.MoveOffsetTo(editor.Version, fromOffset)
+                    let newToOffset = version.MoveOffsetTo(editor.Version, output.Length - input.Length + toOffset)
+                    editor.SetSelection(newFromOffset, newToOffset)
+                    Debug.WriteLine("**Fantomas**: Set selection between offset {0} and offset {1}.", newFromOffset, newToOffset)
                 null
             else
                 Debug.WriteLine("**Fantomas**: Can't access active document.")
                 null
 
-    let formatText (policyParent : PolicyContainer) (mimeTypeInheritanceChain : string seq) (input : string) formattingOption =
-        let isFsiFile = 
-            let doc = IdeApp.Workbench.ActiveDocument
-            if doc = null then false 
-            else 
-                doc.FileName.Extension.Equals(".fsi", StringComparison.OrdinalIgnoreCase)
-        Debug.WriteLine("**Fantomas**: Is this an fsi file? {0}", isFsiFile)
+    let formatText (doc : Gui.Document) (policyParent : PolicyContainer) (mimeTypeInheritanceChain : string seq) (input : string) formattingOption =
         let textStylePolicy = policyParent.Get<TextStylePolicy>(mimeTypeInheritanceChain)
         let formattingPolicy = policyParent.Get<FSharpFormattingPolicy>(mimeTypeInheritanceChain)
 
-        format isFsiFile textStylePolicy formattingPolicy input formattingOption
+        format doc textStylePolicy formattingPolicy input formattingOption
 
     static member MimeType = "text/x-fsharp"
 
@@ -128,14 +147,15 @@ type FSharpFormatter() =
     override __.CorrectIndenting(policyParent : PolicyContainer, mimeTypeChain : string seq, data : TextEditorData, line : int) =
         raise <| NotSupportedException()
 
-    override __.OnTheFlyFormat(doc : MonoDevelop.Ide.Gui.Document, startOffset : int, endOffset : int) =
+    override __.OnTheFlyFormat(doc : Gui.Document, startOffset : int, endOffset : int) =
         raise <| NotSupportedException()
 
     override __.FormatText(policyParent, mimeTypeInheritanceChain, input, fromOffset, toOffset) =
+        let doc = IdeApp.Workbench.ActiveDocument
         if fromOffset = 0 && toOffset = String.length input then 
             Debug.WriteLine("**Fantomas**: Formatting document")
-            formatText policyParent mimeTypeInheritanceChain input Document
+            formatText doc policyParent mimeTypeInheritanceChain input Document
         else
             Debug.WriteLine("**Fantomas**: Formatting selection")
-            formatText policyParent mimeTypeInheritanceChain input (Selection(fromOffset, toOffset))
+            formatText doc policyParent mimeTypeInheritanceChain input (Selection(fromOffset, toOffset))
 
