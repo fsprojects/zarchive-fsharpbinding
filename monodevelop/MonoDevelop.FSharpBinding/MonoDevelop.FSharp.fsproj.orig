@@ -117,6 +117,12 @@
     <Compile Include="FSharpHighlightUsagesExtension.fs" />
     <Compile Include="FSharpResolverProvider.fs" />
     <Compile Include="FSharpReferenceFinderExtension.fs" />
+    <Compile Include="FSharpFormattingPolicy.fs" />
+    <Compile Include="FSharpFormatter.fs" />
+    <Compile Include="FSharpFormattingPanelWidget.fs" />
+    <Compile Include="FSharpFormattingPolicyPanel.fs" />
+    <EmbeddedResource Include="FSharpFormattingPolicy.xml" />
+    <EmbeddedResource Include="FSharpStylePolicy.xml" />
     <Mvc4Files Include="..\dependencies\AspNetMvc4\System.Web.Helpers.dll">
       <Link>System.Web.Helpers.dll</Link>
     </Mvc4Files>
@@ -161,6 +167,7 @@
     <Reference Include="System.Xaml" />
     <Reference Include="mscorlib" />
     <Reference Include="Mono.Cairo" />
+    <Reference Include="Mono.Posix" />
     <Reference Include="Mono.Addins">
       <Private>False</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\Mono.Addins.dll</HintPath>
@@ -214,6 +221,12 @@
     </Reference>
     <Reference Include="FSharp.Compiler.Editor">
       <HintPath>packages\FSharp.Compiler.Service.0.0.17\lib\net40\FSharp.Compiler.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="FantomasLib">
+      <HintPath>packages\Fantomas.1.0.5\lib\FantomasLib.dll</HintPath>      
+    </Reference>
+    <Reference Include="FantomasLib">
+      <HintPath>packages\Fantomas.1.0.5.1\lib\FantomasLib.dll</HintPath>      
     </Reference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
