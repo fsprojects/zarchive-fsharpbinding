@@ -35,17 +35,16 @@
     <Addin id="Refactoring" version="INSERT_FSPROJ_MDVERSION4"/>
   </Dependencies>
 
-  <!-- This is the F# 2.0 targets file. This seems the best choice at the moment -->
+  <!-- By default projects use the F# 3.0 targets file. -->
   <!-- For Mono F# 3.0 and beyond, this targets file is also installed and it points to the F# 3.0 compiler -->
-  <!-- New projects will be created with this targets file. When opened with Visual Studio 2012, it will ask for a project -->
-  <!-- upgrade and replace with the F# 3.0 targets file. Project files with the F# 3.0 targets file will also work on Mono if F# 3.0 is -->
-  <!-- available. -->
+  <!-- New projects will be created with this targets file. When opened with Visual Studio 2013, it will ask for a project -->
+  <!-- upgrade but keep referencing the F# 3.0 targets file in when used on Mono. -->
   <Extension path="/MonoDevelop/ProjectModel/MSBuildItemTypes">
     <DotNetProject language="F#" extension="fsproj"
 			guid="{4925A630-B079-445d-BCD4-3A9C94FE9307}"
-			import="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets"
-			resourceHandler="MonoDevelop.FSharp.FSharpResourceIdBuilder"/>
-  </Extension>
+      import="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets"
+      resourceHandler="MonoDevelop.FSharp.FSharpResourceIdBuilder"/>
+    </Extension>
 
   <Extension path="/MonoDevelop/Ide/GlobalOptionsDialog/Other">
     <Section id="FSharpSettings" _label="F# Settings" class = "MonoDevelop.FSharp.FSharpSettingsPanel" />
@@ -116,11 +115,11 @@
   </Extension>
 
   <Extension path="/MonoDevelop/Core/StockIcons">
-    <StockIcon stockid="md-fs-logo32" resource="icons.fsharp-icon-32.png" />
-    <StockIcon stockid="md-fs-script32" resource="icons.fsharp-script-32.png" />
-    <StockIcon stockid="md-fs-file" resource="icons.fsharp-file-icon.png" />
-    <StockIcon stockid="md-fs-script" resource="icons.fsharp-script-icon.png" />
-    <StockIcon stockid="md-fs-project" resource="icons.fsharp-project-icon.png" />
+    <!-- Not used <StockIcon stockid="md-fs-logo32"   resource="icons.fsharp-icon-32.png" /> -->
+    <!-- Not used <StockIcon stockid="md-fs-script32" resource="icons.fsharp-script-32.png" /> -->
+    <StockIcon stockid="md-fs-file"    resource="icons.fsharp-file-icon.png" size="Menu" />
+    <StockIcon stockid="md-fs-script"  resource="icons.fsharp-script-icon.png" size="Menu" />
+    <StockIcon stockid="md-fs-project" resource="icons.fsharp-project-icon.png" size="Menu" />
   </Extension>
 
   <Extension path="/MonoDevelop/Core/MimeTypes">
@@ -129,12 +128,13 @@
     </MimeType>
     <MimeType id="text/x-fsharp" _description="F# Script File" icon="md-fs-script" isText="true">
       <File pattern="*.fsx" />
-    </MimeType>
-    <MimeType id="text/x-fsharp" _description="F# Script File" icon="md-fs-script" isText="true">
       <File pattern="*.fsscript" />
-    </MimeType>
+        </MimeType>
     <MimeType id="text/x-fsharp" _description="F# Signature File" icon="md-fs-file" isText="true">
       <File pattern="*.fsi" />
+        </MimeType>
+    <MimeType id="application/fsproject+xml" _description="F# project file" baseType="application/xml">
+      <File pattern="*.fsproj" />
     </MimeType>
   </Extension>
 
@@ -142,9 +142,16 @@
     <LanguageBinding id="F#" supportedextensions=".fs,.fsi,.fsx,.fsscript"
                      class="MonoDevelop.FSharp.FSharpLanguageBinding" />
   </Extension>
+
+  <Extension path = "/MonoDevelop/Ide/ReferenceFinder">
+    <ReferenceFinder supportedmimetypes = "text/x-fsharp"
+                     class = "MonoDevelop.FSharp.FSharpReferenceFinder" />
+  </Extension>
+
   <Extension path = "/MonoDevelop/Ide/TextEditorExtensions">
     <Class fileExtensions=".fs,.fsi,.fsx,.fsscript" class="MonoDevelop.FSharp.FSharpTextEditorCompletion" />
-    <Class fileExtensions = ".fs" class = "MonoDevelop.FSharp.FSharpPathExtension" />
+    <Class fileExtensions = ".fs,.fsx" class = "MonoDevelop.FSharp.FSharpPathExtension" />
+    <Class fileExtensions = ".fs,.fsx" class = "MonoDevelop.FSharp.HighlightUsagesExtension" />
   </Extension>
 
   <Extension path = "/MonoDevelop/ProjectModel/ProjectServiceExtensions">
@@ -191,6 +198,20 @@
           id="MonoDevelop.FSharp.FSharpCommands.SendReferences"
           macShortcut="Meta|Control|P"
           shortcut="Ctrl|Alt|P" />
+          
+      <Command _description="Restart F# Interactive"
+          _label="Restart F# Interactive"
+          defaultHandler="MonoDevelop.FSharp.RestartFsi"
+          id="MonoDevelop.FSharp.FSharpCommands.RestartFsi"
+          macShortcut="Meta|Control|R"
+          shortcut="Ctrl|Alt|R" />
+          
+      <Command _description="Clear F# Interactive"
+          _label="Clear F# Interactive"
+          defaultHandler="MonoDevelop.FSharp.ClearFsi"
+          id="MonoDevelop.FSharp.FSharpCommands.ClearFsi"
+          macShortcut="Meta|Control|C"
+          shortcut="Ctrl|Alt|C" />
 
     </Category>
   </Extension>

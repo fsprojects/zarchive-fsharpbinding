@@ -15,35 +15,50 @@ open MonoDevelop.Ide.Gui.Content
 open MonoDevelop.Ide.CodeCompletion
 open Microsoft.FSharp.Compiler
 open Microsoft.FSharp.Compiler.SourceCodeServices
-
+open FSharp.CompilerBinding
 open ICSharpCode.NRefactory.Editor
 open ICSharpCode.NRefactory.Completion
 
 /// A list of completions is returned.  Contains title and can generate description (tool-tip shown on the right) of the item.
 /// Description is generated lazily because it is quite slow and there can be numerous.
-type internal FSharpMemberCompletionData(name, datatipLazy:Lazy<DataTipText>, glyph) =
+type internal FSharpMemberCompletionData(name, datatipLazy:Lazy<ToolTipText>, glyph) =
     inherit CompletionData(CompletionText = Lexhelp.Keywords.QuoteIdentifierIfNeeded name, 
                            DisplayText = name, 
                            DisplayFlags = DisplayFlags.DescriptionHasMarkup)
 
-    let description = lazy (TipFormatter.formatTip false datatipLazy.Value)
+    let description = lazy (TipFormatter.formatTip datatipLazy.Value)
     let icon = lazy (MonoDevelop.Core.IconId(ServiceUtils.getIcon glyph))
 
-    new (name, datatip:DataTipText, glyph) =  new FSharpMemberCompletionData(name, lazy datatip, glyph)
+    new (name, datatip:ToolTipText, glyph) =  new FSharpMemberCompletionData(name, lazy datatip, glyph)
     new (mi:Declaration) =  new FSharpMemberCompletionData(mi.Name, lazy mi.DescriptionText, mi.Glyph)
 
     override x.Description = name //description.Value   // this is not used
     override x.Icon = icon.Value
 
     /// Check if the datatip has multiple overloads
-    override x.HasOverloads = match datatipLazy.Value with DataTipText xs -> xs.Length > 1
+    override x.HasOverloads = 
+        match datatipLazy.Value with 
+        | ToolTipText [xs] ->
+            match xs with 
+            | ToolTipElementGroup ttg -> true 
+            | _ -> false
+        | ToolTipText list -> true
 
     /// Split apart the elements into separate overloads
     override x.OverloadedData =
         match datatipLazy.Value with 
-        | DataTipText xs -> 
-            xs |> Seq.map (fun x -> FSharpMemberCompletionData(name, DataTipText[x], glyph)) 
-               |> Seq.cast
+        | ToolTipText xs -> 
+            seq{for tooltipElement in xs do
+                match tooltipElement with
+                | ToolTipElement(a, b) -> yield FSharpMemberCompletionData(name, ToolTipText[tooltipElement], glyph) :> _
+                | ToolTipElementGroup(items) ->
+                  let overloads =
+                      items 
+                      |> Seq.map (fun args -> FSharpMemberCompletionData(name, ToolTipText[ToolTipElement(args)], glyph)) 
+                      |> Seq.cast
+                  yield! overloads
+                | _ -> () }
+
 
     override x.AddOverload (data: ICompletionData) = ()//not currently called
 
@@ -51,48 +66,13 @@ type internal FSharpMemberCompletionData(name, datatipLazy:Lazy<DataTipText>, gl
     override x.CreateTooltipInformation (smartWrap: bool) = 
       
       Debug.WriteLine("computing tooltip for {0}", name)
-      
-      let description = description.Value
-      let lines = description.Split('\n','\r')
 
-      // We have to split the text into a 'signature' (formatted in mono-font) and
-      // a 'summary' (formatted in proportional font).  This is not ideal as the F# language
-      // service mixes elements that logically belong to each. So what is below is a heuristic reordering.
-      // Along the way we do some reformatting of the 'sections' that F# generates.
-      let isDividerLine (s:string) = s.StartsWith("-----")
-      let sections = 
-           let rec loop (xs:string[]) = 
-               seq {
-                 if xs.Length > 0 then
-                    let sect = xs |> Seq.takeWhile (isDividerLine >> not) |> Seq.filter (String.IsNullOrEmpty >> not) |> Seq.toArray
-                    let rest = xs |> Seq.skipWhile (isDividerLine >> not) |> Seq.skipWhile isDividerLine |> Seq.toArray
-                    if sect.Length > 0 then 
-                        yield sect
-                    yield! loop rest }
-           loop lines |> Seq.toArray
+      match description.Value with
+      | [signature,comment] -> TooltipInformation(SummaryMarkup = comment, SignatureMarkup = signature)
+      //With multiple tips just take the head.  
+      //This shouldnt happen anyway as we split them in the resolver provider
+      | multiple -> multiple |> List.head |> (fun (signature,comment) -> TooltipInformation(SummaryMarkup = comment, SignatureMarkup = signature))
 
-      let firstSection, otherSections = sections.[0], sections.[1..]
-
-      // Only show up to 8 sections - System.Action and System.Func get ridiculous
-      let otherSections = otherSections |> Seq.filter (fun sect -> sect.Length > 0) |> Seq.truncate 8 |> Seq.toArray
-
-      // Include the indented format of all the items in various sections in the 'signature'
-      let isSignatureLine (s:string) = s.StartsWith(" ")
-      let signatureLines = 
-         [| for sect in (firstSection :: Array.toList otherSections) do 
-                let firstLine, otherLines = sect.[0], sect.[1..]
-                yield firstLine
-                yield! otherLines |> Seq.takeWhile isSignatureLine  |]
-
-      // Only show the description of the first section
-      let summaryLines = 
-          let ls = firstSection
-          let _firstLine, otherLines = ls.[0], ls.[1..]
-          otherLines |> Seq.skipWhile isSignatureLine |> Seq.filter (String.IsNullOrEmpty >> not) 
-
-      let tooltipInfo = TooltipInformation(SummaryMarkup   = String.concat "\n" summaryLines,
-                                           SignatureMarkup = String.concat "\n" signatureLines)
-      tooltipInfo
 
 /// Completion data representing a delayed fetch of completion data
 type internal FSharpTryAgainMemberCompletionData() =
@@ -108,31 +88,34 @@ type internal FSharpErrorCompletionData(exn:exn) =
     override x.Icon =  new MonoDevelop.Core.IconId("md-event")
 
 /// Provide information to the 'method overloads' windows that comes up when you type '('
-type ParameterDataProvider(nameStart: int, name, meths : Method array) = 
+type ParameterDataProvider(nameStart: int, name, meths : MethodGroupItem array) = 
     inherit MonoDevelop.Ide.CodeCompletion.ParameterDataProvider (nameStart)
     override x.Count = meths.Length
         /// Returns the markup to use to represent the specified method overload
         /// in the parameter information window.
     override x.CreateTooltipInformation (overload:int, currentParameter:int, smartWrap:bool) = 
         // Get the lower part of the text for the display of an overload
-        let description = 
-            let meth = meths.[overload]
-            let text = TipFormatter.formatTip false meth.Description 
-            let allLines = text.Split([|'\n';'\r'|], StringSplitOptions.RemoveEmptyEntries)
-            let body = if allLines.Length <= 1 then None else Some <| String.Join("\n", allLines.[1..])
+        let meth = meths.[overload]
+        let signature, comment =
+            match TipFormatter.formatTip meth.Description with
+            | [signature,comment] -> signature,comment
+            //With multiple tips just take the head.  
+            //This shouldnt happen anyway as we split them in the resolver provider
+            | multiple -> multiple |> List.head |> (fun (signature,comment) -> signature,comment)
+
+        let description =
             let param = 
                 meth.Parameters |> Array.mapi (fun i param -> 
                     let paramDesc = 
                         // Sometimes the parameter decription is hidden in the XML docs
-                        match TipFormatter.extractParamTip param.Name meth.Description  with 
-                        | Some tip -> tip
+                        match TipFormatter.extractParamTip param.ParameterName meth.Description with 
+                        | Some(tip) -> tip
                         | None -> param.Description
-                    let name = if i = currentParameter then  "<b>" + param.Name + "</b>" else param.Name
+                    let name = if i = currentParameter then  "<b>" + param.ParameterName + "</b>" else param.ParameterName
                     let text = name + ": " + GLib.Markup.EscapeText paramDesc
                     text )
-            match body with
-            | None -> String.Join("\n", param)
-            | Some body -> body + "\n\n" + String.Join("\n", param)
+            if String.IsNullOrEmpty comment then String.Join("\n", param)
+            else comment + "\n" + String.Join("\n", param)
             
         
         // Returns the text to use to represent the specified parameter
@@ -140,12 +123,11 @@ type ParameterDataProvider(nameStart: int, name, meths : Method array) =
             let meth = meths.[overload]
             if currentParameter < 0 || currentParameter >= meth.Parameters.Length  then "" else 
             let param = meth.Parameters.[currentParameter]
-            param.Name 
+            param.ParameterName 
 
         let heading = 
-            let meth = meths.[overload]
-            let text = TipFormatter.formatTip false meth.Description 
-            let lines = text.Split [| '\n';'\r' |]
+
+            let lines = signature.Split [| '\n';'\r' |]
 
             // Try to highlight the current parameter in bold. Hack apart the text based on (, comma, and ), then
             // put it back together again.
@@ -183,7 +165,7 @@ type ParameterDataProvider(nameStart: int, name, meths : Method array) =
     override x.GetParameterName (overload:int, paramIndex:int) =
         let meth = meths.[overload]
         let prm = meth.Parameters.[paramIndex]
-        prm.Name
+        prm.ParameterName
 
 /// Implements text editor extension for MonoDevelop that shows F# completion    
 type FSharpTextEditorCompletion() =
@@ -222,8 +204,12 @@ type FSharpTextEditorCompletion() =
       if config = null then null else
 
       // Try to get typed result - with the specified timeout
-      let tyRes = LanguageService.Service.GetTypedParseResult(FilePath(doc.Editor.FileName), docText, doc.Project, config, allowRecentTypeCheckResults=true, timeout = ServiceSettings.blockingTimeout)
-      let methsOpt = tyRes.GetMethods(startOffset, doc.Editor.Document)
+      let files = CompilerArguments.getSourceFiles(doc.Project.Items) |> Array.ofList
+      let args = CompilerArguments.getArgumentsFromProject(doc.Project, config)
+      let framework = CompilerArguments.getTargetFramework( (doc.Project :?> MonoDevelop.Projects.DotNetProject).TargetFramework.Id)
+      let tyRes = MDLanguageService.Instance.GetTypedParseResult(doc.Project.FileName.ToString(), doc.Editor.FileName, docText, files, args, true, ServiceSettings.blockingTimeout, framework)
+      let line, col, lineStr = MonoDevelop.getLineInfoFromOffset(offset, doc.Editor.Document)
+      let methsOpt = tyRes.GetMethods(line, col, lineStr)
       match methsOpt with 
       | None -> 
           Debug.WriteLine("Getting Parameter Info: no methods")
@@ -287,12 +273,15 @@ type FSharpTextEditorCompletion() =
   member x.CodeCompletionCommandImpl(context, allowRecentTypeCheckResults) =
     try 
       let config = IdeApp.Workspace.ActiveConfiguration
-
+      let files = CompilerArguments.getSourceFiles(x.Document.Project.Items) |> Array.ofList
+      let args = CompilerArguments.getArgumentsFromProject(x.Document.Project, config)
+      let framework = CompilerArguments.getTargetFramework( (x.Document.Project :?> MonoDevelop.Projects.DotNetProject).TargetFramework.Id)
       // Try to get typed information from LanguageService (with the specified timeout)
-      let tyRes = LanguageService.Service.GetTypedParseResult(x.Document.FileName, x.Document.Editor.Text, x.Document.Project, config, allowRecentTypeCheckResults, timeout = ServiceSettings.blockingTimeout)
+      let tyRes = MDLanguageService.Instance.GetTypedParseResult(x.Document.Project.FileName.ToString(), x.Document.FileName.ToString(), x.Document.Editor.Text, files, args, allowRecentTypeCheckResults, ServiceSettings.blockingTimeout, framework)
       
       // Get declarations and generate list for MonoDevelop
-      match tyRes.GetDeclarations(x.Document, context) with
+      let line, col, lineStr = MonoDevelop.getLineInfoFromOffset(context.TriggerOffset, x.Document.Editor.Document)
+      match tyRes.GetDeclarations(line, col, lineStr) with
       | Some(decls, residue) when decls.Items.Any() -> 
             let items = decls.Items
                         |> Array.map (fun mi -> FSharpMemberCompletionData(mi) :> ICompletionData)
@@ -344,7 +333,7 @@ open Microsoft.FSharp.Compiler.Range
 
 [<AutoOpen>]
 module Helper = 
-  type UntypedParseInfo with 
+  type ParseFileResults with 
     // GetNavigationItems is not 100% solid and throws occasional exceptions
     member x.GetNavigationItemsDeclarationsSafe() = 
         try x.GetNavigationItems().Declarations
@@ -401,7 +390,7 @@ type FSharpPathExtension() =
 
             let toplevel = 
                 // GetNavigationItems is not 100% solid and throws occasional exceptions
-                try ast.Untyped.GetNavigationItemsDeclarationsSafe()
+                try ast.ParseFileResults.GetNavigationItemsDeclarationsSafe()
                 with _ -> [| |] 
 
             let topLevelTypesInsideCursor =
@@ -465,12 +454,12 @@ and FSharpDataProvider(ext:FSharpPathExtension, tag) =
         memberList.Clear()
         match tag with
         | :? TypedParseResult as tpr ->
-            let navitems = tpr.Untyped.GetNavigationItemsDeclarationsSafe()
+            let navitems = tpr.ParseFileResults.GetNavigationItemsDeclarationsSafe()
             for decl in navitems do
                 memberList.Add(decl.Declaration)
         | :? (TypedParseResult * string) as typeAndFilter ->
             let tpr, filter = typeAndFilter 
-            let navitems = tpr.Untyped.GetNavigationItemsDeclarationsSafe()
+            let navitems = tpr.ParseFileResults.GetNavigationItemsDeclarationsSafe()
             for decl in navitems do
                 if decl.Declaration.Name.StartsWith(filter) then
                     memberList.Add(decl.Declaration)
