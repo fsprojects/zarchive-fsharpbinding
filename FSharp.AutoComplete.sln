@@ -1,5 +1,5 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2012
 Project("{4925A630-B079-445d-BCD4-3A9C94FE9307}") = "FSharp.CompilerBinding", "FSharp.CompilerBinding\FSharp.CompilerBinding.fsproj", "{88F6940F-D300-474C-B2A7-E2ECD5B04B57}"
 EndProject
