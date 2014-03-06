@@ -21,19 +21,30 @@ if (-not (test-path $STDataPath)) {
 }
 
 $script:thisDir = split-path $MyInvocation.MyCommand.Path -parent
-$script:distDir = resolve-path((join-path $thisDir "../FSharp/dist"))
-$script:FSharpDir = resolve-path((join-path $thisDir "../FSharp"))
+$script:distDir = resolve-path((join-path $thisDir '../FSharp/dist'))
+$script:FSharpDir = resolve-path((join-path $thisDir '../FSharp'))
 
 push-location $FSharpDir
-    $typeOfBuild = if ($Release) {"release"} else {"dev"}
+    $typeOfBuild = if ($Release) {'release'} else {'dev'}
     "building $typeOfBuild build..."
-    # Run with the required Python version.
-    & "py.exe" "-3.3" (join-path $script:thisDir "../FSharp/builder.py") "--release" $typeOfBuild
+
+    if ((get-command 'py.exe').length -ne 0) {
+        # Use the launcher available in Py3k.
+        & 'py' '-3.3' (join-path $script:thisDir '../FSharp/builder.py') '--release' $typeOfBuild
+    }
+    elseif ("$(python.exe -V 2>&1)".startswith('Python 2.7')) {
+        & 'python' (join-path $script:thisDir '../FSharp/builder.py') '--release' $typeOfBuild
+    }
+    else {
+        write-error 'could not run python'
+        exit 1
+    }
 
     if ($LASTEXITCODE -ne 0) {
-       write-error "Could not run py.exe."
+       write-error 'could not run builder.py'
        exit 1
     }
+
     'done'
 pop-location
 
@@ -47,9 +58,9 @@ if ($typeOfBuild -eq 'dev') {
     & "$thisDir/PublishTests.ps1"
 }
 
-if ($Release -and (!$DontUpload)) {
+if ($Release -and !$DontUpload) {
     # This should point to a more useful location. Or we should
     # talk to the GH api if possible.
-	start-process "https://github.com/fsharp/fsharpbinding"
-	($distDir).path | clip.exe
+    start-process 'https://github.com/fsharp/fsharpbinding'
+    ($distDir).path | clip.exe
 }

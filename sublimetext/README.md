@@ -30,7 +30,11 @@ OS X and Windows, but they may not work on your computer at present.
 The file *manifest.json* should contain all the files that need to be
 included in *FSharp.sublime-package*.
 
-## Windows development environment
+### Windows development environment
+
+#### Requirements
+
+* Python 2.7 or above, or Python 3.3 or above.
 
 If you're using a portable installation of Sublime Text, you must set
 `$STDataPath` in your PowerShell session to Sublime Text's *Data* path. For
