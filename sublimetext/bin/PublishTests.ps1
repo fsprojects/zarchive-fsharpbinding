@@ -5,14 +5,18 @@ if (-not (test-path variable:STDataPath)) {
     exit 1
 }
 
-remove-item "$STDataPath/Packages/FSharp_tests/*" -recurse -force -erroraction silentlycontinue
+$pathToTests = "$thisDir/../FSharp_Tests"
 
-push-location $thisDir -erroraction stop
+'publishing tests locally...'
+remove-item "$STDataPath/Packages/FSharp_tests/*" -recurse -force -erroraction silentlycontinue
+[void](new-item -itemtype d "$STDataPath/Packages/FSharp_Tests" -erroraction silentlycontinue)
+
+push-location $pathToTests -erroraction stop
     copy-item "test_runner.py" "$STDataPath/Packages/FSharp_Tests" -force
+    copy-item "FSharpTests.sublime-commands" "$STDataPath/Packages/FSharp_Tests" -force
 pop-location
 
-push-location (join-path $thisDir 'tests') -erroraction stop
-    copy-item "*" "$STDataPath/Packages/FSharp_Tests" -force -recurse
+push-location (join-path $pathToTests 'tests') -erroraction stop
     copy-item "*" "$STDataPath/Packages/FSharp_Tests" -force -recurse
 pop-location
 

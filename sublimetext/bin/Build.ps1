@@ -1,3 +1,15 @@
+<#
+.DESCRIPTION
+    Builds the project and optionally downloads dependencies. Meant to be
+    used as a Sublime Text build system, because it can restart the editor
+    for the user to see the changes almost instantly.
+
+.PARAMETER -Release
+    Use this if you want to exclude tests from the built package.
+
+.PARAMETER -Refresh
+    Use this if you want to also download dependencies.
+#>
 param([switch]$Release, [switch]$Refresh)
 
 $script:thisDir = split-path $MyInvocation.MyCommand.Path -parent

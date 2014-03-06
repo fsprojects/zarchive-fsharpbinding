@@ -20,9 +20,7 @@ General steps:
 * Clone this repository to any folder outside of Sublime Text's *Data* folder
 * Edit files as needed
 * Edit tests in FSharp_Tests as needed
-* Build *FSharp.sublime-package*
-* Publish to *Installed Packages*
-* Publish FSharp_Tests to *Packages/FSharp_Tests*
+* Publish the project using the provided scripts
 * Restart Sublime Text
 * Run the tests
 
@@ -34,5 +32,10 @@ included in *FSharp.sublime-package*.
 
 ## Windows development environment
 
-You must set `$STDataPath` in your PowerShell session to Sublime Text's *Data*
-path.
+If you're using a portable installation of Sublime Text, you must set
+`$STDataPath` in your PowerShell session to Sublime Text's *Data* path. For
+full installations, the script will attempt to find said directory
+automatically.
+
+Run `.\bin\GetDependencies.ps1` once to get dependencies.
+Run `.\bin\Publish.ps1` to publish locally any changes to the files.
