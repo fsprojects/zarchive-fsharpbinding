@@ -44,7 +44,25 @@ type InteractiveSession() =
     
   let textReceived = Event<_>()  
   let promptReady = Event<_>()  
-  
+
+  let cutOffLength = 5000 // Arbitrary numbers everywhere!
+  // The ConsoleView stalls on long lines, so cut them off in fsi. 
+  // It is rarely useful to view more than 5000 chars wide texts in fsi? 
+  let cutOffLongLines (s:string) = 
+     if s.Length < cutOffLength then s else
+       let sb = System.Text.StringBuilder(s.Length + 100) // This arbitrary number to hopefully reduce allocations
+       let rec doLine (index:int) = 
+          match s.IndexOf(Environment.NewLine, index), s.Length > index with 
+          | -1, false     -> ()
+          | -1, _         -> sb.Append(s, index,  Math.Min(s.Length - index, cutOffLength)) |> ignore
+          | newlineidx, _ -> let length = Math.Min(newlineidx - index, cutOffLength)
+                             sb.Append(s, index, length) |> ignore
+                             sb.AppendLine() |> ignore
+                             doLine (newlineidx + Environment.NewLine.Length)
+                             ()
+       doLine 0
+       sb.ToString()
+
   do 
     Event.merge fsiProcess.OutputDataReceived fsiProcess.ErrorDataReceived
       |> Event.filter (fun de -> de.Data <> null)
@@ -54,7 +72,7 @@ type InteractiveSession() =
             DispatchService.GuiDispatch(fun () -> promptReady.Trigger())
           elif de.Data.Trim() <> "" then
             let str = (if waitingForResponse then waitingForResponse <- false; "\n" else "") + de.Data + "\n"
-            DispatchService.GuiDispatch(fun () -> textReceived.Trigger(str)) )
+            DispatchService.GuiDispatch(fun () -> textReceived.Trigger(str |> cutOffLongLines)) )
     fsiProcess.EnableRaisingEvents <- true
   
   member x.Interrupt() =
