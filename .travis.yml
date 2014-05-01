@@ -22,5 +22,6 @@ script:
   - for dir in $(find monodevelop-binaries/ -maxdepth 1 -mindepth 1 -type d | grep -v ".git");
     do
       cd monodevelop && ./configure.sh --prefix=../$dir && make build;
+      cd ..;
     done
 
