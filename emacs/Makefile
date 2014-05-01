@@ -34,8 +34,11 @@ dest_bin  = $(HOME)/.emacs.d/fsharp-mode/bin/
 
 # Building
 
-$(ac_exe) : $(bin_d)
+$(ac_exe) : $(bin_d) ~/.config/.mono/certs
 	xbuild $(ac_fsproj) /property:OutputPath="$(bin_d)"
+
+~/.config/.mono/certs:
+	mozroots --import --sync --quiet
 
 install : $(ac_exe) $(dest_root) $(dest_bin)
 # Install elisp packages
@@ -87,6 +90,6 @@ byte-compile : packages
           --eval "(add-to-list 'load-path \"$(base_d)/emacs\")" \
           -f batch-byte-compile $(src_files)
 
-run : packages
+run : $(ac_exe) packages
 	HOME=$(tmp_d) ;\
-	$(emacs) $(load_files)
+	$(emacs) $(load_files) -f configure-fsharp-tests

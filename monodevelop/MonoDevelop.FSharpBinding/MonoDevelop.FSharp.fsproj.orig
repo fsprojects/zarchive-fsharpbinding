@@ -31,11 +31,15 @@
     <GenerateXmlDoc>false</GenerateXmlDoc>
     <GenerateTailCalls>false</GenerateTailCalls>
     <StartAction>Program</StartAction>
-    <StartProgram>C:\Program Files (x86)\Xamarin Studio\bin\XamarinStudio.exe</StartProgram>
-    <StartWorkingDirectory>C:\Program Files (x86)\Xamarin Studio\bin</StartWorkingDirectory>
+    <StartProgram>INSERT_FSPROJ_MDEXE</StartProgram>
+    <StartWorkingDirectory>INSERT_FSPROJ_MDROOT</StartWorkingDirectory>
     <CustomCommands>
       <CustomCommands>
-        <Command type="Execute" command="&quot;/Applications/Xamarin Studio.app/Contents/MacOS/lib/monodevelop/bin/XamarinStudio.exe&quot;" workingdir="/Applications/Xamarin Studio.app/Contents/MacOS/lib/monodevelop/bin" />
+        <Command type="Execute" command="&quot;INSERT_FSPROJ_MDEXE&quot;" workingdir="INSERT_FSPROJ_MDROOT">
+          <EnvironmentVariables>
+            <Variable name="MONODEVELOP_DEV_ADDINS" value="${TargetDir}" />
+          </EnvironmentVariables>
+        </Command>
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -74,40 +78,40 @@
     <EmbeddedResource Include="icons.fsharp-file-icon.png" />
     <EmbeddedResource Include="icons.fsharp-project-icon.png" />
     <EmbeddedResource Include="icons.fsharp-script-icon.png" />
-    <None Include="templates.EmptyFSharpSource.xft.xml">
+    <None Include="Templates/EmptyFSharpSource.xft.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="templates.EmptyFSharpScript.xft.xml">
+    <None Include="Templates/EmptyFSharpScript.xft.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="templates.EmptyFSharpSignature.xft.xml">
+    <None Include="Templates/EmptyFSharpSignature.xft.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="templates.FSharpNUnitTestType.xft.xml">
+    <None Include="Templates/FSharpNUnitTestType.xft.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="templates.FSharpConsoleProject.xpt.xml">
+    <None Include="Templates/FSharpConsoleProject.xpt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="templates.FSharpLibraryProject.xpt.xml">
+    <None Include="Templates/FSharpLibraryProject.xpt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="templates.FSharpTutorialProject.xpt.xml">
+    <None Include="Templates/FSharpTutorialProject.xpt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="templates.FSharpGtkProject.xpt.xml">
+    <None Include="Templates/FSharpGtkProject.xpt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="templates.AssemblyInfo.xft.xml">
+    <None Include="Templates/AssemblyInfo.xft.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="templates.FSharpProjectMvc4Razor.xpt.xml">
+    <None Include="Templates/FSharpProjectMvc4Razor.xpt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="templates.FSharpProjectMvc4Razor.windows.xpt.xml">
+    <None Include="Templates/FSharpProjectMvc4Razor.windows.xpt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="templates.FSharpNUnitLibraryProject.xpt.xml">
+    <None Include="Templates/FSharpNUnitLibraryProject.xpt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="FSharpBinding.addin.xml">
@@ -122,17 +126,20 @@
     <Compile Include="Services\LanguageService.fs" />
     <Compile Include="Services\CompilerService.fs" />
     <Compile Include="Services\InteractiveSession.fs" />
+    <Compile Include="Services\NRefactory.fs" />
     <Compile Include="FSharpInteractivePad.fs" />
     <Compile Include="FSharpOptionsPanels.fs" />
     <Compile Include="FSharpLanguageBinding.fs" />
     <Compile Include="FSharpResourceIdBuilder.fs" />
     <Compile Include="FSharpParser.fs" />
     <Compile Include="FSharpTextEditorCompletion.fs" />
+    <Compile Include="FSharpPathExtension.fs" />
     <Compile Include="FSharpProjectServiceExtension.fs" />
     <Compile Include="FSharpProjectFileNodeExtension.fs" />
     <Compile Include="FSharpHighlightUsagesExtension.fs" />
     <Compile Include="FSharpResolverProvider.fs" />
     <Compile Include="FSharpReferenceFinderExtension.fs" />
+    <Compile Include="FSharpFormatter.fs" />
     <Mvc4Files Include="..\dependencies\AspNetMvc4\System.Web.Helpers.dll">
       <Link>System.Web.Helpers.dll</Link>
     </Mvc4Files>
@@ -217,6 +224,10 @@
       <Private>False</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\AddIns\MonoDevelop.Refactoring\MonoDevelop.Refactoring.dll</HintPath>
     </Reference>
+    <Reference Include="MonoDevelop.Debugger">
+      <Private>False</Private>
+      <HintPath>INSERT_FSPROJ_MDROOT\AddIns\MonoDevelop.Debugger\MonoDevelop.Debugger.dll</HintPath>
+    </Reference>
     <ProjectReference Include="..\..\FSharp.CompilerBinding\FSharp.CompilerBinding.fsproj">
       <Project>{88F6940F-D300-474C-B2A7-E2ECD5B04B57}</Project>
       <Name>FSharp.CompilerBinding</Name>
@@ -229,7 +240,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Compiler.Editor">
-      <HintPath>packages\FSharp.Compiler.Service.0.0.36\lib\net40\FSharp.Compiler.Service.dll</HintPath>
+      <HintPath>packages\FSharp.Compiler.Service.0.0.45\lib\net40\FSharp.Compiler.Service.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

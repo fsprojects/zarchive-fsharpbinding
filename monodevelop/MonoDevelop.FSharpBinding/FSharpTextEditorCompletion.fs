@@ -13,6 +13,7 @@ open MonoDevelop.Ide
 open MonoDevelop.Ide.Gui
 open MonoDevelop.Ide.Gui.Content
 open MonoDevelop.Ide.CodeCompletion
+open MonoDevelop.Ide.CodeTemplates
 open Microsoft.FSharp.Compiler
 open Microsoft.FSharp.Compiler.SourceCodeServices
 open FSharp.CompilerBinding
@@ -21,23 +22,22 @@ open ICSharpCode.NRefactory.Completion
 
 /// A list of completions is returned.  Contains title and can generate description (tool-tip shown on the right) of the item.
 /// Description is generated lazily because it is quite slow and there can be numerous.
-type internal FSharpMemberCompletionData(name, datatipLazy:Lazy<ToolTipText>, glyph) =
+type internal FSharpMemberCompletionData(name, getTip, glyph) =
     inherit CompletionData(CompletionText = Lexhelp.Keywords.QuoteIdentifierIfNeeded name, 
                            DisplayText = name, 
                            DisplayFlags = DisplayFlags.DescriptionHasMarkup)
 
-    let description = lazy (TipFormatter.formatTip datatipLazy.Value)
     let icon = lazy (MonoDevelop.Core.IconId(ServiceUtils.getIcon glyph))
 
-    new (name, datatip:ToolTipText, glyph) =  new FSharpMemberCompletionData(name, lazy datatip, glyph)
-    new (mi:Declaration) =  new FSharpMemberCompletionData(mi.Name, lazy mi.DescriptionText, mi.Glyph)
+    new (name, datatip:ToolTipText, glyph) = new FSharpMemberCompletionData(name, (fun () -> datatip), glyph)
+    new (mi:Declaration) =  new FSharpMemberCompletionData(mi.Name, (fun () -> mi.DescriptionText), mi.Glyph)
 
     override x.Description = name //description.Value   // this is not used
     override x.Icon = icon.Value
 
     /// Check if the datatip has multiple overloads
     override x.HasOverloads = 
-        match datatipLazy.Value with 
+        match getTip() with 
         | ToolTipText [xs] ->
             match xs with 
             | ToolTipElementGroup ttg -> true 
@@ -46,7 +46,7 @@ type internal FSharpMemberCompletionData(name, datatipLazy:Lazy<ToolTipText>, gl
 
     /// Split apart the elements into separate overloads
     override x.OverloadedData =
-        match datatipLazy.Value with 
+        match getTip() with 
         | ToolTipText xs -> 
             seq{for tooltipElement in xs do
                 match tooltipElement with
@@ -66,8 +66,8 @@ type internal FSharpMemberCompletionData(name, datatipLazy:Lazy<ToolTipText>, gl
     override x.CreateTooltipInformation (smartWrap: bool) = 
       
       Debug.WriteLine("computing tooltip for {0}", name)
-
-      match description.Value with
+      let description = TipFormatter.formatTip (getTip())
+      match description with
       | [signature,comment] -> TooltipInformation(SummaryMarkup = comment, SignatureMarkup = signature)
       //With multiple tips just take the head.  
       //This shouldnt happen anyway as we split them in the resolver provider
@@ -171,6 +171,8 @@ type ParameterDataProvider(nameStart: int, name, meths : MethodGroupItem array) 
 type FSharpTextEditorCompletion() =
   inherit CompletionTextEditorExtension()
 
+  let mutable suppressParameterCompletion = false
+
   override x.ExtendsEditor(doc:Document, editor:IEditableTextBuffer) =
     // Extend any text editor that edits F# files
     CompilerArguments.supportedExtension(IO.Path.GetExtension(doc.FileName.ToString()))
@@ -180,8 +182,10 @@ type FSharpTextEditorCompletion() =
   /// Provide parameter and method overload information when you type '(', '<' or ','
   override x.HandleParameterCompletion(context:CodeCompletionContext, completionChar:char) : MonoDevelop.Ide.CodeCompletion.ParameterDataProvider =
     try
-     if (completionChar <> '(' && completionChar <> '<' && completionChar <> ',' ) then null else
-      Debug.WriteLine("Getting Parameter Info on completion character {0}", completionChar)
+      if suppressParameterCompletion then
+         suppressParameterCompletion <- false
+         null
+      else
       let doc = x.Document
       let docText = doc.Editor.Text
       let offset = context.TriggerOffset
@@ -196,11 +200,13 @@ type FSharpTextEditorCompletion() =
               elif ((ch = ')' || ch = '}' || ch = ']')) then loop (depth+1) (i-1) 
               elif (ch = '(' || ch = '<') then i
               else loop depth (i-1) 
-          loop 0 offset 
+          loop 0 (offset-1)
 
-      Debug.WriteLine("Getting Parameter Info, startOffset = {0}", startOffset)
       let config = IdeApp.Workspace.ActiveConfiguration
-      if docText = null || config = null || offset >= docText.Length || offset < 0 then null else
+      if docText = null || config = null || offset >= docText.Length || startOffset < 0 || offset <= 0 then 
+        null 
+      else
+      Debug.WriteLine("Getting Parameter Info, startOffset = {0}", startOffset)
 
       // Try to get typed result - with the specified timeout
       let proj = doc.Project :?> MonoDevelop.Projects.DotNetProject
@@ -208,11 +214,14 @@ type FSharpTextEditorCompletion() =
       let args = CompilerArguments.getArgumentsFromProject(proj, config)
       let framework = CompilerArguments.getTargetFramework(proj.TargetFramework.Id)
 
-      match MDLanguageService.Instance.GetTypedParseResultWithTimeout(doc.Project.FileName.ToString(), doc.Editor.FileName, docText, files, args, AllowStaleResults.MatchingFileName, ServiceSettings.blockingTimeout, framework) with
+      let typedParseResults = MDLanguageService.Instance.GetTypedParseResultWithTimeout(doc.Project.FileName.ToString(), doc.Editor.FileName, docText, files, args, AllowStaleResults.MatchingFileName, ServiceSettings.blockingTimeout, framework) 
+                              |> Async.RunSynchronously
+
+      match typedParseResults with
       | None -> null
       | Some tyRes ->
-      let line, col, lineStr = MonoDevelop.getLineInfoFromOffset(offset, doc.Editor.Document)
-      let methsOpt = tyRes.GetMethods(line, col, lineStr)
+      let line, col, lineStr = MonoDevelop.getLineInfoFromOffset(startOffset, doc.Editor.Document)
+      let methsOpt = tyRes.GetMethods(line, col, lineStr) |> Async.RunSynchronously
       match methsOpt with 
       | None -> 
           Debug.WriteLine("Getting Parameter Info: no methods")
@@ -221,13 +230,20 @@ type FSharpTextEditorCompletion() =
           Debug.WriteLine("Getting Parameter Info: methods!")
           new ParameterDataProvider (startOffset, name, meths) :> _ 
     with _ -> null
-        
-  override x.KeyPress (key, keyChar, modifier) =
-      let result = base.KeyPress (key, keyChar, modifier)
-      if ((keyChar = ',' || keyChar = ')') && x.CanRunParameterCompletionCommand ()) then
-          base.RunParameterCompletionCommand ()
-      result
 
+  override x.KeyPress (key, keyChar, modifier) =
+      // base.KeyPress will execute RunParameterCompletionCommand,
+      // so suppress it here.  
+      suppressParameterCompletion <-
+         keyChar <> '(' && keyChar <> '<' && keyChar <> ','
+
+      let result = base.KeyPress (key, keyChar, modifier)
+
+      suppressParameterCompletion <- false
+      if (keyChar = ')' && x.CanRunParameterCompletionCommand ()) then
+          base.RunParameterCompletionCommand ()
+
+      result
 
   // Run completion automatically when the user hits '.'
   // (this means that completion currently also works in comments and strings...)
@@ -267,41 +283,48 @@ type FSharpTextEditorCompletion() =
 
       Debug.WriteLine("allowAnyStale = {0}", allowAnyStale)
 
-      x.CodeCompletionCommandImpl(context, allowAnyStale)
+      x.CodeCompletionCommandImpl(context, allowAnyStale, dottedInto = true)
 
   /// Completion was triggered explicitly using Ctrl+Space or by the function above  
   override x.CodeCompletionCommand(context) =
-      x.CodeCompletionCommandImpl(context, true)
+      x.CodeCompletionCommandImpl(context, allowAnyStale = true, dottedInto = false)
 
-  member x.CodeCompletionCommandImpl(context, allowAnyStale) =
+  member x.CodeCompletionCommandImpl(context, allowAnyStale, dottedInto) =
+    let result = CompletionDataList()
+    let doc = x.Document
     try 
       let config = IdeApp.Workspace.ActiveConfiguration
-      let proj = x.Document.Project :?> MonoDevelop.Projects.DotNetProject
-      let files = CompilerArguments.getSourceFiles(x.Document.Project.Items) |> Array.ofList
+      let proj = doc.Project :?> MonoDevelop.Projects.DotNetProject
+      let files = CompilerArguments.getSourceFiles(doc.Project.Items) |> Array.ofList
       let args = CompilerArguments.getArgumentsFromProject(proj, config)
       let framework = CompilerArguments.getTargetFramework(proj.TargetFramework.Id)
       // Try to get typed information from LanguageService (with the specified timeout)
       let stale = if allowAnyStale then AllowStaleResults.MatchingFileName else AllowStaleResults.MatchingSource
-      match MDLanguageService.Instance.GetTypedParseResultWithTimeout(x.Document.Project.FileName.ToString(), x.Document.FileName.ToString(), x.Document.Editor.Text, files, args, stale, ServiceSettings.blockingTimeout, framework) with
-      | None ->
-        let result = CompletionDataList()
-        result.Add(FSharpTryAgainMemberCompletionData())
-        result :> ICompletionDataList
+      let typedParseResults = 
+          MDLanguageService.Instance.GetTypedParseResultWithTimeout(doc.Project.FileName.ToString(), doc.FileName.ToString(), doc.Editor.Text, files, args, stale, ServiceSettings.blockingTimeout, framework)
+          |> Async.RunSynchronously
+      match typedParseResults with
+      | None       -> result.Add(FSharpTryAgainMemberCompletionData())
       | Some tyRes ->
         // Get declarations and generate list for MonoDevelop
-        let line, col, lineStr = MonoDevelop.getLineInfoFromOffset(context.TriggerOffset, x.Document.Editor.Document)
+        let line, col, lineStr = MonoDevelop.getLineInfoFromOffset(context.TriggerOffset, doc.Editor.Document)
         match tyRes.GetDeclarations(line, col, lineStr) with
         | Some(decls, residue) when decls.Items.Any() ->
               let items = decls.Items
                           |> Array.map (fun mi -> FSharpMemberCompletionData(mi) :> ICompletionData)
-              let result = CompletionDataList()
               result.AddRange(items)
-              result :> ICompletionDataList
-        | _ -> null
+        | _ -> ()
     with
-    | e -> let result = CompletionDataList()
-           result.Add(FSharpErrorCompletionData(e))
-           result :> ICompletionDataList
+    | e -> result.Add(FSharpErrorCompletionData(e))
+    
+    // Add the code templates
+    if not dottedInto then
+      let templates = CodeTemplateService.GetCodeTemplatesForFile(doc.FileName.ToString())
+                      |> Seq.map (fun t -> CodeTemplateCompletionData(doc, t))
+                      |> Seq.cast<ICompletionData>
+      result.AddRange(templates)
+
+    result :> ICompletionDataList
 
   // T find out what this is used for
   override x.GetParameterCompletionCommandOffset(cpos:byref<int>) = false
@@ -331,157 +354,6 @@ type FSharpTextEditorCompletion() =
               else loop depth (i+1) parameterIndex
           let res = loop 0 i 1
           res
-
-
-open Microsoft.FSharp.Compiler.Range
-
-type FSharpPathExtension() =
-    inherit TextEditorExtension()
-
-    let pathChanged = new Event<_,_>()
-    let mutable currentPath = [||]
-    let mutable subscriptions = []
-    member x.Document = base.Document
-    member x.GetEntityMarkup(node: DeclarationItem) =
-        let prefix = match node.Kind with
-                     | NamespaceDecl-> "Namespace: "
-                     | ModuleFileDecl -> "ModuleFile: "
-                     | ExnDecl -> "Exn: "
-                     | ModuleDecl -> "Module: "
-                     | TypeDecl -> "Type: "
-                     | MethodDecl -> "Method: "
-                     | PropertyDecl -> "Property: "
-                     | FieldDecl -> "Field: "
-                     | OtherDecl -> "" 
-        let name = node.Name.Split('.')
-        if name.Length > 0 then prefix + name.Last()
-        else prefix + node.Name
-
-    override x.Initialize() =
-        currentPath <- [| new PathEntry("No selection", Tag = null) |]
-        let positionChanged = x.Document.Editor.Caret.PositionChanged.Subscribe(fun o e -> x.PathUpdated e)
-        let documentParsed  = x.Document.DocumentParsed.Subscribe(fun o e -> x.PathUpdated null)
-        subscriptions <- positionChanged :: documentParsed :: subscriptions
-        
-    member private x.PathUpdated(documentLocation) =
-        let loc = x.Document.Editor.Caret.Location
-        
-        if x.Document.ParsedDocument = null then () else
-        match x.Document.ParsedDocument.Ast with
-        | :? ParseAndCheckResults as ast ->
-
-            let posGt (p1Column, p1Line) (p2Column, p2Line) = 
-                (p1Line > p2Line || (p1Line = p2Line && p1Column > p2Column))
-
-            let posEq (p1Column, p1Line) (p2Column, p2Line) = 
-                (p1Line = p2Line &&  p1Column = p2Column)
-
-            let posGeq p1 p2 =
-                posEq p1 p2 || posGt p1 p2
-
-            let inside (docloc:Mono.TextEditor.DocumentLocation) (start, finish) =
-                let cursor = (docloc.Column, docloc.Line)
-                posGeq cursor start && posGeq finish cursor
-
-            let toplevel = ast.GetNavigationItems()
-
-            let topLevelTypesInsideCursor =
-                toplevel |> Array.filter (fun tl -> let m = tl.Declaration.Range in inside loc ((m.StartColumn, m.StartLine),(m.EndColumn, m.EndLine)))
-                         |> Array.sortBy(fun xs -> xs.Declaration.Range.StartLine)
-
-            let newPath = ResizeArray<_>()
-            for top in topLevelTypesInsideCursor do
-                let name = top.Declaration.Name
-                if name.Contains(".") then
-                    let nameparts = name.[.. name.LastIndexOf(".")]
-                    newPath.Add(PathEntry(ImageService.GetPixbuf(ServiceUtils.getIcon top.Declaration.Glyph, Gtk.IconSize.Menu), x.GetEntityMarkup(top.Declaration), Tag = (ast, nameparts)))
-                else newPath.Add(PathEntry(ImageService.GetPixbuf(ServiceUtils.getIcon top.Declaration.Glyph, Gtk.IconSize.Menu), x.GetEntityMarkup(top.Declaration), Tag = ast))
-            
-            if topLevelTypesInsideCursor.Length > 0 then
-                let lastToplevel = topLevelTypesInsideCursor.Last()
-                //only first child found is returned, could there be multiple children found?
-                let child = lastToplevel.Nested |> Array.tryFind (fun tl -> let m = tl.Range in inside loc ((m.StartColumn, m.StartLine),(m.EndColumn, m.EndLine)))
-                let multichild = lastToplevel.Nested |> Array.filter (fun tl -> let m = tl.Range in inside loc ((m.StartColumn, m.StartLine),(m.EndColumn, m.EndLine)))
-
-                Debug.Assert( multichild.Length <= 1, String.Format("{0} children found please investigate!", multichild.Length))
-                match child with
-                | Some(c) -> newPath.Add(PathEntry(ImageService.GetPixbuf(ServiceUtils.getIcon c.Glyph, Gtk.IconSize.Menu), x.GetEntityMarkup(c) , Tag = lastToplevel))
-                | None -> newPath.Add(PathEntry("No selection", Tag = lastToplevel))
-
-            let previousPath = currentPath
-            //ensure the path has chnaged from the previous one before setting and raising event.
-            let samePath = Seq.forall2 (fun (p1:PathEntry) (p2:PathEntry) -> p1.Markup = p2.Markup) previousPath newPath
-            if not samePath then
-                if newPath.Count = 0 then currentPath <- [|PathEntry("No selection", Tag = ast)|]
-                else currentPath <- newPath.ToArray()
-
-                //invoke pathChanged
-                pathChanged.Trigger(x, DocumentPathChangedEventArgs(previousPath))
-        | _ -> ()
-
-    override x.Dispose() =
-        subscriptions |> List.iter (fun s -> s.Dispose())
-        subscriptions <- []
-
-    interface IPathedDocument with
-        member x.CurrentPath = currentPath
-        member x.CreatePathWidget(index) =
-            let path = (x :> IPathedDocument).CurrentPath
-            if path = null || index < 0 || index >= path.Length then null else
-            let tag = path.[index].Tag
-            let window = new DropDownBoxListWindow(new FSharpDataProvider(x, tag))
-            window.FixedRowHeight <- 22
-            window.MaxVisibleRows <- 14
-            window.SelectItem (path.[index].Tag)
-            window :> _
-
-        member x.add_PathChanged(handler) = pathChanged.Publish.AddHandler(handler)
-        member x.remove_PathChanged(handler) = pathChanged.Publish.RemoveHandler(handler)
-
-
-and FSharpDataProvider(ext:FSharpPathExtension, tag) =
-    let memberList = ResizeArray<_>()
-
-    let reset() =  
-        memberList.Clear()
-        match tag with
-        | :? ParseAndCheckResults as tpr ->
-            let navitems = tpr.GetNavigationItems()
-            for decl in navitems do
-                memberList.Add(decl.Declaration)
-        | :? (ParseAndCheckResults * string) as typeAndFilter ->
-            let tpr, filter = typeAndFilter 
-            let navitems = tpr.GetNavigationItems()
-            for decl in navitems do
-                if decl.Declaration.Name.StartsWith(filter) then
-                    memberList.Add(decl.Declaration)
-        | :? TopLevelDeclaration as tld ->
-            for item in tld.Nested do
-                 memberList.Add(item)
-        | _ -> ()
-
-    do reset()
-
-    interface DropDownBoxListWindow.IListDataProvider with
-        member x.IconCount = memberList.Count
-        member x.Reset() = reset()
-        member x.GetTag (n) = memberList.[n] :> obj
-
-        member x.ActivateItem(n) =
-            let node = memberList.[n]
-            let extEditor = ext.Document.GetContent<IExtensibleTextEditor>()
-            if extEditor <> null then
-                let (scol,sline) = node.Range.StartColumn, node.Range.StartLine
-                extEditor.SetCaretTo(max 1 sline, max 1 scol, true)
-
-        member x.GetMarkup(n) =
-            let node = memberList.[n]
-            ext.GetEntityMarkup (node)
-
-        member x.GetIcon(n) =
-            let node = memberList.[n]
-            ImageService.GetPixbuf(ServiceUtils.getIcon node.Glyph, Gtk.IconSize.Menu)         
-
 
 
 

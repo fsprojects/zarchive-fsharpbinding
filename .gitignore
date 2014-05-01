@@ -3,6 +3,7 @@
 [Oo]bj/
 monodevelop/pack/*
 monodevelop/packages/*
+monodevelop/build-and*
 repository/*
 *.suo
 *.pidb
@@ -11,6 +12,9 @@ repository/*
 *.dll
 *.pdb
 *.cache
+*.swp
+*.orig
+=======
 *~
 pack/*
 lib/NUnit.*

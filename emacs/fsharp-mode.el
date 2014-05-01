@@ -4,9 +4,10 @@
 
 ;; Author: 1993-1997 Xavier Leroy, Jacques Garrigue and Ian T Zimmerman
 ;;         2010-2011 Laurent Le Brun <laurent@le-brun.eu>
-;; Maintainer: Robin Neatherway <robin.neatherway@gmail.com>
+;;         2012-2014 Robin Neatherway <robin.neatherway@gmail.com>
+;; Maintainer: Robin Neatherway
 ;; Keywords: languages
-;; Version: 1.1.0
+;; Version: 1.2.1
 
 ;; This file is not part of GNU Emacs.
 
@@ -206,7 +207,9 @@ and whether it is in a project directory.")
           ac-auto-start
           ac-use-comphist
           ac-auto-show-menu
-          popup-tip-max-width))
+          popup-tip-max-width
+	  fsharp-ac-last-parsed-ticks
+	  fsharp-ac-errors))
 
   (setq major-mode               'fsharp-mode
         mode-name                "fsharp"
@@ -233,7 +236,7 @@ and whether it is in a project directory.")
         )
 
   ; Syntax highlighting
-  (setq font-lock-defaults '(fsharp-font-lock-keywords nil t))
+  (setq font-lock-defaults '(fsharp-font-lock-keywords))
   (setq syntax-propertize-function 'fsharp--syntax-propertize-function)
   ;; Error navigation
   (setq next-error-function 'fsharp-ac/next-error)

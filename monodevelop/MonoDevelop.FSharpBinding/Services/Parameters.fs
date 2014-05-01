@@ -58,6 +58,8 @@ type FSharpCompilerParameters() as this =
     elif x.DefineConstants <> null then
       x.DefineConstants <- x.DefineConstants.Replace(";" + symbol, null)
       
+#if MDVERSION_4_2_2
+#else
 #if MDVERSION_4_2_3
 #else
 #if MDVERSION_4_2_4
@@ -71,7 +73,8 @@ type FSharpCompilerParameters() as this =
 #endif
 #endif
 #endif
-     
+#endif
+
   override x.HasDefineSymbol(symbol) =
     x.DefineConstants.Split(';', ',', ' ', '\t') |> Array.exists (fun s -> symbol = s)
 
@@ -90,20 +93,20 @@ type FSharpCompilerParameters() as this =
   member x.GenerateTailCalls
     with get() = asBool x.generateTailCalls
     and set(value) = 
-        if x.GenerateTailCalls <> value then 
+        if x.generateTailCalls <> asString value then 
             x.generateTailCalls <- asString value 
         
   member x.Optimize
     with get() = asBool x.optimize
     and set(value) = 
-        if x.Optimize <> value then 
+        if x.optimize <> asString value then 
             x.optimize <- asString value
             x.debugType <- (if x.DebugSymbols then (if x.Optimize then "pdbonly" else "full") else "none")
         
   member x.DebugSymbols
     with get() = asBool x.debugSymbols
     and set(value) = 
-        if x.DebugSymbols <> value then 
+        if x.debugSymbols <> asString value then 
             x.debugSymbols <- asString value
             x.debugType <- (if x.DebugSymbols then (if x.Optimize then "pdbonly" else "full") else "none")
         

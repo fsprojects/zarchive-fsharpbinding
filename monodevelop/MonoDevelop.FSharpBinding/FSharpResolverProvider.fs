@@ -62,14 +62,14 @@ type FSharpLanguageItemTooltipProvider() =
                   args,
                   AllowStaleResults.MatchingSource,
                   ServiceSettings.blockingTimeout,
-                  framework)
+                  framework) |> Async.RunSynchronously
         Debug.WriteLine (sprintf "TooltipProvider: Getting tool tip")
         match tyResOpt with
         | None -> null
         | Some tyRes ->
         // Get tool-tip from the language service
         let line, col, lineStr = MonoDevelop.getLineInfoFromOffset(offset, editor.Document)
-        let tip = tyRes.GetToolTip(line, col, lineStr)
+        let tip = tyRes.GetToolTip(line, col, lineStr) |> Async.RunSynchronously
         match tip with
         | None -> null
         | Some (ToolTipText(elems),_) when elems |> List.forall (function ToolTipElementNone -> true | _ -> false) -> 
@@ -89,7 +89,7 @@ type FSharpLanguageItemTooltipProvider() =
                 let tooltipItem = TooltipItem (tiptext, segment)
                 lastResult <- Some(tooltipItem)
                 tooltipItem
-      with _ -> null
+      with x -> null
 
     override x.CreateTooltipWindow (editor, offset, modifierState, item) = 
         let doc = IdeApp.Workbench.ActiveDocument
@@ -175,25 +175,25 @@ type FSharpResolverProvider() =
                   args, 
                   AllowStaleResults.MatchingSource,
                   ServiceSettings.blockingTimeout,
-                  framework)
+                  framework) |> Async.RunSynchronously
 
         Debug.WriteLine("getting declaration location...")
         match tyResOpt with
         | None -> null
         | Some tyRes ->
         // Get the declaration location from the language service
-        let line, col, lineStr = MonoDevelop.getLineInfoFromOffset(doc.Editor.Caret.Offset, doc.Editor.Document)
-        let loc = tyRes.GetDeclarationLocation(line, col, lineStr)
+        let line, col, lineStr = MonoDevelop.getLineInfoFromOffset(offset, doc.Editor.Document)
+        let loc = tyRes.GetDeclarationLocation(line, col, lineStr) |> Async.RunSynchronously
         let lastIdent = 
             match FSharp.CompilerBinding.Parsing.findLongIdents(col, lineStr) with 
             | Some(_, identIsland) -> Seq.last identIsland
             | None -> ""
 
-        let fsSymbolOpt = tyRes.GetSymbol(line, col, lineStr)
+        let fsSymbolOpt = tyRes.GetSymbol(line, col, lineStr) |> Async.RunSynchronously
 
         match fsSymbolOpt with 
         | None ->  null
-        | Some fsSymbol -> 
+        | Some fsSymbolUse -> 
             let reg = 
                 match loc with
                 | FindDeclResult.DeclFound(m) -> 
@@ -208,7 +208,7 @@ type FSharpResolverProvider() =
                     DomRegion.Empty
             region <- reg
             // This is the NRefactory symbol for the item - the Region is used for goto-definition
-            let resolveResult = NRefactory.createResolveResult(doc.ProjectContent, fsSymbol, lastIdent, reg)
+            let resolveResult = NRefactory.createResolveResult(doc.ProjectContent, fsSymbolUse.Symbol, lastIdent, reg)
             resolveResult
 
       with exn -> 
