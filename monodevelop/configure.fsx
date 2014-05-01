@@ -101,7 +101,16 @@ let getMdExeVersion mdDir =
 let (mdDir, mdVersion) =
     match getPrefix args with
     | Some path when File.Exists (GetPath [path; MdCheckFile]) ->
-        path, getMdExeVersion path
+        match getMdExe path with
+        | Some exe -> path, getExeVersion exe
+        | None ->
+            let dir = Path.GetFileName ((Path.GetFullPath path).TrimEnd([|'/';'\\'|]))
+            let m = Regex.Match(dir, @"\d+\.\d+\.\d+")
+            if m.Success then
+              Path.GetFullPath path, m.Groups.[0].Value
+            else
+              printfn "No MonoDevelop libraries found in specified prefix."
+              exit 1
     | Some _ ->
         printfn "No MonoDevelop libraries found in specified prefix."
         exit 1
@@ -123,7 +132,7 @@ let (mdDir, mdVersion) =
         | [dir, version] -> 
             dir, version
         | _ -> 
-            printfn "Multiple MonoDevelop library directories found. Use --prefix{path-to-md-libraries} to select one.\r\nOptions: \r\n%A" mdDirs 
+            printfn "Multiple MonoDevelop library directories found. Use --prefix={path-to-md-libraries} to select one.\r\nOptions: \r\n%A" mdDirs 
             exit 1
 
 if not isWindows then
