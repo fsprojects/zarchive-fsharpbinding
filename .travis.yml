@@ -25,4 +25,4 @@ script:
       cd monodevelop && ./configure.sh --prefix=../$dir && make build || rc=$?;
       cd ..;
     done;
-    exit rc
+    exit $rc
