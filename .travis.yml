@@ -19,9 +19,10 @@ script:
   - make integration-test
   - make -C emacs test
   - make -C emacs integration-test
-  - for dir in $(find monodevelop-binaries/ -maxdepth 1 -mindepth 1 -type d | grep -v ".git");
+  - rc=0;
+    for dir in $(find monodevelop-binaries/ -maxdepth 1 -mindepth 1 -type d | grep -v ".git");
     do
-      cd monodevelop && ./configure.sh --prefix=../$dir && make build;
+      cd monodevelop && ./configure.sh --prefix=../$dir && make build || rc=$?;
       cd ..;
-    done
-
+    done;
+    exit rc
