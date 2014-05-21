@@ -92,7 +92,7 @@ module NRefactory =
 
            // Create an IUnresolveAssembly holding the type definition.
            let assemblyFilename = match fsEntity.Assembly.FileName with None -> "" | Some n -> n
-           let unresolvedAssembly = DefaultUnresolvedAssembly(projectContent.AssemblyName, Location = assemblyFilename)
+           let unresolvedAssembly = DefaultUnresolvedAssembly(fsEntity.Assembly.SimpleName, Location = assemblyFilename)
            unresolvedAssembly.AddTypeDefinition(unresolvedTypeDef)
 
            // We create a fake 'Compilation' for the symbol to contain the unresolvedTypeDef
