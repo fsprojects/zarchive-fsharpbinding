@@ -70,19 +70,16 @@ module NRefactory =
 
         // Type Definitions, Type Abbreviations, Exception Definitions and Modules
         | :? FSharpEntity as fsEntity -> 
-
            // The accessibility used here can influence the scope of a renaming operation.
            // For now we just use 'public' to rename across the whole solution (though really it will just be
            // across the whole project because of the limits of the range of symbols returned by F.C.S).
            let access = Accessibility.Public
 
            // The 'DefaultUnresolvedTypeDefinition' has an UnresolvedFile property. However it doesn't seem needed.
-           // let unresolvedFile = MonoDevelop.Ide.TypeSystem.DefaultParsedDocument(e.DeclarationLocation.FileName)
+           let unresolvedFile = MonoDevelop.Ide.TypeSystem.DefaultParsedDocument(fsEntity.DeclarationLocation.FileName)
            
            // Create a resolution context for the resolved type definition.
-           let nsp = match fsEntity.Namespace with None -> "" | Some n -> n
-           let unresolvedTypeDef = DefaultUnresolvedTypeDefinition (nsp, Region=region, Name=lastIdent, Accessibility=access (* , UnresolvedFile=unresolvedFile *) )
-
+           let unresolvedTypeDef = DefaultUnresolvedTypeDefinition (fsEntity.FullName, Region=region, Accessibility=access, UnresolvedFile=unresolvedFile)
            // TODO: Add base type references, this will allow 'Go To Base' to work. 
            // It may also allow 'Find Derived Types' to work. This would require generating 
            // ITypeReference nodes to reference other type definitions in the assembly being edited.
