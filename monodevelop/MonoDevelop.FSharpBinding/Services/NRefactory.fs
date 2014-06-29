@@ -114,15 +114,16 @@ module NRefactory =
            let fsEntity = fsMember.EnclosingEntity
 
            // We create a fake 'Compilation', 'TypeDefinition' and 'Assembly' for the symbol 
-           let nsp = match fsEntity.Namespace with None -> "" | Some n -> n
-           let unresolvedTypeDef = DefaultUnresolvedTypeDefinition (nsp, fsEntity.DisplayName, Accessibility=access)
+           //let unresolvedFile = MonoDevelop.Ide.TypeSystem.DefaultParsedDocument(fsEntity.DeclarationLocation.FileName)
+           let unresolvedTypeDef = DefaultUnresolvedTypeDefinition (fsEntity.FullName, Region=region, Accessibility=access)
 
            // We use an IUnresolvedMethod for the symbol regardless of whether it is a property, event, 
            // method or function. For the operations we're implementing (Find-all references and rename refactoring)
            // it doesn't seem to matter.
-           let unresolvedMember = FSharpUnresolvedMethod(unresolvedTypeDef, fsMember.DisplayName, fsSymbol, lastIdent, Region=region, Accessibility=access)
+           let unresolvedMember = FSharpUnresolvedMethod(unresolvedTypeDef, fsMember.LogicalName, fsSymbol, lastIdent, Region=region, Accessibility=access)
+           unresolvedMember.IsStatic <- not fsMember.IsInstanceMember
            let assemblyFilename = match fsEntity.Assembly.FileName with None -> "" | Some n -> n
-           let unresolvedAssembly = DefaultUnresolvedAssembly(projectContent.AssemblyName, Location = assemblyFilename)
+           let unresolvedAssembly = DefaultUnresolvedAssembly(fsEntity.Assembly.SimpleName, Location = assemblyFilename)
            unresolvedTypeDef.Members.Add(unresolvedMember)
            unresolvedAssembly.AddTypeDefinition(unresolvedTypeDef)
 
