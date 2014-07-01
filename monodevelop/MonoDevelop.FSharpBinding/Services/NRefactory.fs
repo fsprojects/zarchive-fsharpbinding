@@ -7,7 +7,7 @@ open ICSharpCode.NRefactory.Semantics
 open ICSharpCode.NRefactory.TypeSystem
 open ICSharpCode.NRefactory.TypeSystem.Implementation
 open Microsoft.FSharp.Compiler.SourceCodeServices
-
+open FSharp.CompilerBinding
 /// Utilities to produce NRefactory ISymbol, IEntity, IVariable etc. implementations based on FSharpSymbol
 /// objects returned by FSharp.Compiler.Service.
 module NRefactory = 
@@ -63,7 +63,35 @@ module NRefactory =
             member x.Type = (SpecialType.UnknownType :> _)
             member x.IsConst = false
             member x.ConstantValue = null 
-   
+
+    let createAssembly (entity:FSharpEntity) = 
+           let assemblyFilename = match entity.Assembly.FileName with None -> "" | Some n -> n
+           DefaultUnresolvedAssembly(entity.Assembly.SimpleName, Location = assemblyFilename)
+
+    let rec internal getNonAbbreviatedType (typ: FSharpType) =
+        if typ.HasTypeDefinition && typ.TypeDefinition.IsFSharpAbbreviation then
+            getNonAbbreviatedType typ.AbbreviatedType
+        else typ
+
+    let rec getUnresolvedType (ty:FSharpType) = 
+      let ty = getNonAbbreviatedType ty
+      let fullTypeName = 
+         match ty.IsFunctionType with
+                | true -> "FSharpFunc"
+                | false -> if ty.HasTypeDefinition then ty.TypeDefinition.FullName
+                           elif ty.IsGenericParameter then ty.GenericParameter.Name
+                           else ""
+      let unresolved = DefaultUnresolvedTypeDefinition(fullTypeName)
+
+      if ty.HasTypeDefinition then do
+        ty.GenericArguments
+        |> Seq.mapi getUnresolvedTypeParameter
+        |> Seq.iter unresolved.TypeParameters.Add
+      unresolved
+    and getUnresolvedTypeParameter i ty = 
+         let typar = DefaultUnresolvedTypeParameter(SymbolKind.TypeParameter, i, ty.GenericParameter.Name) 
+         typar
+               
     /// Build an NRefactory symbol for an F# symbol.
     let createSymbol (projectContent: IProjectContent, fsSymbol: FSharpSymbol, lastIdent, region) = 
         match fsSymbol with 
@@ -87,9 +115,7 @@ module NRefactory =
            //
            //unresolvedTypeDef.BaseTypes <- [ for x in fsEntity.DeclaredInterfaces -> Def ]
 
-           // Create an IUnresolveAssembly holding the type definition.
-           let assemblyFilename = match fsEntity.Assembly.FileName with None -> "" | Some n -> n
-           let unresolvedAssembly = DefaultUnresolvedAssembly(fsEntity.Assembly.SimpleName, Location = assemblyFilename)
+           let unresolvedAssembly = createAssembly fsEntity
            unresolvedAssembly.AddTypeDefinition(unresolvedTypeDef)
 
            // We create a fake 'Compilation' for the symbol to contain the unresolvedTypeDef
@@ -117,13 +143,15 @@ module NRefactory =
            //let unresolvedFile = MonoDevelop.Ide.TypeSystem.DefaultParsedDocument(fsEntity.DeclarationLocation.FileName)
            let unresolvedTypeDef = DefaultUnresolvedTypeDefinition (fsEntity.FullName, Region=region, Accessibility=access)
 
-           // We use an IUnresolvedMethod for the symbol regardless of whether it is a property, event, 
-           // method or function. For the operations we're implementing (Find-all references and rename refactoring)
-           // it doesn't seem to matter.
            let unresolvedMember = FSharpUnresolvedMethod(unresolvedTypeDef, fsMember.LogicalName, fsSymbol, lastIdent, Region=region, Accessibility=access)
+           for pg in fsMember.CurriedParameterGroups do
+            for p in pg do
+               let par = DefaultUnresolvedParameter(getUnresolvedType p.Type, if p.Name.IsNone then "" else p.Name.Value)
+               unresolvedMember.Parameters.Add par
+              
            unresolvedMember.IsStatic <- not fsMember.IsInstanceMember
-           let assemblyFilename = match fsEntity.Assembly.FileName with None -> "" | Some n -> n
-           let unresolvedAssembly = DefaultUnresolvedAssembly(fsEntity.Assembly.SimpleName, Location = assemblyFilename)
+
+           let unresolvedAssembly = createAssembly fsEntity
            unresolvedTypeDef.Members.Add(unresolvedMember)
            unresolvedAssembly.AddTypeDefinition(unresolvedTypeDef)
 

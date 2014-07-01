@@ -21,6 +21,11 @@ type ResolverProviderTests() =
 
     let content = """
     let a = System.String.Concat("a","b")
+
+    let fsharpfunc a b = a b
+
+    let ff = List.filter (fun i -> true) [1;2;3]
+
     """
 
     let createDoc (text:string)=
@@ -108,6 +113,32 @@ type ResolverProviderTests() =
             m.Parameters.[0].Type.FullName |> should equal "System.String"
             m.Parameters.[1].Name |> should equal "str1"
             m.Parameters.[1].Type.FullName |> should equal "System.String"
+        | _ -> Assert.Fail "Not a method result"
+
+    [<Test>]
+    member x.``Local F# function should be found``() =
+        let basicOffset = getBasicOffset ("fsharpfunc")
+        match resolveExpression (doc, content, basicOffset) with
+        | Member (FSharpMethod m) -> 
+            m.Name |> should equal "fsharpfunc" 
+            m.Parameters.Count |> should equal 2
+//            m.Parameters.[0].Name |> should equal "str0"
+//            m.Parameters.[0].Type.FullName |> should equal "Func<'b,c'>"
+//            m.Parameters.[1].Name |> should equal "str1"
+//            m.Parameters.[1].Type.FullName |> should equal "System.String"
+        | _ -> Assert.Fail "Not a method result"
+
+    [<Test>]
+    member x.``List filter should be found``() =
+        let basicOffset = getBasicOffset ("filter")
+        match resolveExpression (doc, content, basicOffset) with
+        | Member (FSharpMethod m) -> 
+            m.Name |> should equal "filter" 
+            m.Parameters.Count |> should equal 2
+//            m.Parameters.[0].Name |> should equal "str0"
+//            m.Parameters.[0].Type.FullName |> should equal "Func<'b,c'>"
+//            m.Parameters.[1].Name |> should equal "str1"
+//            m.Parameters.[1].Type.FullName |> should equal "System.String"
         | _ -> Assert.Fail "Not a method result"
 
     [<Test>]
