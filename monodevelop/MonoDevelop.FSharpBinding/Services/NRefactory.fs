@@ -7,6 +7,7 @@ open ICSharpCode.NRefactory.Semantics
 open ICSharpCode.NRefactory.TypeSystem
 open ICSharpCode.NRefactory.TypeSystem.Implementation
 open Microsoft.FSharp.Compiler.SourceCodeServices
+open ICSharpCode.NRefactory.TypeSystem.Implementation
 open FSharp.CompilerBinding
 /// Utilities to produce NRefactory ISymbol, IEntity, IVariable etc. implementations based on FSharpSymbol
 /// objects returned by FSharp.Compiler.Service.
@@ -73,23 +74,22 @@ module NRefactory =
             getNonAbbreviatedType typ.AbbreviatedType
         else typ
 
-    let rec getUnresolvedType (ty:FSharpType) = 
+    let rec getUnresolvedType (ty:FSharpType) (addTypeParameter: DefaultUnresolvedTypeParameter -> unit) = 
       let ty = getNonAbbreviatedType ty
       let fullTypeName = 
-         match ty.IsFunctionType with
-                | true -> "FSharpFunc"
-                | false -> if ty.HasTypeDefinition then ty.TypeDefinition.FullName
-                           elif ty.IsGenericParameter then ty.GenericParameter.Name
-                           else ""
+         if ty.HasTypeDefinition then ty.TypeDefinition.FullName
+         elif ty.IsGenericParameter then ty.GenericParameter.Name
+         else ""
       let unresolved = DefaultUnresolvedTypeDefinition(fullTypeName)
 
       if ty.HasTypeDefinition then do
         ty.GenericArguments
         |> Seq.mapi getUnresolvedTypeParameter
-        |> Seq.iter unresolved.TypeParameters.Add
+        |> Seq.iter (fun t -> unresolved.TypeParameters.Add t
+                              (*addTypeParameter t*))
       unresolved
     and getUnresolvedTypeParameter i ty = 
-         let typar = DefaultUnresolvedTypeParameter(SymbolKind.TypeParameter, i, ty.GenericParameter.Name) 
+         let typar = DefaultUnresolvedTypeParameter(SymbolKind.Method, 0, ty.GenericParameter.Name) 
          typar
                
     /// Build an NRefactory symbol for an F# symbol.
@@ -140,18 +140,41 @@ module NRefactory =
            let fsEntity = fsMember.EnclosingEntity
 
            // We create a fake 'Compilation', 'TypeDefinition' and 'Assembly' for the symbol 
-           //let unresolvedFile = MonoDevelop.Ide.TypeSystem.DefaultParsedDocument(fsEntity.DeclarationLocation.FileName)
-           let unresolvedTypeDef = DefaultUnresolvedTypeDefinition (fsEntity.FullName, Region=region, Accessibility=access)
+           let unresolvedFile = MonoDevelop.Ide.TypeSystem.DefaultParsedDocument(fsEntity.DeclarationLocation.FileName)
 
-           let unresolvedMember = FSharpUnresolvedMethod(unresolvedTypeDef, fsMember.LogicalName, fsSymbol, lastIdent, Region=region, Accessibility=access)
-           for pg in fsMember.CurriedParameterGroups do
-            for p in pg do
-               let par = DefaultUnresolvedParameter(getUnresolvedType p.Type, if p.Name.IsNone then "" else p.Name.Value)
-               unresolvedMember.Parameters.Add par
-              
-           unresolvedMember.IsStatic <- not fsMember.IsInstanceMember
+           let unresolvedTypeDef = DefaultUnresolvedTypeDefinition (fsEntity.FullName, Region=region, Accessibility=access, UnresolvedFile = unresolvedFile)
 
            let unresolvedAssembly = createAssembly fsEntity
+(*
+           let unresolvedMember = FSharpUnresolvedMethod(unresolvedTypeDef, fsMember.CompiledName, fsSymbol, lastIdent, Region=region, Accessibility=access)
+           let addTypeParameter = (fun (t:DefaultUnresolvedTypeParameter) -> unresolvedMember.TypeParameters.Add t)
+           unresolvedMember.ReturnType <- getUnresolvedType fsMember.ReturnParameter.Type addTypeParameter
+           fsMember.GenericParameters
+           |> Seq.mapi (fun i gp -> DefaultUnresolvedTypeParameter(SymbolKind.Method, i, gp.Name ))
+           |> Seq.iter (fun t -> //unresolved.TypeParameters.Add t
+                                 addTypeParameter t)
+
+           for pg in fsMember.CurriedParameterGroups do
+            for p in pg do
+               let par = DefaultUnresolvedParameter(getUnresolvedType p.Type addTypeParameter, if p.Name.IsNone then "" else p.Name.Value)
+
+               unresolvedMember.Parameters.Add par
+*)
+           let unresolvedMember = FSharpUnresolvedMethod(unresolvedTypeDef, "Append", fsSymbol, lastIdent)
+           fsMember.GenericParameters
+           |> Seq.mapi (fun i gp -> DefaultUnresolvedTypeParameter(SymbolKind.Method, i, gp.Name ))
+           |> Seq.iter (fun t -> unresolvedMember.TypeParameters.Add t)
+
+           let list = DefaultUnresolvedTypeDefinition("Microsoft.FSharp.Collections", "List")
+           list.TypeParameters.Add(
+               DefaultUnresolvedTypeParameter(SymbolKind.TypeDefinition, 0, "T"))
+           unresolvedMember.Parameters.Add( DefaultUnresolvedParameter(unbox list, "list1"))
+           unresolvedMember.Parameters.Add( DefaultUnresolvedParameter(unbox list, "list2"))
+       
+           unresolvedAssembly.AddTypeDefinition list
+               //////////////////////////////////////
+
+           unresolvedMember.IsStatic <- not fsMember.IsInstanceMember
            unresolvedTypeDef.Members.Add(unresolvedMember)
            unresolvedAssembly.AddTypeDefinition(unresolvedTypeDef)
 
@@ -166,7 +189,7 @@ module NRefactory =
            let context = SimpleTypeResolveContext(resolvedAssembly)
            let resolvedTypeDef = DefaultResolvedTypeDefinition(context, unresolvedTypeDef)
            let context = context.WithCurrentTypeDefinition(resolvedTypeDef)
-
+           
            // Finally, create the resolved method definition, which wraps the unresolved one
            let resolvedMember = FSharpResolvedMethod(unresolvedMember, context, fsSymbol, lastIdent)
            resolvedMember :> ISymbol

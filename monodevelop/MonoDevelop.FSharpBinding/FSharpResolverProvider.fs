@@ -21,7 +21,7 @@ type FSharpResolverProvider() =
   
     /// Get tool-tip at the specified offset (from the start of the file)
     member x.GetLanguageItem(doc:Document, offset:int, region:DomRegion byref) : ResolveResult =
-
+      
       try 
         LoggingService.LogInfo "ResolverProvider: In GetLanguageItem"
         if doc.Editor = null || doc.Editor.Document = null then null else
