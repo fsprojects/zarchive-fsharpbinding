@@ -97,7 +97,7 @@ type internal FSharpErrorCompletionData(exn:exn) =
     override x.Icon =  new MonoDevelop.Core.IconId("md-event")
 
 /// Provide information to the 'method overloads' windows that comes up when you type '('
-type ParameterDataProvider(nameStart: int, name, meths : MethodGroupItem array) = 
+type FSharpParameterDataProvider(nameStart: int, name, meths : MethodGroupItem array) = 
     inherit MonoDevelop.Ide.CodeCompletion.ParameterDataProvider (nameStart)
     override x.Count = meths.Length
         /// Returns the markup to use to represent the specified method overload
@@ -181,6 +181,7 @@ type FSharpTextEditorCompletion() =
   inherit CompletionTextEditorExtension()
 
   let mutable suppressParameterCompletion = false
+  let languageService = MDLanguageService.Instance
 
   override x.ExtendsEditor(doc:Document, editor:IEditableTextBuffer) =
     // Extend any text editor that edits F# files
@@ -189,7 +190,7 @@ type FSharpTextEditorCompletion() =
   override x.Initialize() = base.Initialize()
 
   /// Provide parameter and method overload information when you type '(', '<' or ','
-  override x.HandleParameterCompletion(context:CodeCompletionContext, completionChar:char) : MonoDevelop.Ide.CodeCompletion.ParameterDataProvider =
+  override x.HandleParameterCompletion(context, completionChar) =
     try
       if suppressParameterCompletion then
          suppressParameterCompletion <- false
@@ -216,38 +217,26 @@ type FSharpTextEditorCompletion() =
       else
       Debug.WriteLine("Getting Parameter Info, startOffset = {0}", startOffset)
 
-
-      // Try to get typed result - with the specified timeout
-      let projFile, files, args, framework = MonoDevelop.getCheckerArgs(doc.Project, doc.Editor.FileName)
-      let typedParseResults =
-        MDLanguageService.Instance.GetTypedParseResultWithTimeout(projFile, doc.Editor.FileName, docText, files, args, AllowStaleResults.MatchingFileName, ServiceSettings.blockingTimeout, framework) 
-        |> Async.RunSynchronously
-
-      match typedParseResults with
-      | None -> null
-      | Some tyRes ->
-      let line, col, lineStr = MonoDevelop.getLineInfoFromOffset(startOffset, doc.Editor.Document)
-      let methsOpt = tyRes.GetMethods(line, col, lineStr) |> Async.RunSynchronously
-      match methsOpt with 
-      | None -> 
-          Debug.WriteLine("Getting Parameter Info: no methods")
-          null 
-      | Some(name, meths) -> 
+      asyncMaybe {
+          // Try to get typed result - with the specified timeout
+          let projFile, files, args, framework = MonoDevelop.getCheckerArgs(doc.Project, doc.Editor.FileName)
+          let! tyRes = languageService.GetTypedParseResultWithTimeout(projFile, doc.Editor.FileName, docText, files, args, AllowStaleResults.MatchingFileName, ServiceSettings.blockingTimeout, framework) 
+          let line, col, lineStr = MonoDevelop.getLineInfoFromOffset(startOffset, doc.Editor.Document)
+          let! (name, meths) = tyRes.GetMethods(line, col, lineStr)
           Debug.WriteLine("Getting Parameter Info: methods!")
-          new ParameterDataProvider (startOffset, name, meths) :> _ 
+          return FSharpParameterDataProvider (startOffset, name, meths) :> ParameterDataProvider }
+      |> Async.RunSynchronously
+      |> Option.getOrElse null
     with _ -> null
 
   override x.KeyPress (key, keyChar, modifier) =
-      // base.KeyPress will execute RunParameterCompletionCommand,
-      // so suppress it here.  
-      suppressParameterCompletion <-
-         keyChar <> '(' && keyChar <> '<' && keyChar <> ','
+      // base.KeyPress will execute RunParameterCompletionCommand, so suppress it here.  
+      suppressParameterCompletion <- keyChar <> '(' && keyChar <> '<' && keyChar <> ','
 
       let result = base.KeyPress (key, keyChar, modifier)
 
       suppressParameterCompletion <- false
-      if (keyChar = ')' && x.CanRunParameterCompletionCommand ()) then
-          base.RunParameterCompletionCommand ()
+      if (keyChar = ')' && x.CanRunParameterCompletionCommand ()) then base.RunParameterCompletionCommand ()
 
       result
 
@@ -303,7 +292,7 @@ type FSharpTextEditorCompletion() =
       // Try to get typed information from LanguageService (with the specified timeout)
       let stale = if allowAnyStale then AllowStaleResults.MatchingFileName else AllowStaleResults.MatchingSource
       let typedParseResults = 
-          MDLanguageService.Instance.GetTypedParseResultWithTimeout(projFile, doc.FileName.ToString(), doc.Editor.Text, files, args, stale, ServiceSettings.blockingTimeout, framework)
+          languageService.GetTypedParseResultWithTimeout(projFile, doc.FileName.ToString(), doc.Editor.Text, files, args, stale, ServiceSettings.blockingTimeout, framework)
           |> Async.RunSynchronously
       match typedParseResults with
       | None       -> result.Add(FSharpTryAgainMemberCompletionData())
