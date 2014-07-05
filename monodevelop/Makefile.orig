@@ -27,12 +27,16 @@ ifeq ($(config),)
 config=Debug
 endif
 
-.PHONY: all
+.PHONY: all build test pack install uninstall release clean
 
 all: build
 
 build: MonoDevelop.FSharpBinding/MonoDevelop.FSharp.$(MDTAG).fsproj MonoDevelop.FSharpBinding/FSharpBinding.addin.xml
 	(cd MonoDevelop.FSharpBinding && xbuild MonoDevelop.FSharp.$(MDTAG).fsproj /p:Configuration=$(config))
+
+test:
+	xbuild MonoDevelop.FSharpBinding/MonoDevelop.FSharp.Tests/MonoDevelop.FSharp.Tests.fsproj /p:Configuration=$(config)
+	mono ../lib/NUnit.Runners.2.6.1/tools/nunit-console.exe MonoDevelop.FSharpBinding/MonoDevelop.FSharp.Tests/bin/Debug/MonoDevelop.FSharp.Tests.dll
 
 pack: build
 	-rm -fr pack/$(VERSION)/$(MDTAG)/$(config)
@@ -49,10 +53,13 @@ release:
 	$(MAKE) config=Release pack
 
 clean:
+	(cd MonoDevelop.FSharpBinding && xbuild MonoDevelop.FSharp.$(MDTAG).fsproj /target:Clean)
 	-rm -fr bin
 	-rm -fr pack
 	-rm -fr MonoDevelop.FSharpBinding/FSharpBinding.addin.xml
 	-rm -fr MonoDevelop.FSharpBinding/MonoDevelop.FSharp.*.fsproj
 	-rm -fr MonoDevelop.FSharpBinding/obj
 	(cd MonoDevelop.FSharpBinding/Gui && xbuild MonoDevelop.FSharp.Gui.csproj /target:Clean)
+	(cd MonoDevelop.FSharpBinding/MonoDevelop.FSharp.Tests && xbuild MonoDevelop.FSharp.Tests.fsproj /target:Clean)
+	-rm -fr MonoDevelop.FSharp.Tests/MonoDevelop.FSharp.Tests/MonoDevelop.FSharp.*.fsproj
 
