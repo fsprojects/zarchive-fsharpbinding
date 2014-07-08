@@ -11,6 +11,7 @@ install:
   - sudo apt-get install -yq emacs24 emacs24-el emacs24-common-non-dfsg
   - sudo apt-get install -yq mono-complete
   - sudo apt-get install -yq fsharp
+  - git clone https://github.com/rneatherway/monodevelop-binaries.git
 
 script:
   - make
@@ -18,4 +19,10 @@ script:
   - make integration-test
   - make -C emacs test
   - make -C emacs integration-test
-
+  - rc=0;
+    for dir in $(find monodevelop-binaries/ -maxdepth 1 -mindepth 1 -type d | grep -v ".git");
+    do
+      cd monodevelop && ./configure.sh --prefix=../$dir && make build && make test || rc=$?;
+      cd ..;
+    done;
+    exit $rc
