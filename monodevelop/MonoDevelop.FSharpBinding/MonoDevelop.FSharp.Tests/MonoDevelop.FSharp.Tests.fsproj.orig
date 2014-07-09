@@ -55,7 +55,7 @@
     <Reference Include="mscorlib" />
     <Reference Include="Mono.Cairo" />
     <Reference Include="Mono.Debugging">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\Mono.Debugging.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Addins">
