@@ -22,7 +22,7 @@ script:
   - rc=0;
     for dir in $(find monodevelop-binaries/ -maxdepth 1 -mindepth 1 -type d | grep -v ".git");
     do
-      cd monodevelop && ./configure.sh --prefix=../$dir && make build && make test || rc=$?;
+      cd monodevelop && ./configure.sh --prefix=$(readlink -e ../$dir) && make build && make test || rc=$?;
       cd ..;
     done;
     exit $rc
