@@ -347,6 +347,10 @@
       <Private>False</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\Mono.Addins.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Debugging">
+      <Private>False</Private>
+      <HintPath>INSERT_FSPROJ_MDROOT\bin\Mono.Debugging.dll</HintPath>
+    </Reference>
     <Reference Include="Xwt">
       <Private>False</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\Xwt.dll</HintPath>
@@ -386,6 +390,13 @@
     <Reference Include="MonoDevelop.Debugger">
       <Private>False</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\AddIns\MonoDevelop.Debugger\MonoDevelop.Debugger.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoDevelop.DesignerSupport">
+      <Private>True</Private>
+      <HintPath>INSERT_FSPROJ_MDROOT\AddIns\MonoDevelop.DesignerSupport\MonoDevelop.DesignerSupport.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
     </Reference>
     <ProjectReference Include="..\..\FSharp.CompilerBinding\FSharp.CompilerBinding.fsproj">
       <Project>{88F6940F-D300-474C-B2A7-E2ECD5B04B57}</Project>

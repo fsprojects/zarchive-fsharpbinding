@@ -54,53 +54,64 @@
     <Reference Include="System.Xaml" />
     <Reference Include="mscorlib" />
     <Reference Include="Mono.Cairo" />
+    <Reference Include="Mono.Debugging">
+      <Private>True</Private>
+      <HintPath>INSERT_FSPROJ_MDROOT\bin\Mono.Debugging.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Addins">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\Mono.Addins.dll</HintPath>
     </Reference>
      <Reference Include="Mono.Addins.Setup">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\Mono.Addins.Setup.dll</HintPath>
     </Reference>
     <Reference Include="Xwt">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\Xwt.dll</HintPath>
     </Reference>
     <Reference Include="Xwt.Gtk">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\Xwt.Gtk.dll</HintPath>
     </Reference>
     <Reference Include="Mono.TextEditor">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\Mono.TextEditor.dll</HintPath> 
     </Reference>
     <Reference Include="MonoDevelop.Core">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\MonoDevelop.Core.dll</HintPath>
     </Reference>
     <Reference Include="monodoc">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\monodoc.dll</HintPath>
     </Reference>
     <Reference Include="MonoDevelop.Ide">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\MonoDevelop.Ide.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>
     <Reference Include="MonoDevelop.SourceEditor2">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\AddIns\DisplayBindings\SourceEditor\MonoDevelop.SourceEditor2.dll</HintPath>
     </Reference>
     <Reference Include="MonoDevelop.Refactoring">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\AddIns\MonoDevelop.Refactoring\MonoDevelop.Refactoring.dll</HintPath>
     </Reference>
     <Reference Include="MonoDevelop.Debugger">
-      <Private>False</Private>
+      <Private>True</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\AddIns\MonoDevelop.Debugger\MonoDevelop.Debugger.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoDevelop.DesignerSupport">
+      <Private>True</Private>
+      <HintPath>INSERT_FSPROJ_MDROOT\AddIns\MonoDevelop.DesignerSupport\MonoDevelop.DesignerSupport.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
