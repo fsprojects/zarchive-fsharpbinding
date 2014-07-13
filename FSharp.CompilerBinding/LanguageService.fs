@@ -5,6 +5,21 @@ open System.Diagnostics
 open Microsoft.FSharp.Compiler
 open Microsoft.FSharp.Compiler.SourceCodeServices
 
+module Symbols =
+  /// We always know the text of the identifier that resolved to symbol.
+  /// Trim the range of the referring text to only include this identifier.
+  /// This means references like A.B.C are trimmed to "C".  This allows renaming to just rename "C". 
+  let trimSymbolRegion(symbolUse:FSharpSymbolUse) (lastIdentAtLoc:string) =
+    let m = symbolUse.RangeAlternate 
+    let ((beginLine, beginCol), (endLine, endCol)) = ((m.StartLine, m.StartColumn), (m.EndLine, m.EndColumn))
+             
+    let (beginLine, beginCol) =
+        if endCol >=lastIdentAtLoc.Length && (beginLine <> endLine || (endCol-beginCol) >= lastIdentAtLoc.Length) then 
+            (endLine,endCol-lastIdentAtLoc.Length)
+        else
+            (beginLine, beginCol)
+    (beginLine, beginCol), (endLine, endCol)
+
 // --------------------------------------------------------------------------------------
 /// Wraps the result of type-checking and provides methods for implementing
 /// various IntelliSense functions (such as completion & tool tips). Provides default
@@ -40,8 +55,10 @@ type ParseAndCheckResults private (infoOpt: (CheckFileResults * ParseFileResults
         | None -> return None
         | Some(col,identIsland) ->
           let! res = checkResults.GetToolTipTextAlternate(line, col, lineStr, identIsland, token)
+          let! sym = checkResults.GetSymbolUseAtLocation(line, col, lineStr, identIsland)
           Debug.WriteLine("Result: Got something, returning")
-          return Some (res, (col - 10, col))
+          return sym |> Option.bind (fun sym -> let (_, startCol), (_, endCol) = Symbols.trimSymbolRegion sym (Seq.last identIsland)
+                                                Some (res, (startCol, endCol)))
       }
     member x.GetDeclarationLocation(line, col, lineStr) =
       async {
@@ -75,6 +92,7 @@ type ParseAndCheckResults private (infoOpt: (CheckFileResults * ParseFileResults
         | Some(colu, identIsland) ->
             return! checkResults.GetSymbolUseAtLocation(line, colu, lineStr, identIsland)
       }
+
     member x.GetSymbolAtLocation(line, col, lineStr, identIsland) =
       async {
         match infoOpt with 
@@ -82,12 +100,31 @@ type ParseAndCheckResults private (infoOpt: (CheckFileResults * ParseFileResults
         | Some (checkResults, parseResults) -> 
             return! checkResults.GetSymbolUseAtLocation (line, col, lineStr, identIsland)
       }
+
     member x.GetUsesOfSymbolInFile(symbol) =
       async {
         match infoOpt with 
         | None -> return [| |]
         | Some (checkResults, parseResults) -> return! checkResults.GetUsesOfSymbolInFile(symbol)
       }
+
+    member x.GetAllUsesOfAllSymbolsInFile() =
+      async {
+          match infoOpt with
+          | None -> return None
+          | Some (checkResults, parseResults) ->
+              let! allSymbols = checkResults.GetAllUsesOfAllSymbolsInFile()
+              return Some allSymbols
+      }
+
+    member x.PartialAssemblySignature =
+      async {
+          match infoOpt with
+          | None -> return None
+          | Some (checkResults, parseResults) ->
+              return Some checkResults.PartialAssemblySignature
+      }
+
     member x.GetErrors() =
         match infoOpt with 
         | None -> None
@@ -102,6 +139,7 @@ type ParseAndCheckResults private (infoOpt: (CheckFileResults * ParseFileResults
             with _ -> 
                 Debug.Assert(false, "couldn't update navigation items, ignoring")  
                 [| |]
+
     member x.ParseTree = match infoOpt with
                          | Some (check,parse) -> parse.ParseTree
                          | None -> None    
@@ -282,14 +320,14 @@ type LanguageService(dirtyNotify) =
   member x.ParseFileInProject(projectFilename, fileName:string, src, files, args, targetFramework) = 
     let opts = x.GetCheckerOptions(fileName, projectFilename, src, files, args, targetFramework)
     Debug.WriteLine(sprintf "Parsing: Get untyped parse result (fileName=%s)" fileName)
-    checker.ParseFileInProject(fileName, src, opts)
+    checker.ParseFileInProject(fixFileName fileName, src, opts)
 
   member internal x.TryGetStaleTypedParseResult(fileName:string, options, src, stale)  = 
     // Try to get recent results from the F# service
     let res = 
         match stale with 
-        | AllowStaleResults.MatchingFileName -> checker.TryGetRecentTypeCheckResultsForFile(fileName, options) 
-        | AllowStaleResults.MatchingSource -> checker.TryGetRecentTypeCheckResultsForFile(fileName, options, source=src) 
+        | AllowStaleResults.MatchingFileName -> checker.TryGetRecentTypeCheckResultsForFile(fixFileName fileName, options) 
+        | AllowStaleResults.MatchingSource -> checker.TryGetRecentTypeCheckResultsForFile(fixFileName fileName, options, source=src) 
         | AllowStaleResults.No -> None
     match res with 
     | Some (untyped,typed,_) when typed.HasFullTypeCheckInfo  -> Some (ParseAndCheckResults(typed, untyped))
@@ -347,4 +385,3 @@ type LanguageService(dirtyNotify) =
     return refs }
 
   member x.InvalidateConfiguration(options) = checker.InvalidateConfiguration(options)
-

@@ -116,6 +116,10 @@ module NRefactory =
            //unresolvedTypeDef.BaseTypes <- [ for x in fsEntity.DeclaredInterfaces -> Def ]
 
            let unresolvedAssembly = createAssembly fsEntity
+           // For scripts, there is no assembly so avoid errors caused by null in XS
+           let assemblyFilename = match fsEntity.Assembly.FileName with None -> "" | Some n -> n
+           let assemblyName = match projectContent.AssemblyName with | null -> "FakeAssembly" | x -> x
+           let unresolvedAssembly = DefaultUnresolvedAssembly(assemblyName, Location = assemblyFilename)
            unresolvedAssembly.AddTypeDefinition(unresolvedTypeDef)
 
            // We create a fake 'Compilation' for the symbol to contain the unresolvedTypeDef
@@ -162,13 +166,11 @@ module NRefactory =
 *)
            let unresolvedMember = FSharpUnresolvedMethod(unresolvedTypeDef, "Append", fsSymbol, lastIdent)
            fsMember.GenericParameters
-           |> Seq.mapi (fun i gp -> DefaultUnresolvedTypeParameter(SymbolKind.Method, i, gp.Name ))
            |> Seq.iter (fun t -> unresolvedMember.TypeParameters.Add t)
-
-           let list = DefaultUnresolvedTypeDefinition("Microsoft.FSharp.Collections", "List")
+           let assemblyFilename = match fsEntity.Assembly.FileName with None -> "" | Some n -> n
            list.TypeParameters.Add(
                DefaultUnresolvedTypeParameter(SymbolKind.TypeDefinition, 0, "T"))
-           unresolvedMember.Parameters.Add( DefaultUnresolvedParameter(unbox list, "list1"))
+           let unresolvedAssembly = DefaultUnresolvedAssembly(projectContent.AssemblyName, Location = assemblyFilename)
            unresolvedMember.Parameters.Add( DefaultUnresolvedParameter(unbox list, "list2"))
        
            unresolvedAssembly.AddTypeDefinition list
@@ -202,18 +204,7 @@ module NRefactory =
     ///
     /// symbolDeclLocOpt is used to modify the MemberReferences ReferenceUsageType in the case of highlight usages
     let createMemberReference(projectContent, symbolUse: FSharpSymbolUse, fileNameOfRef, text, lastIdentAtLoc:string) =
-         let m = symbolUse.RangeAlternate
-         let ((beginLine, beginCol), (endLine, endCol)) = ((m.StartLine, m.StartColumn), (m.EndLine, m.EndColumn))
-         
-         // We always know the text of the identifier that resolved to symbol.
-         // Trim the range of the referring text to only include this identifier.
-         // This means references like A.B.C are trimmed to "C".  This allows renaming to just
-         // rename "C". 
-         let (beginLine, beginCol) =
-             if endCol >=lastIdentAtLoc.Length && (beginLine <> endLine || (endCol-beginCol) >= lastIdentAtLoc.Length) then 
-                 (endLine,endCol-lastIdentAtLoc.Length)
-             else
-                 (beginLine, beginCol)
+         let (beginLine, beginCol), (endLine, endCol) = Symbols.trimSymbolRegion symbolUse lastIdentAtLoc
              
          let document = TextDocument(text)
          let offset = document.LocationToOffset(beginLine, beginCol+1)
@@ -223,7 +214,7 @@ module NRefactory =
          let memberRef = MemberReference(symbol, domRegion, offset, lastIdentAtLoc.Length)
 
          //if the current range is a symbol range and the fileNameOfRefs match change the ReferenceUsageType
-         if symbolUse.FileName = fileNameOfRef && symbolUse.IsFromDefinition then
+         if symbolUse.IsFromDefinition then
             memberRef.ReferenceUsageType <- ReferenceUsageType.Write
 
          memberRef

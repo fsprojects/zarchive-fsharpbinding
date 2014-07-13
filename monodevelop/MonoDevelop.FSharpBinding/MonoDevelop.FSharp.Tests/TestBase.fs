@@ -35,7 +35,7 @@ type Util =
 
 type TestBase() =
     static let firstRun = ref true
-        
+    do MonoDevelop.FSharp.MDLanguageService.DisableVirtualFileSystem()
     abstract member Setup: unit -> unit
 
     [<TestFixtureSetUp>]
@@ -64,4 +64,4 @@ type TestBase() =
         Gtk.Application.Init ()
         TypeSystemService.TrackFileChanges <- true
         DesktopService.Initialize ()
-        Services.ProjectService.DefaultTargetFramework <- Runtime.SystemAssemblyService.GetTargetFramework (TargetFrameworkMoniker.NET_2_0)
+        Services.ProjectService.DefaultTargetFramework <- Runtime.SystemAssemblyService.GetTargetFramework (TargetFrameworkMoniker.NET_4_5)

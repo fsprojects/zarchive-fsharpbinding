@@ -181,12 +181,15 @@ type FSharpTextEditorCompletion() =
   inherit CompletionTextEditorExtension()
 
   let mutable suppressParameterCompletion = false
+  let mutable lastCharDottedInto = false 
 
   override x.ExtendsEditor(doc:Document, editor:IEditableTextBuffer) =
     // Extend any text editor that edits F# files
     CompilerArguments.supportedExtension(IO.Path.GetExtension(doc.FileName.ToString()))
 
-  override x.Initialize() = base.Initialize()
+  override x.Initialize() = 
+      do base.Document.Editor.IndentationTracker <- FSharpIndentationTracker(base.Document) :> Mono.TextEditor.IIndentationTracker 
+      base.Initialize()
 
   /// Provide parameter and method overload information when you type '(', '<' or ','
   override x.HandleParameterCompletion(context:CodeCompletionContext, completionChar:char) : MonoDevelop.Ide.CodeCompletion.ParameterDataProvider =
@@ -211,16 +214,16 @@ type FSharpTextEditorCompletion() =
               else loop depth (i-1) 
           loop 0 (offset-1)
 
-      if docText = null || offset >= docText.Length || startOffset < 0 || offset <= 0 then 
+      if docText = null || offset > docText.Length || startOffset < 0 || offset <= 0 then 
         null 
       else
       Debug.WriteLine("Getting Parameter Info, startOffset = {0}", startOffset)
 
 
       // Try to get typed result - with the specified timeout
-      let projFile, files, args, framework = MonoDevelop.getCheckerArgs(doc.Project, doc.Editor.FileName)
+      let projFile, files, args, framework = MonoDevelop.getCheckerArgs(doc.Project, doc.FileName.FullPath.ToString())
       let typedParseResults =
-        MDLanguageService.Instance.GetTypedParseResultWithTimeout(projFile, doc.Editor.FileName, docText, files, args, AllowStaleResults.MatchingFileName, ServiceSettings.blockingTimeout, framework) 
+        MDLanguageService.Instance.GetTypedParseResultWithTimeout(projFile, doc.FileName.FullPath.ToString(), docText, files, args, AllowStaleResults.MatchingFileName, ServiceSettings.blockingTimeout, framework) 
         |> Async.RunSynchronously
 
       match typedParseResults with
@@ -238,11 +241,15 @@ type FSharpTextEditorCompletion() =
     with _ -> null
 
   override x.KeyPress (key, keyChar, modifier) =
+      // Avoid two dots in sucession turning inte ie '.CompareWith.' instead of '..'
+      let suppressMemberCompletion = lastCharDottedInto && keyChar = '.'
+      lastCharDottedInto <- false
+      if suppressMemberCompletion then true else
       // base.KeyPress will execute RunParameterCompletionCommand,
       // so suppress it here.  
       suppressParameterCompletion <-
          keyChar <> '(' && keyChar <> '<' && keyChar <> ','
-
+      
       let result = base.KeyPress (key, keyChar, modifier)
 
       suppressParameterCompletion <- false
@@ -299,12 +306,13 @@ type FSharpTextEditorCompletion() =
     let result = CompletionDataList()
     let doc = x.Document
     try
-      let projFile, files, args, framework = MonoDevelop.getCheckerArgs(doc.Project, doc.Editor.FileName)
+      let projFile, files, args, framework = MonoDevelop.getCheckerArgs(doc.Project, doc.FileName.FullPath.ToString())
       // Try to get typed information from LanguageService (with the specified timeout)
       let stale = if allowAnyStale then AllowStaleResults.MatchingFileName else AllowStaleResults.MatchingSource
       let typedParseResults = 
-          MDLanguageService.Instance.GetTypedParseResultWithTimeout(projFile, doc.FileName.ToString(), doc.Editor.Text, files, args, stale, ServiceSettings.blockingTimeout, framework)
+          MDLanguageService.Instance.GetTypedParseResultWithTimeout(projFile, doc.FileName.FullPath.ToString(), doc.Editor.Text, files, args, stale, ServiceSettings.blockingTimeout, framework)
           |> Async.RunSynchronously
+      lastCharDottedInto <- dottedInto
       match typedParseResults with
       | None       -> result.Add(FSharpTryAgainMemberCompletionData())
       | Some tyRes ->

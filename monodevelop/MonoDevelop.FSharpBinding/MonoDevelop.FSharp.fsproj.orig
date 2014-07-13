@@ -229,6 +229,9 @@
     <None Include="Templates/ios/LibraryProject.xpt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Templates/ios/Common/Default-568h.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Templates/ios/Common/Info_iPad.plist.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -283,18 +286,22 @@
     <None Include="Templates/ios/SingleView/Universal/ViewController.fs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-     
+    <None Include="Templates/FSharp-templates.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Compile Include="PowerPack\CodeDomVisitor.fs" />
     <Compile Include="PowerPack\CodeDomGenerator.fs" />
     <Compile Include="PowerPack\CodeProvider.fs" />
     <Compile Include="Services\Parameters.fs" />
     <Compile Include="Services\CompilerArguments.fs" />
     <Compile Include="Services\TooltipHelpers.fs" />
+    <Compile Include="Services\FileService.fs" />
     <Compile Include="Services\LanguageService.fs" />
     <Compile Include="Services\CompilerService.fs" />
     <Compile Include="Services\InteractiveSession.fs" />
     <Compile Include="Services\NRefactory.fs" />
     <Compile Include="Services\NRefactoryCodeActionSource.fs" />
+    <Compile Include="Services\FSharpIndentationTracker.fs" />
     <Compile Include="FSharpInteractivePad.fs" />
     <Compile Include="FSharpOptionsPanels.fs" />
     <Compile Include="FSharpLanguageBinding.fs" />
@@ -308,7 +315,12 @@
     <Compile Include="FSharpTooltipProvider.fs" />
     <Compile Include="FSharpResolverProvider.fs" />
     <Compile Include="FSharpReferenceFinderExtension.fs" />
+    <Compile Include="FSharpFormattingPolicy.fs" />
     <Compile Include="FSharpFormatter.fs" />
+    <Compile Include="FSharpFormattingPanelWidget.fs" />
+    <Compile Include="FSharpFormattingPolicyPanel.fs" />
+    <EmbeddedResource Include="FSharpFormattingPolicy.xml" />
+    <EmbeddedResource Include="FSharpStylePolicy.xml" />
     <EmbeddedResource Include="FSharpBinding.addin.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -316,24 +328,14 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="pango-sharp">
-      <Private>False</Private>
-      <HintPath>../dependencies/gtk-sharp-2.0/pango-sharp.dll</HintPath>
     </Reference>
     <Reference Include="atk-sharp">
-      <Private>False</Private>
-      <HintPath>../dependencies/gtk-sharp-2.0/atk-sharp.dll</HintPath>
     </Reference>
     <Reference Include="gdk-sharp">
-      <Private>False</Private>
-      <HintPath>../dependencies/gtk-sharp-2.0/gdk-sharp.dll</HintPath>
     </Reference>
     <Reference Include="gtk-sharp">
-      <Private>False</Private>
-      <HintPath>../dependencies/gtk-sharp-2.0/gtk-sharp.dll</HintPath>
     </Reference>
     <Reference Include="glib-sharp">
-      <Private>False</Private>
-      <HintPath>../dependencies/gtk-sharp-2.0/glib-sharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -342,6 +344,7 @@
     <Reference Include="System.Xaml" />
     <Reference Include="mscorlib" />
     <Reference Include="Mono.Cairo" />
+    <Reference Include="Mono.Posix" />
     <Reference Include="Mono.Addins">
       <Private>False</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\bin\Mono.Addins.dll</HintPath>
@@ -411,6 +414,9 @@
     </Reference>
     <Reference Include="Mono.Cecil.Rocks">
       <HintPath>packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="FantomasLib">
+      <HintPath>packages\Fantomas.1.4.0\lib\FantomasLib.dll</HintPath>      
     </Reference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

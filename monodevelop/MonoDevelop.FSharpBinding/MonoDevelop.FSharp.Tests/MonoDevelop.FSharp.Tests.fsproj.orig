@@ -37,25 +37,15 @@
     <Tailcalls>true</Tailcalls>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <Private>False</Private>
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="pango-sharp">
     </Reference>
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <Private>False</Private>
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="atk-sharp">
     </Reference>
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <Private>False</Private>
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="gdk-sharp">
     </Reference>
-    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <Private>False</Private>
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="gtk-sharp">
     </Reference>
-    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <Private>False</Private>
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="glib-sharp">
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -111,6 +101,9 @@
     <Reference Include="MonoDevelop.Debugger">
       <Private>False</Private>
       <HintPath>INSERT_FSPROJ_MDROOT\AddIns\MonoDevelop.Debugger\MonoDevelop.Debugger.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoDevelop.Projects.Formats.MSBuild">
+      <HintPath>INSERT_FSPROJ_MDROOT\bin\MonoDevelop.Projects.Formats.MSBuild.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
