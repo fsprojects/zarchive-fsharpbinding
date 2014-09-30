@@ -29,6 +29,7 @@
 (require 'fsharp-mode-completion)
 (require 'fsharp-doc)
 (require 'inf-fsharp-mode)
+(require 'compile)
 
 ;;; Compilation
 
@@ -58,6 +59,9 @@ and whether it is in a project directory.")
 
 (defvar fsharp-mode-map nil
   "Keymap used in fsharp mode.")
+
+(defvar fsharp-run-executable-file-history nil
+  "History of executable commands run.")
 
 (unless fsharp-mode-map
   (setq fsharp-mode-map (make-sparse-keymap))
@@ -211,8 +215,8 @@ and whether it is in a project directory.")
           ac-use-comphist
           ac-auto-show-menu
           popup-tip-max-width
-	  fsharp-ac-last-parsed-ticks
-	  fsharp-ac-errors))
+          fsharp-ac-last-parsed-ticks
+          fsharp-ac-errors))
 
   (setq major-mode               'fsharp-mode
         mode-name                "fsharp"
@@ -245,14 +249,6 @@ and whether it is in a project directory.")
   (setq next-error-function 'fsharp-ac/next-error)
   (add-hook 'next-error-hook 'fsharp-ac/show-error-at-point nil t)
   (add-hook 'post-command-hook 'fsharp-ac/show-error-at-point nil t)
-
-  ;; make a local copy of the menubar, so our modes don't
-  ;; change the global menubar
-  (when (and running-xemacs
-             (featurep 'menubar)
-             current-menubar)
-    (set-buffer-menubar current-menubar)
-    (add-submenu nil fsharp-mode-xemacs-menu))
 
   (setq compile-command (fsharp-mode-choose-compile-command
                          (buffer-file-name)))
@@ -360,10 +356,25 @@ whole string."
       (buffer-substring-no-properties begin end))))
 
 (defun fsharp-run-executable-file ()
+  "Execute a file with specified arguments. If a project is
+currently loaded and the output is a .exe file (stored in
+FSHARP-AC--OUTPUT-FILE), then this will be used as a default. If
+the current system is not Windows then the command string will be
+passed to `mono'."
   (interactive)
-  (let ((name (buffer-file-name)))
-    (if (string-match "^\\(.*\\)\\.\\(fs\\|fsi\\)$" name)
-        (shell-command (concat (match-string 1 name) ".exe")))))
+  (let* ((default (if (and fsharp-ac--output-file
+                           (s-equals? "exe"
+                                      (downcase (file-name-extension fsharp-ac--output-file))))
+                      (if fsharp-ac-using-mono
+                          (s-concat "mono " fsharp-ac--output-file)
+                        fsharp-ac--output-file)
+                    ""))
+         (cmd (read-from-minibuffer "Run: "
+                                    default
+                                    nil
+                                    nil
+                                    'fsharp-run-executable-file-history)))
+    (start-process-shell-command cmd nil cmd)))
 
 ;;; Project
 

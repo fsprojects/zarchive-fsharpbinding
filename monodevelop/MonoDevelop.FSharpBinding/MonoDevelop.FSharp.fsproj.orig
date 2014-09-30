@@ -286,12 +286,92 @@
     <None Include="Templates/ios/SingleView/Universal/ViewController.fs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Templates/FSharp-templates.xml">
+    <None Include="Templates\Xamarin.iOS\Project\UnitTests\UnitTestsProject.xpt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="PowerPack\CodeDomVisitor.fs" />
-    <Compile Include="PowerPack\CodeDomGenerator.fs" />
-    <Compile Include="PowerPack\CodeProvider.fs" />
+    <None Include="Templates\Xamarin.iOS\Project\SingleView\ProjectIPad.xpt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\SingleView\ProjectIPhone.xpt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\SingleView\ProjectUniversal.xpt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Empty\AppDelegate.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Empty\ProjectIPad.xpt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Empty\ProjectIPhone.xpt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Empty\ProjectUniversal.xpt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Common\Default-568h.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Common\Entitlements.plist.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Common\Info_iPad.plist.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Common\Info_iPad.Storyboard.plist.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Common\Info_iPhone.plist.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Common\Info_iPhone.Storyboard.plist.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Common\Info_Universal.plist.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Common\Info_Universal.Storyboard.plist.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Common\ExtensionAppDelegate.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\Common\Conversions.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\LibraryProject.xpt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\SingleView\Common\AppDelegate.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\SingleView\IPad\ViewController.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\SingleView\IPhone\ViewController.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\SingleView\Universal\ViewController.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\UnitTests\UnitTestAppDelegate.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\CustomKeyboardExtension\Info.plist.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS/Project\CustomKeyboardExtension\KeyboardViewController.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Xamarin.iOS\Project\CustomKeyboardExtension\Project.xpt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+
+    <None Include="Templates\FSharp-templates.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+
     <Compile Include="Services\Parameters.fs" />
     <Compile Include="Services\CompilerArguments.fs" />
     <Compile Include="Services\TooltipHelpers.fs" />
@@ -302,7 +382,7 @@
     <Compile Include="Services\NRefactory.fs" />
     <Compile Include="Services\NRefactoryCodeActionSource.fs" />
     <Compile Include="Services\FSharpIndentationTracker.fs" />
-	<Compile Include="FSharpSymbolHelper.fs" />
+	  <Compile Include="FSharpSymbolHelper.fs" />
     <Compile Include="FSharpInteractivePad.fs" />
     <Compile Include="FSharpOptionsPanels.fs" />
     <Compile Include="FSharpLanguageBinding.fs" />
@@ -320,27 +400,21 @@
     <Compile Include="FSharpFormatter.fs" />
     <Compile Include="FSharpFormattingPanelWidget.fs" />
     <Compile Include="FSharpFormattingPolicyPanel.fs" />
-	<Compile Include="FSharpSyntaxMode.fs" />
-	<Compile Include="FSharpHighlightUsagesExtension.fs" />
-	<EmbeddedResource Include="FSharpSyntaxMode.xml" />
+	  <Compile Include="FSharpSyntaxMode.fs" />
+	  <Compile Include="FSharpHighlightUsagesExtension.fs" />
+    <Compile Include="UnformattedTextFileDescriptionTemplate.fs" />
+	  <EmbeddedResource Include="FSharpSyntaxMode.xml" />
     <EmbeddedResource Include="FSharpFormattingPolicy.xml" />
     <EmbeddedResource Include="FSharpStylePolicy.xml" />
-    <EmbeddedResource Include="FSharpBinding.addin.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <EmbeddedResource Include="FSharpBinding.addin.xml" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="pango-sharp">
-    </Reference>
-    <Reference Include="atk-sharp">
-    </Reference>
-    <Reference Include="gdk-sharp">
-    </Reference>
-    <Reference Include="gtk-sharp">
-    </Reference>
-    <Reference Include="glib-sharp">
-    </Reference>
+    <Reference Include="pango-sharp"/>
+    <Reference Include="atk-sharp"/>
+    <Reference Include="gdk-sharp"/>
+    <Reference Include="gtk-sharp"/>
+    <Reference Include="glib-sharp"/>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -413,7 +487,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Compiler.Service">
-      <HintPath>packages\FSharp.Compiler.Service.0.0.57\lib\net40\FSharp.Compiler.Service.dll</HintPath>
+      <HintPath>packages\FSharp.Compiler.Service.0.0.62\lib\net40\FSharp.Compiler.Service.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
@@ -428,7 +502,13 @@
       <HintPath>packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
     <Reference Include="FantomasLib">
-      <HintPath>packages\Fantomas.1.4.0\lib\FantomasLib.dll</HintPath>
+      <HintPath>packages\Fantomas.1.5.0\lib\FantomasLib.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Compiler.CodeDom">
+      <HintPath>packages\FSharp.Compiler.CodeDom.0.9.1\lib\net40\FSharp.Compiler.CodeDom.dll</HintPath>
+    </Reference>
+    <Reference Include="ExtCore">
+      <HintPath>packages\ExtCore.0.8.42\lib\net40\ExtCore.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

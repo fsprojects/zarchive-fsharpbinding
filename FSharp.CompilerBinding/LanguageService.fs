@@ -20,6 +20,13 @@ module Symbols =
             (beginLine, beginCol)
     (beginLine, beginCol), (endLine, endCol)
 
+/// Contains settings of the F# language service
+module ServiceSettings =
+
+  /// When making blocking calls from the GUI, we specify this value as the timeout, so that the GUI is not blocked forever
+  let blockingTimeout = 500
+  let maximumTimeout = 10000
+
 // --------------------------------------------------------------------------------------
 /// Wraps the result of type-checking and provides methods for implementing
 /// various IntelliSense functions (such as completion & tool tips). Provides default
@@ -31,8 +38,8 @@ type ParseAndCheckResults private (infoOpt: (CheckFileResults * ParseFileResults
 
     static member Empty = ParseAndCheckResults(None)
 
-    /// Get declarations at the current location in the specified document
-    /// (used to implement dot-completion in 'FSharpTextEditorCompletion.fs')
+    /// Get declarations at the current location in the specified document and the long ident residue
+    /// e.g. The incomplete ident One.Two.Th will return Th
     member x.GetDeclarations(line, col, lineStr) = 
         match infoOpt with 
         | None -> None
@@ -40,7 +47,23 @@ type ParseAndCheckResults private (infoOpt: (CheckFileResults * ParseFileResults
             let longName,residue = Parsing.findLongIdentsAndResidue(col, lineStr)
             Debug.WriteLine (sprintf "GetDeclarations: '%A', '%s'" longName residue)
             // Get items & generate output
-            try Some (checkResults.GetDeclarationsAlternate(Some parseResults, line, col, lineStr, longName, residue, fun (_,_) -> false)
+            try
+             let results =
+                 Async.RunSynchronously (checkResults.GetDeclarationsAlternate(Some parseResults, line, col, lineStr, longName, residue, fun (_,_) -> false),
+                                         timeout = ServiceSettings.maximumTimeout )
+             Some (results, residue)
+            with :? TimeoutException as e -> None
+
+    /// Get the symbols for declarations at the current location in the specified document and the long ident residue
+    /// e.g. The incomplete ident One.Two.Th will return Th
+    member x.GetDeclarationSymbols(line, col, lineStr) = 
+        match infoOpt with 
+        | None -> None
+        | Some (checkResults, parseResults) -> 
+            let longName,residue = Parsing.findLongIdentsAndResidue(col, lineStr)
+            Debug.WriteLine (sprintf "GetDeclarationSymbols: '%A', '%s'" longName residue)
+            // Get items & generate output
+            try Some (checkResults.GetDeclarationSymbols (Some parseResults, line, col, lineStr, longName, residue, fun (_,_) -> false)
                       |> Async.RunSynchronously, residue)
             with :? TimeoutException as e -> None
 
@@ -214,30 +237,32 @@ type LanguageService(dirtyNotify) =
     
     async { 
        while true do
-            Debug.WriteLine("Worker: Awaiting request") 
-            let! (fileName, source, options, reply: AsyncReplyChannel<_> ) = mbox.Receive()
-            
-            let fileName = fixFileName(fileName)            
-            
-            Debug.WriteLine("Worker: Request received, fileName = {0}, parsing...", box fileName)
-            let! parseResults = checker.ParseFileInProject(fileName, source, options) 
+            try
+              Debug.WriteLine("Worker: Awaiting request") 
+              let! (fileName, source, options, reply: AsyncReplyChannel<_> ) = mbox.Receive()
               
-            Debug.WriteLine("Worker: Typecheck source...")
-            let! checkAnswer = checker.CheckFileInProject(parseResults, fileName, 0, source,options, IsResultObsolete(fun () -> false), null )
+              let fileName = fixFileName(fileName)            
               
-            Debug.WriteLine(sprintf "Worker: Parse completed")
-
-            // Construct new typed parse result if the task succeeded
-            let results =
-              match checkAnswer with
-              | CheckFileAnswer.Succeeded(checkResults) ->
-                  Debug.WriteLine(sprintf "LanguageService: Update typed info - HasFullTypeCheckInfo? %b" checkResults.HasFullTypeCheckInfo)
-                  ParseAndCheckResults(checkResults, parseResults)
-              | _ -> 
-                  Debug.WriteLine("LanguageService: Update typed info - failed")
-                  ParseAndCheckResults.Empty
-                  
-            reply.Reply results
+              Debug.WriteLine("Worker: Request received, fileName = {0}, parsing...", box fileName)
+              let! parseResults = checker.ParseFileInProject(fileName, source, options) 
+                
+              Debug.WriteLine("Worker: Typecheck source...")
+              let! checkAnswer = checker.CheckFileInProject(parseResults, fileName, 0, source,options, IsResultObsolete(fun () -> false), null )
+                
+              Debug.WriteLine(sprintf "Worker: Parse completed")
+              
+              // Construct new typed parse result if the task succeeded
+              let results =
+                match checkAnswer with
+                | CheckFileAnswer.Succeeded(checkResults) ->
+                    Debug.WriteLine(sprintf "LanguageService: Update typed info - HasFullTypeCheckInfo? %b" checkResults.HasFullTypeCheckInfo)
+                    ParseAndCheckResults(checkResults, parseResults)
+                | _ -> 
+                    Debug.WriteLine("LanguageService: Update typed info - failed")
+                    ParseAndCheckResults.Empty
+                    
+              reply.Reply results
+            with exn -> Debug.WriteLine( sprintf "LanguageService: Exception: %s" (exn.ToString()) )
         })
 
   /// Constructs options for the interactive checker for the given file in the project under the given configuration.
@@ -261,9 +286,10 @@ type LanguageService(dirtyNotify) =
         try 
           let fileName = fixFileName(fileName)
           Debug.WriteLine (sprintf "GetScriptCheckerOptions: Creating for stand-alone file or script: '%s'" fileName )
-          let opts = checker.GetProjectOptionsFromScript(fileName, source, fakeDateTimeRepresentingTimeLoaded projFilename)
-                     |> Async.RunSynchronously
-          
+          let opts =
+              Async.RunSynchronously (checker.GetProjectOptionsFromScript(fileName, source, fakeDateTimeRepresentingTimeLoaded projFilename),
+                                      timeout = ServiceSettings.maximumTimeout)
+
           // The InteractiveChecker resolution sometimes doesn't include FSharp.Core and other essential assemblies, so we need to include them by hand
           if opts.ProjectOptions |> Seq.exists (fun s -> s.Contains("FSharp.Core.dll")) then opts
           else 
