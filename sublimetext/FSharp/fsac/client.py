@@ -1,10 +1,6 @@
 import threading
 import queue
-import asyncore
-import socket
-import time
 import json
-
 
 from .server import requests_queue
 from .server import responses_queue

@@ -1,8 +1,5 @@
 import threading
 import queue
-import asyncore
-import socket
-import time
 import os
 
 from .pipe_server import PipeServer

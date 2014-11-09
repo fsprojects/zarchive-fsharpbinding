@@ -5,28 +5,23 @@
 import sublime
 import sublime_plugin
 
-from threading import Thread
-import asyncore
-import json
 import os
-import queue
-import time
 
+from FSharp.fsac import server
+from FSharp.fsac.client import FsacClient
 from FSharp.fsac.request import AdHocRequest
 from FSharp.fsac.request import CompilerLocationRequest
-from FSharp.fsac.request import DeclarationsRequest
-from FSharp.fsac.request import ProjectRequest
-from FSharp.fsac.request import ParseRequest
 from FSharp.fsac.request import DataRequest
-from FSharp.fsac.client import FsacClient
+from FSharp.fsac.request import DeclarationsRequest
+from FSharp.fsac.request import ParseRequest
+from FSharp.fsac.request import ProjectRequest
 from FSharp.fsac.response import CompilerLocationResponse
 from FSharp.fsac.response import ProjectResponse
-from FSharp.fsac import server
-from FSharp.sublime_plugin_lib.subprocess import GenericBinary
 
 
 def plugin_unloaded():
     editor_context.fsac.stop()
+
 
 class Editor(object):
     """Global editor state.

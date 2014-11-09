@@ -1,3 +1,8 @@
+# Copyright (c) 2014, Guillermo López-Anglada. Please see the AUTHORS file for details.
+# All rights reserved. Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.)
+
+
 class Request (object):
     def __init__(self, timeout=250, add_newline=True):
         self.add_newline = add_newline
