@@ -5,6 +5,11 @@ import json
 from .server import requests_queue
 from .server import responses_queue
 
+from FSharp.sublime_plugin_lib import PluginLogger
+
+
+_logger = PluginLogger(__name__)
+
 
 def read_reqs(responses, req_proc):
     """Reads responses from server and forwards them to @req_proc.
@@ -23,7 +28,8 @@ def read_reqs(responses, req_proc):
             except:
                 pass
 
-            req_proc (json.loads(data.decode ('utf-8')))
+            _logger.debug('request data: %s', data)
+            req_proc (json.loads(data.decode('utf-8')))
         except queue.Empty:
             pass
 

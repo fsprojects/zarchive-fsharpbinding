@@ -4,6 +4,8 @@ import os
 
 from .pipe_server import PipeServer
 
+from FSharp.sublime_plugin_lib import PluginLogger
+
 
 PATH_TO_FSAC = os.path.join(os.path.dirname(__file__),
                             'fsac/fsautocomplete.exe')
@@ -14,6 +16,8 @@ actions_queue = queue.Queue()
 responses_queue = queue.Queue()
 
 STOP_SIGNAL = '__STOP'
+
+_logger = PluginLogger(__name__)
 
 
 def request_reader(server):
@@ -30,6 +34,7 @@ def request_reader(server):
                 pass
 
             if req:
+                _logger.debug('reading request: %s', req)
                 server.fsac.proc.stdin.write(req)
                 server.fsac.proc.stdin.flush ()
         except queue.Empty:
@@ -53,6 +58,7 @@ def response_reader(server):
             except:
                 pass
 
+            _logger.debug('reading response: %s', data)
             responses_queue.put (data)
         except queue.Empty:
             pass
