@@ -1,288 +1,176 @@
 import sublime
 import sublime_plugin
 
-from queue import Queue
-import queue
 from threading import Thread
-from zipfile import ZipFile
+import asyncore
+import json
 import os
+import queue
+import time
 
-from FSharp.lib import const
-from FSharp.lib.fsac import get_server
-from FSharp.lib import fs
-
-
-tasks = Queue()
-task_results = Queue()
-
-
-SIG_QUIT = '<<QUIT>>'
-
-
-def plugin_loaded():
-    """
-    Initializes plugin.
-    """
-
-    # Install binaries if needed.
-    if not installation.check_binaries():
-        installation.install_binaries()
-        print('FSharp: Binaries installed. Everything ok.')
-    else:
-        print('FSharp: Binaries found. Everything ok.')
-
-    # Start the pipe server.
-    AsyncPipe()
+from FSharp.fsac.reader import AdHocRequest
+from FSharp.fsac.reader import CompilerLocationRequest
+from FSharp.fsac.reader import DeclarationsRequest
+from FSharp.fsac.reader import ProjectRequest
+from FSharp.fsac.reader import ParseRequest
+from FSharp.fsac.reader import DataRequest
+from FSharp.fsac.reader import FsacClient
+from FSharp.fsac.server import start, PATH_TO_FSAC
+from FSharp.sublime_plugin_lib.subprocess import GenericBinary
 
 
-def plugin_unloaded():
-    tasks.put((SIG_QUIT, ()))
+class Editor(object):
 
-
-class AsyncPipe(object):
-    """
-    Wraps the fsac server to make it asynchronous.
-    """
     def __init__(self):
-        self.server = get_server()
-        self.tasks = tasks
+        server = start()
+        self.fsac = Fsac(server)
+        self.compilers_path = None
+        self.project_file = None
+        self.fsac.send_request (CompilerLocationRequest ())
 
-        writer = Thread(target=self.write, daemon=True)
-        reader = Thread(target=self.read, daemon=True)
+    @property
+    def compiler_path(self):
+        if self.compilers_path is None:
+            return None
+        return os.path.join (self.compilers_path, 'fsc.exe')
 
-        writer.start()
-        reader.start()
-
-    def write(self):
-        while True:
-            action, args = self.tasks.get()
-            method = getattr(self.server, action, None)
-
-            if self.server.proc.poll() is not None:
-                print("FSharp: Server process unavailable. "
-                      "Exiting writer thread.")
-                break
-
-            if not method:
-                process_output({'Kind': 'ERROR', 'Data': 'Not a valid call.'})
-                continue
-
-            if action == SIG_QUIT:
-                # Give the other thread a chance to exit.
-                self.tasks.put((action, args))
-                break
-
-            # Write to server's stdin.
-            method(*args)
-
-    def read(self):
-        while True:
-            output = self.server.read_line()
-            if output['Kind'] == 'completion':
-                task_results.put(output)
-            else:
-                process_output(output)
-
-            if self.server.proc.poll() is not None:
-                print("FSharp: Server process unavailable. "
-                      "Exiting reader thread.")
-                break
-
-            try:
-                # Don't block here so we can read all the remaining output.
-                action, args = self.tasks.get(timeout=0.01)
-            except:
-                continue
-
-            if action == SIG_QUIT:
-                #  Give the other thread a chance to exit.
-                self.tasks.put((action, args))
-                break
-
-            self.tasks.put((action, args))
+    @property
+    def interpreter_path(self):
+        if self.compilers_path is None:
+            return None
+        return os.path.join (self.compilers_path, 'fsi.exe')
 
 
-class actions:
-    """
-    Groups methods that process data received from the autocomplete server.
-    """
-    @staticmethod
-    def generic_action(data=None):
-        sublime.status_message("RECEIVED: " + str(data))
-        print("RECEIVED: " + str(data))
+class CompilerLocationResponse (object):
+    def __init__(self, content):
+        self.content = content
 
-    @staticmethod
-    def show_info(data):
-        print(data)
-
-    @staticmethod
-    def find_declaration(data):
-        data = data['Data']
-        fname = data['File']
-        row = data['Line'] + 1
-        col = data['Column'] + 1
-        encoded = "{0}:{1}:{2}".format(fname, row, col)
-        sublime.active_window().open_file(encoded, sublime.ENCODED_POSITION)
-
-    @staticmethod
-    def declarations(data):
-        decls = data['Data']
-        print(decls)
-
-    @staticmethod
-    def show_completions(data):
-        v = sublime.active_window().active_view()
-        v.show_popup_menu(data['Data'], None)
-
-    @staticmethod
-    def show_tooltip(data):
-        v = sublime.active_window().active_view()
-        v.show_popup_menu([line for line in data['Data'].split('\n') if line],
-                          None)
+    @property
+    def compilers_path(self):
+       return self.content ['Data']
 
 
-class requests:
-    @staticmethod
-    def parse(view):
-        tasks.put(('parse', (view.file_name(), True)))
+class ProjectResponse (object):
+    def __init__(self, content):
+        self.content = content
 
-    @staticmethod
-    def completions(view):
-        requests.parse(view)
-        row, col = view.rowcol(view.sel()[0].b)
-        tasks.put(('completions', (view.file_name(), row, col)))
+    @property
+    def files(self):
+       return self.content['Data']['Files']
 
-    @staticmethod
-    def declarations(view):
-        requests.parse(view)
-        tasks.put(('declarations', (view.file_name(),)))
+    @property
+    def framework(self):
+       return self.content ['Data']['Framework']
 
-    @staticmethod
-    def tooltip(view):
-        requests.parse(view)
-        row, col = view.rowcol(view.sel()[0].b)
-        tasks.put(('tooltip', (view.file_name(), row, col)))
+    @property
+    def output(self):
+       return self.content ['Data'] ['Output']
+
+    @property
+    def output(self):
+       return self.content ['Data'] ['References']
 
 
-def process_output(data):
-    action = None
-    if data['Kind'] == 'completion':
-        raise ValueError('completion results should be handled in a different way')
-    elif data['Kind'] == 'tooltip':
-        action = actions.show_tooltip
-    elif data['Kind'] == 'INFO':
-        action = actions.show_info
-    elif data['Kind'] == 'finddecl':
-        action = actions.find_declaration
-    elif data['Kind'] == 'declarations':
-        action = actions.declarations
-    elif data['Kind'] == 'project':
-        for fname in data['Data']:
-            tasks.put(('parse', (fname, True)))
-    else:
-        action = actions.generic_action
+def process_resp(data):
+    # data = json.loads (data.decode ('utf-8'))
 
-    if action:
-        # Run action on the main UI thread to make ST happy.
-        sublime.set_timeout(lambda: action(data), 0)
+    print ('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+    print (data)
+    print ('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+
+    if data ['Kind'] == 'compilerlocation':
+        r = CompilerLocationResponse (data)
+        editor_context.compilers_path = r.compilers_path
+        print (editor_context.interpreter_path)
+        return
+
+    if data['Kind'] == 'project':
+        r = ProjectResponse(data)
+        print (''.join(r.files))
+
+    if data['Kind'] == 'parse':
+        print ('parseparseparse', data)
 
 
-class installation:
-    @staticmethod
-    def check_binaries():
-        print('FSharp: Checking installed files')
-        return os.path.exists(const.path_to_fs_ac_binary())
+class Fsac(object):
+    def __init__(self, server, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.client = FsacClient(server, process_resp)
 
-    @staticmethod
-    def install_binaries():
-        print('FSharp: Installing files to Packages/FSharp_Binaries...')
-        sublime.status_message('FSharp: Installing files to Packages/FSharp_Binaries...')
+    def send_request(self, request):
+        self.client.send_request(request)
+
+
+class fs_set_project_file(sublime_plugin.WindowCommand):
+    def run(self):
         try:
-            os.mkdir(const.path_to_fs_binaries())
-        except IOError:
-            pass
-
-        zipped_bytes = sublime.load_binary_resource('Packages/FSharp/bundled/fsautocomplete.zip')
-        target = os.path.join(const.path_to_fs_binaries(), 'fsautocomplete.zip')
-        with open(target, 'wb') as f:
-            f.write(zipped_bytes)
-
-        with open(target, 'rb') as f:
-            ZipFile(f).extractall(path=const.path_to_fs_binaries())
-        os.unlink(target)
+            fname = self.window.active_view ().file_name ()
+        except AttributeError as e:
+            return
+        if not fname:
+            return
+        editor_context.fsac.send_request (ProjectRequest (fname))
 
 
-class FsSetProjectFile(sublime_plugin.WindowCommand):
-    def is_enabled(self):
-        v = self.window.active_view()
-        if v and fs.is_fsharp_project(v.file_name()):
-            return True
-
-        msg = 'FSharp: Not a project file.'
-        print(msg)
-        sublime.status_message(msg)
-        return False
-
+class fs_parse_file(sublime_plugin.WindowCommand):
     def run(self):
-        v = self.window.active_view()
-        sublime.status_message('FSharp: Loading project...')
-        tasks.put(('project', (v.file_name(),)))
-
-
-class FsGetTooltip(sublime_plugin.WindowCommand):
-    def is_enabled(self):
-        v = self.window.active_view()
-        if v and fs.is_fsharp_code(v.file_name()):
-            return True
-
-        msg = 'FSharp: Not an F# code file.'
-        print(msg)
-        sublime.status_message(msg)
-        return False
-
-    def run(self):
-        v = self.window.active_view()
-        requests.tooltip(v)
-
-
-class FsDeclarations(sublime_plugin.WindowCommand):
-    def is_enabled(self):
-        v = self.window.active_view()
-        if v and fs.is_fsharp_code(v.file_name()):
-            return True
-
-        msg = 'FSharp: Not an F# code file.'
-        print(msg)
-        sublime.status_message(msg)
-        return False
-
-    def run(self):
-        v = self.window.active_view()
-        requests.declarations(v)
-
-
-class FsStEvents(sublime_plugin.EventListener):
-    def on_query_completions(self, view, prefix, locations):
-        if not fs.is_fsharp_code(view.file_name()):
-            return []
-
-        while not task_results.empty():
-            task_results.get()
-
-        # A request for completions is treated especially: the result will
-        # be published to a queue.
-        requests.completions(view)
-
-        completions = []
         try:
-            completions = task_results.get(timeout=0.2)
-            completions = completions['Data']
-        except queue.Empty:
-            # Too bad. The daemon was too slow.
-            pass
+            v = self.window.active_view()
+            fname = self.window.active_view ().file_name ()
+        except AttributeError as e:
+            return
+        if not fname:
+            return
 
-        # TODO: Necessary? (It seems so.)
-        flags = (sublime.INHIBIT_EXPLICIT_COMPLETIONS |
-                 sublime.INHIBIT_WORD_COMPLETIONS)
+        content = v.substr(sublime.Region(0, v.size()))
+        editor_context.fsac.send_request(ParseRequest(fname, content=content))
 
-        return [[c, c] for c in completions], flags
+
+class fs_get_declarations(sublime_plugin.WindowCommand):
+    def run(self):
+        try:
+            v = self.window.active_view()
+            fname = self.window.active_view ().file_name ()
+        except AttributeError as e:
+            return
+        if not fname:
+            return
+
+        editor_context.fsac.send_request(DeclarationsRequest(fname))
+
+
+class _my_fsac(sublime_plugin.WindowCommand):
+    def run(self):
+        print ('hello world')
+        self.window.show_input_panel ('', '', self.on_done, None, None)
+
+    def on_done(self, s):
+        editor_context.fsac.send_request(AdHocRequest(s))
+
+
+class fs_show_options(sublime_plugin.WindowCommand):
+    OPTIONS = {
+        'F#: Parse Active File': 'fs_parse_file',
+        'F#: Set Active File as Project': 'fs_set_project_file',
+        'F#: Show Declarations': 'fs_get_declarations',
+        'F#: Get Compiler Location': 'compilerlocation'
+    }
+    def run(self):
+        self.window.show_quick_panel(
+            list(sorted(fs_show_options.OPTIONS.keys())),
+            self.on_done)
+
+    def on_done(self, idx):
+        if idx == -1:
+            return
+        key = list (sorted (fs_show_options.OPTIONS.keys ())) [idx]
+        cmd = fs_show_options.OPTIONS [key]
+        if cmd == 'compilerlocation':
+            print ("FFFFFFFFFFFOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+            editor_context.fsac.send_request (CompilerLocationRequest ())
+            return
+
+        self.window.run_command (cmd)
+
+
+editor_context = Editor()
