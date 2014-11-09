@@ -5,10 +5,11 @@ import socket
 import time
 import os
 
-from FSharp.fsac.pipe_server import PipeServer
+from .pipe_server import PipeServer
 
 
-PATH_TO_FSAC = os.path.join(os.path.dirname(__file__), 'fsac/fsautocomplete.exe')
+PATH_TO_FSAC = os.path.join(os.path.dirname(__file__),
+                            'fsac/fsautocomplete.exe')
 
 
 requests_queue = queue.Queue()
@@ -18,40 +19,38 @@ responses_queue = queue.Queue()
 STOP_SIGNAL = '__STOP'
 
 
-def make_request(server):
+def request_reader(server):
     while True:
         try:
             req = requests_queue.get(block=True, timeout=5)
 
             try:
                 if actions_queue.get(block=False) == STOP_SIGNAL:
-                    print('exiting as requested')
+                    print('asked to exit; complying')
                     actions_queue.put(STOP_SIGNAL)
                     break
             except:
                 pass
 
             if req:
-                print ('got this', req)
                 server.fsac.proc.stdin.write(req)
                 server.fsac.proc.stdin.flush ()
         except queue.Empty:
             pass
-    print("request processor, I'm out...")
+    print("request reader exiting...")
 
 
-def make_response(server):
+def response_reader(server):
     while True:
         try:
-            print ("response processor, here I go...")
             data = server.fsac.proc.stdout.readline()
             if not data:
-                print ('boo, exiting because not data')
+                print ('no data; exiting')
                 break
 
             try:
                 if actions_queue.get(block=False) == STOP_SIGNAL:
-                    print('exiting as requested')
+                    print('asked to exit; complying')
                     actions_queue.put(STOP_SIGNAL)
                     break
             except:
@@ -60,7 +59,7 @@ def make_response(server):
             responses_queue.put (data)
         except queue.Empty:
             pass
-    print("response processor, I'm out...")
+    print("response reader exiting")
 
 
 class FsacServer(object):
@@ -70,14 +69,13 @@ class FsacServer(object):
         fsac.proc.stdin.write('outputmode json\n'.encode ('ascii'))
         self.fsac = fsac
 
-        threading.Thread (target=make_request, args=(self,)).start ()
-        threading.Thread (target=make_response, args=(self,)).start ()
+        threading.Thread (target=request_reader, args=(self,)).start ()
+        threading.Thread (target=response_reader, args=(self,)).start ()
+
+    def stop(self):
+        self.actions_queue.put(STOP_SIGNAL)
+        self.prco.stdin.close()
 
 
 def start():
     return FsacServer([PATH_TO_FSAC])
-
-
-# if __name__ == '__main__':
-#     print("starting fsautocomplete...")
-#     start()

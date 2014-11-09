@@ -1,15 +1,3 @@
-import threading
-import queue
-import asyncore
-import socket
-import time
-import json
-
-
-from FSharp.fsac.server import requests_queue
-from FSharp.fsac.server import responses_queue
-
-
 class Request (object):
     def __init__(self, timeout=250, add_newline=True):
         self.add_newline = add_newline
@@ -80,41 +68,4 @@ class AdHocRequest (Request):
 
     def __str__(self):
         return self.content
-
-
-def read_reqs(origin, req_proc):
-    while True:
-        try:
-            data = origin.get(block=True, timeout=5)
-            if not data:
-                print ('oops, no data to consume')
-                break
-
-            try:
-                if actions.get(block=False) == STOP_SIGNAL:
-                    print ('asked to stop, complying')
-                    break
-            except:
-                pass
-
-            req_proc (json.loads(data.decode ('utf-8')))
-        except queue.Empty:
-            pass
-
-
-
-class FsacClient(object):
-
-    def __init__(self, server, req_proc):
-        self.requests = requests_queue
-        self.server = server
-
-        threading.Thread(target=read_reqs, args=(responses_queue, req_proc)).start()
-
-    def stop(self):
-        self.server.stdin.close()
-
-    def send_request(self, request):
-        print ("sending request from client...")
-        self.requests.put(request.encode())
 
