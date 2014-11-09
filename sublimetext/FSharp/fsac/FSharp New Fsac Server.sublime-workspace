@@ -1,0 +1,3584 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"nodete",
+				"NodeText"
+			],
+			[
+				"lexin",
+				"lexIdentifier"
+			],
+			[
+				"eof",
+				"EOF"
+			],
+			[
+				"cons",
+				"consume"
+			],
+			[
+				"LEFDEL",
+				"DEFAULT_LEFT_DELIM"
+			],
+			[
+				"LEF",
+				"DEFAULT_LEFT_DELIM"
+			],
+			[
+				"u",
+				"utf-8"
+			],
+			[
+				"__",
+				"__init__"
+			],
+			[
+				"can",
+				"cancel_change_event"
+			],
+			[
+				"Darf",
+				"DartCompleteFs"
+			],
+			[
+				"fscomplete",
+				"fs_completer"
+			],
+			[
+				"fin",
+				"fileName"
+			],
+			[
+				"pubse",
+				"pub_serve"
+			],
+			[
+				"deter",
+				"determine"
+			],
+			[
+				"pack",
+				"packages_path"
+			],
+			[
+				"Tempfil",
+				"TemporaryFile"
+			],
+			[
+				"ope",
+				"operator"
+			],
+			[
+				"dart",
+				"Dart"
+			],
+			[
+				"patoda",
+				"path_to_dart"
+			],
+			[
+				"b",
+				"browsers"
+			],
+			[
+				"proper",
+				"property	prop"
+			],
+			[
+				"bro",
+				"BROWSERS"
+			],
+			[
+				"ana",
+				"analysis_snapshot"
+			],
+			[
+				"Dar",
+				"Dartium"
+			],
+			[
+				"stat",
+				"startupinfo"
+			],
+			[
+				"pattoda",
+				"path_to_dartium"
+			],
+			[
+				"appe",
+				"append_data"
+			],
+			[
+				"pa",
+				"partial"
+			],
+			[
+				"pub",
+				"pub_cmds"
+			],
+			[
+				"dar",
+				"Dart"
+			],
+			[
+				"Darpr",
+				"DartProject"
+			],
+			[
+				"Plok",
+				"PubspecLockFile"
+			],
+			[
+				"Dpro",
+				"DartProject"
+			],
+			[
+				"pop",
+				"property	prop"
+			],
+			[
+				"supl",
+				"sublime_plugin"
+			],
+			[
+				"too",
+				"get_tool_path"
+			],
+			[
+				"supr",
+				"supress_window"
+			],
+			[
+				"Responset",
+				"ResponseType"
+			],
+			[
+				"ERROR",
+				"ERRORS"
+			],
+			[
+				"resul",
+				"result"
+			],
+			[
+				"startcolumn",
+				"start_column"
+			],
+			[
+				"__in",
+				"__init__"
+			],
+			[
+				"Edicon",
+				"EditorContext"
+			],
+			[
+				"REtyp",
+				"ResponseType"
+			],
+			[
+				"Retp",
+				"ResponseType"
+			],
+			[
+				"respma",
+				"ResponseMaker"
+			],
+			[
+				"Responmake",
+				"ResponseMaker"
+			],
+			[
+				"std",
+				"start_stdout_watcher"
+			],
+			[
+				"Analy",
+				"AnalysisServer"
+			],
+			[
+				"sendset",
+				"send_set_priority_files"
+			],
+			[
+				"insta",
+				"installedPackages"
+			],
+			[
+				"con",
+				"contextmanager"
+			],
+			[
+				"reques",
+				"requests"
+			],
+			[
+				"bu",
+				"buffer"
+			],
+			[
+				"activewi",
+				"active_view"
+			],
+			[
+				"exe",
+				"extension_equals"
+			],
+			[
+				"gser",
+				"g_server"
+			],
+			[
+				"Resp",
+				"Response"
+			],
+			[
+				"path",
+				"path_to_sdk"
+			],
+			[
+				"Anal",
+				"AnalysisServer"
+			],
+			[
+				"Ana",
+				"AnalysisServer"
+			],
+			[
+				"VISU",
+				"VISUAL"
+			],
+			[
+				"Wind",
+				"ViWindowCommandBase"
+			],
+			[
+				"iterto",
+				"iteration"
+			],
+			[
+				"RXAN",
+				"RX_ANY_TAG"
+			],
+			[
+				"ViChange",
+				"ViChangeToLowerCaseByChars"
+			],
+			[
+				"VILI",
+				"VISUAL_LINE"
+			],
+			[
+				"rowco",
+				"row_count"
+			],
+			[
+				"reve",
+				"reverse"
+			],
+			[
+				"reverse",
+				"reverse_search"
+			],
+			[
+				"repe",
+				"repeatable"
+			],
+			[
+				"upxpo",
+				"updates_xpos"
+			],
+			[
+				"nexno",
+				"next_non_white_space_char"
+			],
+			[
+				"line",
+				"line_end"
+			],
+			[
+				"sear",
+				"search_args"
+			],
+			[
+				"ENDTA",
+				"RX_ANY_END_TAG"
+			],
+			[
+				"statp",
+				"start_pt"
+			],
+			[
+				"ViDel",
+				"ViDeleteByChars"
+			],
+			[
+				"TESTEXCMD",
+				"TESTS_EX_CMDS"
+			],
+			[
+				"_MO",
+				"_MODES_MOTION"
+			],
+			[
+				"tesfun",
+				"TESTS_FUNCTIONAL_ALL_MOTIONS"
+			],
+			[
+				"ViUpper",
+				"ViChangeToUpperCaseByChars"
+			],
+			[
+				"ViChangeToLowerCaseByLi",
+				"ViChangeToLowerCaseByLines"
+			],
+			[
+				"ViChangeToLo",
+				"ViChangeToLowerCaseByLines"
+			],
+			[
+				"prop",
+				"property	prop"
+			],
+			[
+				"inpupa",
+				"input_parser"
+			],
+			[
+				"inppar",
+				"input_parser"
+			],
+			[
+				"seq",
+				"seqs"
+			],
+			[
+				"ViBol",
+				"ViMoveToBol"
+			],
+			[
+				"Name",
+				"ViOpenNameSpace"
+			],
+			[
+				"sub",
+				"substr"
+			],
+			[
+				"cmd_type",
+				"cmd_types"
+			],
+			[
+				"MAppi",
+				"Mapping"
+			],
+			[
+				"Mapp",
+				"Mapping"
+			],
+			[
+				"ton",
+				"tokenize_one"
+			],
+			[
+				"regtr",
+				"regions_transformer"
+			],
+			[
+				"rera",
+				"regions_transformer"
+			],
+			[
+				"kna",
+				"key_name"
+			],
+			[
+				"VISUAL_BL",
+				"VISUAL_BLOCK"
+			],
+			[
+				"regitr",
+				"regions_transformer"
+			],
+			[
+				"VISUAL_L",
+				"VISUAL_LINE"
+			],
+			[
+				"partia",
+				"partial_sequence"
+			],
+			[
+				"parse",
+				"parse_sequence"
+			],
+			[
+				"Vina",
+				"Vintageous"
+			],
+			[
+				"name",
+				"name"
+			],
+			[
+				"mis",
+				"multi_step"
+			],
+			[
+				"bizbiq",
+				"BIG_Z_BIG_Q"
+			],
+			[
+				"vus",
+				"Vintageous"
+			],
+			[
+				"cty",
+				"CTRL_Y"
+			],
+			[
+				"ctle",
+				"CTRL_E"
+			],
+			[
+				"isd",
+				"is_dirty"
+			],
+			[
+				"old_",
+				"old_sel"
+			],
+			[
+				"canya",
+				"can_yank"
+			],
+			[
+				"vis",
+				"VISUAL_LINE"
+			],
+			[
+				"spl",
+				"sublime_plugin"
+			],
+			[
+				"rgitr",
+				"regions_transformer"
+			],
+			[
+				"GREA",
+				"GREATER_THAN_GREATER_THAN"
+			],
+			[
+				"Eae",
+				"EQUAL_EQUAL"
+			],
+			[
+				"plca",
+				"place_carets"
+			],
+			[
+				"regis",
+				"register"
+			],
+			[
+				"jdir",
+				"jump_direction"
+			],
+			[
+				"jumdi",
+				"jump_directions"
+			],
+			[
+				"Ba",
+				"ViCommandBase"
+			],
+			[
+				"IN",
+				"INTERNAL_NORMAL"
+			],
+			[
+				"NORM",
+				"MODE_NORMAL"
+			],
+			[
+				"suiname",
+				"suite_names"
+			],
+			[
+				"repea",
+				"repeat_count"
+			],
+			[
+				"repeada",
+				"repeat_data"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "todo.txt",
+			"settings":
+			{
+				"buffer_size": 4,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "server.py",
+			"settings":
+			{
+				"buffer_size": 1817,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "pipe_server.py",
+			"settings":
+			{
+				"buffer_size": 2477,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "fsac.py",
+			"settings":
+			{
+				"buffer_size": 280,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 127.0,
+		"selected_items":
+		[
+			[
+				"Dart: for",
+				"Dart: Format"
+			],
+			[
+				"Dart: fo",
+				"Dart: Format"
+			],
+			[
+				"Dart: ana",
+				"Dart: Run Dart Analyzer"
+			],
+			[
+				"Dart: con",
+				"Dart: Check Configuration"
+			],
+			[
+				"vre",
+				"Vintageous: Reset"
+			],
+			[
+				"Dart: an",
+				"Dart: Run Dart Analyzer"
+			],
+			[
+				"Dart: anal",
+				"Dart: Run Dart Analyzer"
+			],
+			[
+				"Dart: form",
+				"Dart: Format"
+			],
+			[
+				"Dart: stage",
+				"Dart: Stagehand"
+			],
+			[
+				"vireset",
+				"Vintageous: Reset"
+			],
+			[
+				"ssmark",
+				"Set Syntax: Markdown"
+			],
+			[
+				"teal",
+				"Build: Dart: Test (All)"
+			],
+			[
+				"teall",
+				"Build: Dart: Test (All)"
+			],
+			[
+				"tethi",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"Dart: s",
+				"Dart: Stagehand"
+			],
+			[
+				"te",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"test",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"tesall",
+				"Build: Dart: Test (All)"
+			],
+			[
+				"stage",
+				"Dart: Stagehand"
+			],
+			[
+				"sta",
+				"Dart: Stagehand"
+			],
+			[
+				"Dart: chco",
+				"Dart: Check Configuration"
+			],
+			[
+				"Dart: sta",
+				"Dart: Stagehand"
+			],
+			[
+				"Dart: sage",
+				"Dart: Stagehand"
+			],
+			[
+				"Dart: sa",
+				"Dart: Stagehand"
+			],
+			[
+				"Dart: st",
+				"Dart: Stagehand"
+			],
+			[
+				"Dart: sag",
+				"Dart: Stagehand"
+			],
+			[
+				"Dart: stge",
+				"Dart: Stagehand"
+			],
+			[
+				"sdk",
+				"Preferences: Key Bindings - Default"
+			],
+			[
+				"Dartstage",
+				"Dart: Stagehand"
+			],
+			[
+				"Dart: sge",
+				"Dart: Stagehand"
+			],
+			[
+				"Dart: stga",
+				"Dart: Stagehand"
+			],
+			[
+				"Dart: stae",
+				"Dart: Stagehand"
+			],
+			[
+				"Dart: state",
+				"Dart: Set Default User Browser"
+			],
+			[
+				"Dart: stag",
+				"Dart: Stagehand"
+			],
+			[
+				"Dart: stagen",
+				"Dart: Stagehand"
+			],
+			[
+				"Dart: sga",
+				"Dart: Stagehand"
+			],
+			[
+				"aaconve",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"aaacone",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"aaanewsyn",
+				"z:AAAPackageDev: New YAML Syntax Definition"
+			],
+			[
+				"tomen",
+				"View: Toggle Menu"
+			],
+			[
+				"viewtome",
+				"View: Toggle Menu"
+			],
+			[
+				"aaaconve",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"aaa conve",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"teth",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"tehi",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"aacon",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"aa conve",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"cotosp",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"sdar",
+				"Set Syntax: Dart"
+			],
+			[
+				"ssdardoc",
+				"Set Syntax: Dart Doc Comments"
+			],
+			[
+				"ssda",
+				"Set Syntax: Dart"
+			],
+			[
+				"ssdoc",
+				"Set Syntax: Dart Doc Comments"
+			],
+			[
+				"ssdar",
+				"Set Syntax: Dart"
+			],
+			[
+				"ssdart",
+				"Set Syntax: Dart Doc Comments"
+			],
+			[
+				"ss",
+				"Set Syntax: XSL"
+			],
+			[
+				"aaco",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"aaacon",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"aanewsy",
+				"z:AAAPackageDev: New YAML Syntax Definition"
+			],
+			[
+				"aaa",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"thif",
+				"Dart: Run (This File)"
+			],
+			[
+				"ssxs",
+				"Set Syntax: XSL"
+			],
+			[
+				"aaarear",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"predause",
+				"Preferences: Dart Settings - User"
+			],
+			[
+				"preuse",
+				"Preferences: Settings - User"
+			],
+			[
+				"vire",
+				"Vintageous: Reset"
+			],
+			[
+				"predaruse",
+				"Preferences: Dart Settings - User"
+			],
+			[
+				"Build: Dart: on",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"Build: Dart: thi",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"sspy",
+				"Set Syntax: Python"
+			],
+			[
+				"Build: Dart: all",
+				"Build: Dart: Test (All)"
+			],
+			[
+				"testthif",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"Dart: tte",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"runthis",
+				"Dart: Run (This File)"
+			],
+			[
+				"unicur",
+				"UnitTesting: Run current project test suite"
+			],
+			[
+				"Dart: check",
+				"Dart: Check Configuration"
+			],
+			[
+				"browpa",
+				"Preferences: Browse Packages"
+			],
+			[
+				"aaaconv",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"aaarearr",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"rearra",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"sedar",
+				"Set Syntax: Dart"
+			],
+			[
+				"rearr",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"seuse",
+				"Preferences: Settings - User"
+			],
+			[
+				"tes",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"pacinsta",
+				"Package Control: Install Package"
+			],
+			[
+				"aaaconver",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"",
+				"About"
+			],
+			[
+				"aaaconre",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"aacorear",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"aaacorear",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"corear",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"aaaparea",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"aaarearra",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"pacins",
+				"Package Control: Install Package"
+			],
+			[
+				"packremo",
+				"Package Control: Remove Package"
+			],
+			[
+				"aaaco",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"aaaconverear",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"aaaconveryaml",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"coyamrearr",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"aaapaar",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"yamarra",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"arrangte",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"virese",
+				"Vintageous: Reset"
+			],
+			[
+				"Dart: teall",
+				"Build: Dart: Test (All)"
+			],
+			[
+				"bro",
+				"Preferences: Browse Packages"
+			],
+			[
+				"Dart: teal",
+				"Build: Dart: Test (All)"
+			],
+			[
+				"brow",
+				"Preferences: Browse Packages"
+			],
+			[
+				"broew",
+				"Preferences: Browse Packages"
+			],
+			[
+				"Dart: ",
+				"Dart: Check Configuration"
+			],
+			[
+				"predar",
+				"Preferences: Dart Settings - File Type (User)"
+			],
+			[
+				"Dart: this",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"Dart: ths",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"Dart: all",
+				"Build: Dart: Test (All)"
+			],
+			[
+				"Dart: hi",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"Dart: thi",
+				"Build: Dart: Test (This File Only)"
+			],
+			[
+				"preda",
+				"Preferences: Dart Settings - Default"
+			],
+			[
+				"predase",
+				"Preferences: Dart Settings - File Type (User)"
+			],
+			[
+				"predarsedef",
+				"Preferences: Dart Settings - Default"
+			],
+			[
+				"predafile",
+				"Preferences: Dart Settings - File Type (User)"
+			],
+			[
+				"predafil",
+				"Preferences: Dart Settings - File Type (User)"
+			],
+			[
+				"predart",
+				"Preferences: Dart Settings - Default"
+			],
+			[
+				"prefe",
+				"Preferences: Dart Settings - Default"
+			],
+			[
+				"conarra",
+				"z:AAAPackageDev: Convert to YAML and Rearrange Syntax Definition"
+			],
+			[
+				"brose",
+				"Preferences: Browse Packages"
+			],
+			[
+				"Dart: chec",
+				"Dart: Check Configuration"
+			],
+			[
+				"chec",
+				"Dart: Check Configuration"
+			],
+			[
+				"Dart: chc",
+				"Dart: Check Configuration"
+			],
+			[
+				"checo",
+				"Dart: Check Configuration"
+			],
+			[
+				"cehc",
+				"Dart: Check Configuration"
+			]
+		],
+		"width": 520.0
+	},
+	"console":
+	{
+		"height": 645.0,
+		"history":
+		[
+			"sublime.log_input(True)",
+			"sublime.log_input()",
+			"sublime.executable_path()",
+			"sublime.executable_path",
+			"dir(sublime)",
+			"sys.base_exec_prefix",
+			"sys.base_prefix",
+			"sys.executable",
+			"dir(sys)",
+			"sys.path",
+			"import sys",
+			"sys.path",
+			"import sys",
+			"sys.path",
+			"import sys",
+			"os.path.split(\"hello/world/here\")",
+			"import os",
+			"shutil.makedirs",
+			"shutil.mkdirs",
+			"shutil.mkdird",
+			"import shutil",
+			"os.mkdirs",
+			"os.mkdird",
+			"os.path.exists",
+			"os.mkdir",
+			"import os",
+			"sublime.log_commands(True)",
+			"\"stagehand\" in\" xxx stagehand 0.1.2\"",
+			"os.path.split(\"Dart Doc Comment.YAML-tmLanguage\")",
+			"import os",
+			"lambda: x = 10",
+			"view.scope_name(0)",
+			"view.scope_name",
+			"window.show_input_panel('', '', None, None, None)",
+			"window.show_input_panel('', '', None, None)",
+			"window.show_input_panel('', '', None)",
+			"os.path.split(\"hello/kitty.txt\")",
+			"import os",
+			"0 < 10 < 100",
+			"0 > 10 < 100",
+			"sys.platform",
+			"dir(sys)",
+			"sys.plat",
+			"sys.version",
+			"import sys",
+			"os.path.expandvars(\"%WINDIR%\")",
+			"os.path.expandvars(\"%%WINDIR%%\")",
+			"import os",
+			"'source.dart comment.line.triple-slash.dart'.rsplit(' ', 1)",
+			"'source.dart comment.line.triple-slash.dart'.rsplit()",
+			"\"hey foo bar\".rsplit(\" \", 1)",
+			"\"hey foo bar\".lsplit",
+			"\"hey foo bar\".split()",
+			"\"hey foo bar\".rsplit()",
+			"\"hey foo bar\".rsplit(1)",
+			"\"foo bar\".rsplit()",
+			"[f for f in dir(view) if 'scope' in f]",
+			"[f for f in dir(view) if 'selector' in f]",
+			"sublime.log_commands(False)",
+			"sublime.log_commands(True)",
+			"any(1, 2, 3)",
+			"ant(1, 2, 3)",
+			"sublime.log_commands(True)",
+			"sublime.log_input(True)",
+			"unittest.skipIf",
+			"import unittest",
+			"os.path.split(\"chrome.exe\")",
+			"import os",
+			"os.path.join('', \"chrome.exe\")",
+			"import os",
+			"os.path.join('', \"chrome.exe\")",
+			"unittest.skipUnless",
+			"unittst.skipUnless",
+			"import unittest",
+			"os.name",
+			"import os",
+			"(\"one\", \"twow\", \"Three\")[:2]",
+			"(\"one\", \"twow\", \"Three\")",
+			"os.path.join(\"foo\", \"\")",
+			"list(range(10,0,-1))",
+			"list(range(10,0))",
+			"range(10,0)",
+			"os.path.split(\"osx/hello\")",
+			"os.path.split(\"osx\")",
+			"import os",
+			"window.settings().get('foo', 'bar')",
+			"sublime.log_commands(False)",
+			"sublime.log_commands(True)",
+			"os.path.realpath(None)",
+			"import os",
+			"from Dart.lib.pub_package import PubPackage",
+			"assert(1)",
+			"assert(10)",
+			"\"foo %d\" % 10",
+			"re.match('abc', 'abcd')",
+			"re.match('abc', 'b')",
+			"import re",
+			"import re.",
+			"sublime.OP_NOT_EQUAL",
+			"sublime.OP_EQUAL",
+			"m.groups()",
+			"m.group()",
+			"m = re.match('^.*?:(\\d+)', s)",
+			"re.match('^.*?:(\\d+)', s)",
+			"re.match(':(\\d+)', s)",
+			"re.match(s, ':(\\d+)')",
+			"re.match(s, ':(\\d+)'",
+			"import re",
+			"s = 'observatory listening on port http://127.1.1.0:65555'",
+			"hasattr(window, 'run_command')",
+			"window.xxx",
+			"\"foo bar %r\" % ((\"one\", \"two\"),)",
+			"\"foo bar %r\" % (\"one\", \"two\")",
+			"\"foo bar %r\" % repr((\"one\", \"two\"))",
+			"\"foo bar %r\" % (\"one\", \"two\")",
+			"\"foo bar %s\" % (\"one\", \"two\")",
+			"\"foo bar %s\" % (\"one\",)",
+			"sublime.status_message",
+			"sublime.status_messagte",
+			"window.run_command('dart_show_user_browsers')",
+			"sublime.platform()",
+			"\"abc\".endswith((\"a\", \"b\"))",
+			"\"abc\".endswith(\"a\", \"b\")",
+			"sublime.log_commands(True)",
+			"os.environ",
+			"import os",
+			"dir(subprocess)",
+			"import subprocess"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/guillermo/Documents/Dev/fsharpbinding-newfsac"
+	],
+	"file_history":
+	[
+		"/C/Users/guillermo/Documents/Dev/fsharpbinding-newfsac/fsac.py",
+		"/C/Users/guillermo/Documents/Dev/fsharpbinding-newfsac/fsac/FSharp.Compiler.Service.xml",
+		"/C/Users/guillermo/Documents/Dev/fsharpbinding-newfsac/pipe_server.py/FSharp.Compiler.Service.xml",
+		"/C/Users/guillermo/Documents/Dev/fsharpbinding-newfsac/pipe_server.py/FSharp.InteractiveAutocomplete.XML",
+		"/C/Users/guillermo/Documents/Dev/fsharpbinding-newfsac/FSharp New Fsac Server.sublime-project",
+		"/C/Users/guillermo/Documents/Dev/fsharpbinding-newfsac/pipe_server.py/Newtonsoft.Json.xml",
+		"/C/Users/guillermo/Documents/Dev/fsharpbinding-newfsac/reader.py",
+		"/C/Users/guillermo/Documents/Dev/dart-text-template/pubspec.yaml",
+		"/C/Users/guillermo/Documents/Dev/dart-text-template/test/node_test.dart",
+		"/C/Users/guillermo/Documents/Dev/dart-text-template/lib/node.dart",
+		"/C/Users/guillermo/Documents/Dev/dart-text-template/lib/node_test.dart",
+		"/C/Users/guillermo/Documents/Dev/dart-text-template/foo.go",
+		"/C/Users/guillermo/Documents/Dev/dart-text-template/.gitattributes",
+		"/C/Users/guillermo/Documents/Dev/dart-text-template/lib/text_template.dart",
+		"/C/Users/guillermo/Documents/Dev/dart-text-template/lib/dart_text_template.dart",
+		"/C/Users/guillermo/Documents/Dev/dart-text-template/dart-text-template.sublime-project",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/messages/1.1.2.txt",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/messages/1.0.0.txt",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/messages.json",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/messages/1.1.1.txt",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/tests/lib/data_structures.py",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/tests/lib/test_collections.py",
+		"/c/users/guille~1/appdata/local/temp/tmpemsgd_/web/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpv6e2d1/example/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpj8yx3l/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpe2wi6w/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpkd2hj7/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpc7oljb/web/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpx5lx7p.js",
+		"/c/users/guille~1/appdata/local/temp/tmpcndkax/pubspec.yaml",
+		"/c/users/guille~1/appdata/local/temp/tmppz5wcy/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpeh8_k0/example/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpemw30s.js",
+		"/c/users/guille~1/appdata/local/temp/tmpp8x6qo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpwxp757.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpr4lc1v.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp1g2xhh/web/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpevioa7/example/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpcc5gx3/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmppjhxcg/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpan9r98/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpy9cxxn/web/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp4z5_84.js",
+		"/c/users/guille~1/appdata/local/temp/tmp8fjqex/pubspec.yaml",
+		"/c/users/guille~1/appdata/local/temp/tmp67rl7n/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp07zsav/example/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp6h9fls.js",
+		"/c/users/guille~1/appdata/local/temp/tmp1v9alu.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp5tl6fb.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp2z7izt.dart",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/tests/lib/test_fs_completion.py",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/scripts/check.py",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/Support/Default.sublime-keymap",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/lib/out_there/yaml/tokens.py",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/Dart Doc Comments.YAML-tmLanguage",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/Snippets/library.tmSnippet",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/LICENSE",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/edit.py",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/lib/collections.py",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/lib/fs_completion.py",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/stagehand.py",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/Dart.tmLanguage",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/tests/syntax_def/test_dart_syntax.py",
+		"/c/users/guille~1/appdata/local/temp/tmpo4potz/web/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpr0kudn/example/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpcmvhvz/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpdbh6xi/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmps_rngu/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpizmlu4/web/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp76c8vm.js",
+		"/c/users/guille~1/appdata/local/temp/tmp1ugndz/pubspec.yaml",
+		"/c/users/guille~1/appdata/local/temp/tmpo9aqu5/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp23c48w/example/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmppmkqky.js",
+		"/c/users/guille~1/appdata/local/temp/tmp47wzmo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpbt82il.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpu9zesl.dart",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/tests/lib/test_pub_package.py",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/Support/Comments.tmPreferences",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/config_check.py",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/CHANGELOG.txt",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/dev_cmds.py",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/docgen.py",
+		"/c/users/guille~1/appdata/local/temp/tmp79l2l7/web/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmprvrz59/example/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpavu3lc/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpy3h8mg/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmply33yz/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpd48qd5/web/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp18ccrc.js",
+		"/c/users/guille~1/appdata/local/temp/tmpf137cp/pubspec.yaml",
+		"/c/users/guille~1/appdata/local/temp/tmpxhgd1p/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpg1vw4r/example/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpy3ft0t.js",
+		"/c/users/guille~1/appdata/local/temp/tmplzn0u5.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp08lckj.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpuobqel.dart",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/Dart.sublime-project",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/Support/Dart (File System Navigation).hidden-tmLanguage",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/.gitattributes",
+		"/C/Users/guillermo/Documents/Dev/samples/xx.ps1",
+		"/c/users/guille~1/appdata/local/temp/tmpp3emxx/web/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp8rl6_u/example/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpsqdsq1/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpkgcstt/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp3u4m5b/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpp3k0xg/web/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpweayie.js",
+		"/c/users/guille~1/appdata/local/temp/tmp5jqizs/pubspec.yaml",
+		"/c/users/guille~1/appdata/local/temp/tmplhgef8/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp2o2rru/example/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp6o625p.js",
+		"/c/users/guille~1/appdata/local/temp/tmpxhvgr0.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp7ry_pf.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp3ozy9e.dart",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/execute.py",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/lib/out_there/yaml/LICENSE",
+		"/C/Users/guillermo/Documents/Dev/sublime-packages/dart-sublime-bundle/lib/sublime.py",
+		"/c/users/guille~1/appdata/local/temp/tmpoihsle/web/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpjjcb2_/example/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpjpv4oz/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmptr23l6/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmppjhx7n/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp47vroq/web/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmpkxvz65.js",
+		"/c/users/guille~1/appdata/local/temp/tmpz8ov05/pubspec.yaml",
+		"/c/users/guille~1/appdata/local/temp/tmp3bnt5l/bin/foo.dart",
+		"/c/users/guille~1/appdata/local/temp/tmp7m2b4i/example/foo.dart"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 277.0,
+		"where_history":
+		[
+			"*.*",
+			"*.py",
+			"*.*",
+			"*.py",
+			"*.*",
+			"*.py",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"_logger",
+			"DotNode",
+			"IdentifierNode",
+			"VariableNode",
+			"in",
+			"tn",
+			"IdentifierNode",
+			"VariableNode",
+			"variable",
+			"n",
+			"_nodes",
+			"emit",
+			"stateFn",
+			" ",
+			"Left",
+			"c",
+			"l",
+			"isEndOfLine",
+			"errorf",
+			"text",
+			"RIGHT_COMMENT",
+			"LEFT_COMMENT",
+			"DEFAULT_RIGHT_DELIM",
+			"DEFAULT_LEFT_DELIM",
+			"_controller",
+			"items",
+			"error",
+			"input",
+			"tok",
+			"tokenize",
+			"StateFunc",
+			"input",
+			"_input",
+			"loexer",
+			"tok",
+			"tpl",
+			"tokenizer",
+			"int",
+			"_delim",
+			"EndDelimToken",
+			"StartDelimToken",
+			"dart_text_template",
+			"<your name>",
+			"DRAFT",
+			"cb",
+			"CircularList",
+			"BidirectionalCircularBuffer",
+			"circulararray",
+			"vintageous",
+			"test all",
+			"was_empty",
+			"create_project",
+			"entry",
+			"lines",
+			"view",
+			"self",
+			"DartSelectStagehandTemplate",
+			"key",
+			" \"",
+			"pub",
+			"completions",
+			"items",
+			"cache",
+			"DartStagehand",
+			"path",
+			"user_path",
+			"iter_with_prefix",
+			"DRAFT",
+			"path",
+			"calc",
+			"Fix",
+			"DRAFT",
+			"encoded_wrong",
+			"path",
+			"proc",
+			"Popen",
+			"path",
+			"observatory",
+			"Observatory",
+			"observatory",
+			"Observatory",
+			"observatory",
+			"Observatory",
+			"observatory",
+			"getNarrowestScopeAt",
+			"getScopeAt",
+			"scopen",
+			"Scope",
+			"scope",
+			"Scope",
+			"scope",
+			"Scope",
+			"file_name",
+			"start_default_browser",
+			"dart_view",
+			"file_name",
+			"dart-lang",
+			"raise_event",
+			"DRAFT",
+			"vinta",
+			"running pub",
+			"server_running",
+			"foobar",
+			"dart_build_project",
+			"DartBuildProjectCommand",
+			"dart_build_pubspec",
+			"DartBuildPubspecCommand",
+			"sdk",
+			"DartRunCommand",
+			"dart_run",
+			"\\bdart_run\\b",
+			"Dart",
+			"string",
+			"programs",
+			"this",
+			"lib",
+			"panel",
+			"string",
+			"				<",
+			"FFE0A3",
+			"panel",
+			"lib",
+			"import",
+			"set_timeout",
+			"def after",
+			"set_timeout",
+			"def after",
+			"set_timeout"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"text_template",
+			"Guillermo López-Anglada",
+			"iter_prefixed",
+			"dart_enable_experimental_editor_features",
+			"join_unique_parts",
+			"join_exclusive_parts",
+			"RunDartWithObservatory",
+			"path_to_default_user_browser",
+			"dart_can_do_launch",
+			"dart_is_file_runnable",
+			"is_runnable",
+			"is_prefix",
+			"DartView",
+			"dart_linter_underline_color_info",
+			"dart_linter_underline_color_warning",
+			"dart_linter_underline_color_error",
+			"dart_linter_gutter_icon_info",
+			"dart_linter_gutter_icon_warning",
+			"dart_linter_gutter_icon_error",
+			"dart_linter_show_popup_level",
+			"dart_linter_on_save",
+			"dart_linter_on_load",
+			"dart_linter_active",
+			"show_errors",
+			"clear_ui",
+			"find_pubspec_path",
+			"wipe_ui",
+			"negatable",
+			"State",
+			"\\1\\2\n\\1    super().setUp()",
+			"ViewTest",
+			"ViDecrement",
+			"ViIncrement",
+			"assign(seq=\\1, modes=\\2",
+			"assign(seq=\\1, modes=\\2)",
+			"keys.assign",
+			"resolve",
+			"translate(",
+			"seqs.XXX",
+			"@keys.register(keys=[(modes.NORMAL, seqs.L),\n                     (modes.VISUAL, seqs.L),\n                     (modes.VISUAL_LINE, seqs.L),\n                     (modes.VISUAL_BLOCK, seqs.L)])\nclass",
+			"ViMotionDef",
+			"ViMissingCommandDef",
+			"ViCommandDef",
+			"commands",
+			"ViChangeToUpperCaseByLines",
+			"ViChangeToUpperCaseByChars",
+			"ViRightDeleteChars",
+			"input_parser(self, state):",
+			"StShowSwitchProject",
+			"StToggleSidebar",
+			"\"\"\"\\n\\n    def",
+			"\"\"\"\\n\\n      ",
+			"\\1\"\"\"\\n    Vim: `jjj`\\n    \"\"\"\\n    ",
+			"\\1\"\"\"\\n    Vim: `jjj`\\n    \"\"\"\\n",
+			"\"\"\"\\n    Vim: `jjj`\\n    \"\"\"\\n",
+			"\\1    \"\"\"\\n    Vim: `jjj`\\n    \"\"\"\"\\n",
+			"ViInvertCaseByChars",
+			"ViSubstituteByLines",
+			"ViInvertCaseByChars",
+			"ViInvertCaseByLines",
+			"ViChangeToLowerCaseByLines",
+			"ViChangeToLowerCaseByChars",
+			"ViChangeToLowerCaseByLines",
+			"ViChangeToLowerCaseByChars",
+			"ViChangeByChars",
+			"ViYankByChars",
+			"ViDeleteForward",
+			"ViCommandBase",
+			"StShowGotoAnything",
+			"StShowCommandPalette",
+			"ViDeleteByChars",
+			"St\\1",
+			"StClearBookmarks",
+			"StToggleBookmark",
+			"StGotoDefinition",
+			"StGotoSymbolInFile",
+			"StGotoSymbolInProject",
+			"StFinInFiles",
+			"\\n\\n\\nclass",
+			"\\nclass",
+			"last_char_search_command",
+			"to_bare_command_name",
+			"U",
+			", \"type\": \"term\"},",
+			", \"filename\": \"hw-glossary\",",
+			", \"project-name\": \"hw-glossary\",",
+			", \"project-container\": \"hw-glossary\",",
+			", \"platform\": \"wiiu\",",
+			"\", \"language\": \"\\1\",",
+			"EU_\\1",
+			"from unittest.mock",
+			"from unittest import mock",
+			", "
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 3,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "todo.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4,
+								4
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"vintage":
+							{
+								"_vintageous_glue_until_normal_mode": false,
+								"_vintageous_non_interactive": false,
+								"_vintageous_processing_notation": false,
+								"action": null,
+								"action_count": "",
+								"mode": "mode_normal",
+								"motion": null,
+								"motion_count": "",
+								"must_capture_register_name": false,
+								"normal_insert_count": "1",
+								"partial_sequence": "",
+								"register": "\"",
+								"repeat_data":
+								[
+									"vi",
+									"<C-p>",
+									"mode_normal",
+									null
+								],
+								"sequence": "",
+								"xpos": 0
+							}
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "server.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1817,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								89,
+								89
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"vintage":
+							{
+								"_vintageous_non_interactive": false,
+								"_vintageous_processing_notation": false,
+								"action": null,
+								"action_count": "",
+								"mode": "mode_normal",
+								"motion": null,
+								"motion_count": "",
+								"must_capture_register_name": false,
+								"partial_sequence": "",
+								"register": "\"",
+								"repeat_data":
+								[
+									"vi",
+									"<C-p>",
+									"mode_normal",
+									null
+								],
+								"sequence": "",
+								"xpos": 0
+							}
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "pipe_server.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2477,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								292,
+								292
+							]
+						],
+						"settings":
+						{
+							"highlight_line": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"vintage":
+							{
+								"_vintageous_glue_until_normal_mode": false,
+								"_vintageous_non_interactive": false,
+								"_vintageous_processing_notation": false,
+								"action": null,
+								"action_count": "",
+								"mode": "mode_normal",
+								"motion": null,
+								"motion_count": "",
+								"must_capture_register_name": false,
+								"normal_insert_count": "1",
+								"partial_sequence": "",
+								"register": "\"",
+								"repeat_data":
+								[
+									"vi",
+									":",
+									"mode_normal",
+									null
+								],
+								"sequence": "",
+								"xpos": 20
+							}
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "fsac.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 280,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								265,
+								265
+							]
+						],
+						"settings":
+						{
+							"highlight_line": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"vintage":
+							{
+								"_vintageous_glue_until_normal_mode": false,
+								"_vintageous_non_interactive": false,
+								"_vintageous_processing_notation": false,
+								"action": null,
+								"action_count": "",
+								"mode": "mode_normal",
+								"motion": null,
+								"motion_count": "",
+								"must_capture_register_name": false,
+								"normal_insert_count": "1",
+								"partial_sequence": "",
+								"register": "\"",
+								"repeat_data":
+								[
+									"vi",
+									":",
+									"mode_normal",
+									null
+								],
+								"sequence": "",
+								"xpos": 13
+							}
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 3,
+					"file": "fsac.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 280,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								66,
+								66
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"vintage":
+							{
+								"_vintageous_glue_until_normal_mode": false,
+								"_vintageous_non_interactive": false,
+								"_vintageous_processing_notation": false,
+								"action": null,
+								"action_count": "",
+								"mode": "mode_normal",
+								"motion": null,
+								"motion_count": "",
+								"must_capture_register_name": false,
+								"normal_insert_count": "1",
+								"partial_sequence": "",
+								"register": "\"",
+								"repeat_data":
+								[
+									"vi",
+									":",
+									"mode_normal",
+									null
+								],
+								"sequence": "",
+								"xpos": 46
+							}
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "pipe_server.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2477,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								348,
+								348
+							]
+						],
+						"settings":
+						{
+							"highlight_line": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"vintage":
+							{
+								"_vintageous_glue_until_normal_mode": false,
+								"_vintageous_non_interactive": false,
+								"_vintageous_processing_notation": false,
+								"action": null,
+								"action_count": "",
+								"mode": "mode_normal",
+								"motion": null,
+								"motion_count": "",
+								"must_capture_register_name": false,
+								"normal_insert_count": "1",
+								"partial_sequence": "",
+								"register": "\"",
+								"repeat_data":
+								[
+									"vi",
+									":",
+									"mode_normal",
+									null
+								],
+								"sequence": "",
+								"xpos": 16
+							}
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": false,
+	"output.dart.out":
+	{
+		"height": 617.0
+	},
+	"output.exec":
+	{
+		"height": 390.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "FSharp New Fsac Server.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"pipe",
+				"pipe_server.py"
+			],
+			[
+				"fsac",
+				"fsac.py"
+			],
+			[
+				"erve",
+				"server.py"
+			],
+			[
+				"to",
+				"todo.txt"
+			],
+			[
+				"in",
+				"inbox.txt"
+			],
+			[
+				"pu",
+				"pubspec.yaml"
+			],
+			[
+				"nodedar",
+				"lib\\node.dart"
+			],
+			[
+				"note",
+				"test\\node_test.dart"
+			],
+			[
+				"allda",
+				"test\\all.dart"
+			],
+			[
+				"gitatt",
+				".gitattributes"
+			],
+			[
+				"lib",
+				"lib\\text_template.dart"
+			],
+			[
+				"test",
+				"test\\dart_text_template_test.dart"
+			],
+			[
+				"te",
+				"test\\dart_text_template_test.dart"
+			],
+			[
+				"all",
+				"test\\all.dart"
+			],
+			[
+				"dartexttemdart",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-text-template\\lib\\dart_text_template.dart"
+			],
+			[
+				"datem",
+				"dart-text-template.sublime-project"
+			],
+			[
+				"gitig",
+				".gitignore"
+			],
+			[
+				"libtext",
+				"lib\\dart_text_template.dart"
+			],
+			[
+				"main",
+				"bin\\main.dart"
+			],
+			[
+				"readme",
+				"README.md"
+			],
+			[
+				"112",
+				"messages\\1.1.2.txt"
+			],
+			[
+				"message",
+				"messages.json"
+			],
+			[
+				"change",
+				"CHANGELOG.txt"
+			],
+			[
+				"tecollec",
+				"tests\\lib\\test_collections.py"
+			],
+			[
+				"datastr",
+				"tests\\lib\\data_structures.py"
+			],
+			[
+				"fscomple",
+				"lib\\fs_completion.py"
+			],
+			[
+				"keyma",
+				"Support\\Default.sublime-keymap"
+			],
+			[
+				"comment",
+				"Support\\Comments.tmPreferences"
+			],
+			[
+				"skd",
+				"lib\\sdk.py"
+			],
+			[
+				"libpanel",
+				"lib\\panels.py"
+			],
+			[
+				"tecol",
+				"tests\\lib\\test_collections.py"
+			],
+			[
+				"suproj",
+				"Dart.sublime-project"
+			],
+			[
+				"subpr",
+				"lib\\subprocess.py"
+			],
+			[
+				"tesrun",
+				"test_runner.py"
+			],
+			[
+				"suproje",
+				"Dart.sublime-project"
+			],
+			[
+				"subuild",
+				"Support\\Dart.sublime-build"
+			],
+			[
+				"tebuild",
+				"Support\\Dart.sublime-build"
+			],
+			[
+				"command",
+				"Support\\Dart.sublime-commands"
+			],
+			[
+				"supro",
+				"Dart.sublime-project"
+			],
+			[
+				"st",
+				"stagehand.py"
+			],
+			[
+				"stage",
+				"stagehand.py"
+			],
+			[
+				"tecompl",
+				"tests\\lib\\test_fs_completion.py"
+			],
+			[
+				"tecomple",
+				"tests\\lib\\test_fs_completion.py"
+			],
+			[
+				"tefs",
+				"tests\\lib\\test_fs_completion.py"
+			],
+			[
+				"fscom",
+				"lib\\fs_completion.py"
+			],
+			[
+				"sta",
+				"stagehand.py"
+			],
+			[
+				"keys",
+				"lib\\out_there\\yaml\\tokens.py"
+			],
+			[
+				"sucom",
+				"Support\\Dart.sublime-commands"
+			],
+			[
+				"edi",
+				"edit.py"
+			],
+			[
+				"misc",
+				"misc.py"
+			],
+			[
+				"keym",
+				"Support\\Default.sublime-keymap"
+			],
+			[
+				"sdk",
+				"lib\\sdk.py"
+			],
+			[
+				"io",
+				"lib\\io.py"
+			],
+			[
+				"sa",
+				"stagehand.py"
+			],
+			[
+				"kem",
+				"Support\\Default.sublime-keymap"
+			],
+			[
+				"sage",
+				"stagehand.py"
+			],
+			[
+				"fiseyam",
+				"Support\\Dart (File System Navigation).YAML-tmLanguage"
+			],
+			[
+				"fisyna",
+				"Support\\Dart (File System Navigation).hidden-tmLanguage"
+			],
+			[
+				"sucommand",
+				"Support\\Dart.sublime-commands"
+			],
+			[
+				"fsco",
+				"lib\\fs_completion.py"
+			],
+			[
+				"fs",
+				"lib\\fs_completion.py"
+			],
+			[
+				"111",
+				"messages\\1.1.1.txt"
+			],
+			[
+				"license",
+				"LICENSE"
+			],
+			[
+				"package",
+				"lib\\pub_package.py"
+			],
+			[
+				"dalin",
+				"dartlint.py"
+			],
+			[
+				"rupy",
+				"run.py"
+			],
+			[
+				"run",
+				"run.py"
+			],
+			[
+				"runpy",
+				"run.py"
+			],
+			[
+				"symb",
+				"Support\\Symbol List.tmPreferences"
+			],
+			[
+				"cmdef",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle\\tests\\syntax_def\\test_dart_syntax.py"
+			],
+			[
+				"subui",
+				"Support\\Dart.sublime-build"
+			],
+			[
+				"suke",
+				"Support\\Default.sublime-keymap"
+			],
+			[
+				".tpl",
+				"scripts\\release.tmpl"
+			],
+			[
+				"mess",
+				"messages.json"
+			],
+			[
+				"101",
+				"messages\\1.0.1.txt"
+			],
+			[
+				"sup",
+				"lib\\subprocess.py"
+			],
+			[
+				"yamlpy",
+				"lib\\out_there\\yaml\\cyaml.py"
+			],
+			[
+				"subpropy",
+				"lib\\subprocess.py"
+			],
+			[
+				"sub",
+				"Support\\Dart.sublime-build"
+			],
+			[
+				"hidde",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle\\Dart Doc Comments.hidden-tmLanguage"
+			],
+			[
+				"dadocommeyaml",
+				"Dart Doc Comments.YAML-tmLanguage"
+			],
+			[
+				"datyamltm",
+				"Dart Doc Comments.YAML-tmLanguage"
+			],
+			[
+				"app",
+				"appveyor.yml"
+			],
+			[
+				"reade",
+				"lib\\out_there\\yaml\\reader.py"
+			],
+			[
+				"dayam",
+				"Dart Doc Comments.YAML-tmLanguage"
+			],
+			[
+				"dadoc",
+				"Dart Doc Comments.tmLanguage"
+			],
+			[
+				"un",
+				"untitled"
+			],
+			[
+				"dardoco",
+				"Dart Doc Comments.YAML-tmLanguage"
+			],
+			[
+				"unt",
+				"untitled"
+			],
+			[
+				"daymatm",
+				"Dart.YAML-tmLanguage"
+			],
+			[
+				"datmla",
+				"Dart.tmLanguage"
+			],
+			[
+				"dadoyaml",
+				"Dart Doc Comments.YAML-tmLanguage"
+			],
+			[
+				"tesyn",
+				"tests\\syntax_def\\test_dart_syntax.py"
+			],
+			[
+				"yatm",
+				"Dart.YAML-tmLanguage"
+			],
+			[
+				"daryaml",
+				"Dart.YAML-tmLanguage"
+			],
+			[
+				"mani",
+				"manifest.json"
+			],
+			[
+				"doccome",
+				"Dart Doc Comments.hidden-tmLanguage"
+			],
+			[
+				"yam",
+				"Dart.YAML-tmLanguage"
+			],
+			[
+				"giti",
+				".gitattributes"
+			],
+			[
+				"u",
+				"untitled"
+			],
+			[
+				"docomya",
+				"Dart Doc Comments.YAML-tmLanguage"
+			],
+			[
+				"terun",
+				"test_runner.py"
+			],
+			[
+				"tesy",
+				"tests\\syntax_def\\test_dart_syntax.py"
+			],
+			[
+				"tmaln",
+				"Dart.tmLanguage"
+			],
+			[
+				"subp",
+				"lib\\subprocess.py"
+			],
+			[
+				"sd",
+				"lib\\sdk.py"
+			],
+			[
+				"subproce",
+				"lib\\subprocess.py"
+			],
+			[
+				"supor",
+				"pub_support.py"
+			],
+			[
+				"runp",
+				"run.py"
+			],
+			[
+				"exec",
+				"execute.py"
+			],
+			[
+				"supb",
+				"lib\\subprocess.py"
+			],
+			[
+				"run.p",
+				"run.py"
+			],
+			[
+				"todo",
+				".idea\\todo.txt"
+			],
+			[
+				"test__ini",
+				"tests\\__init__.py"
+			],
+			[
+				"run.",
+				"run.py"
+			],
+			[
+				"pubtmla",
+				"Pubspec.tmLanguage"
+			],
+			[
+				"ytam",
+				"Dart.YAML-tmLanguage"
+			],
+			[
+				"yamltm",
+				"Pubspec.YAML-tmLanguage"
+			],
+			[
+				"tml",
+				"Dart.tmLanguage"
+			],
+			[
+				"tmla",
+				"Dart.tmLanguage"
+			],
+			[
+				"tmlan",
+				"Dart.tmLanguage"
+			],
+			[
+				"keymap",
+				"Support\\Default.sublime-keymap"
+			],
+			[
+				"rele",
+				"scripts\\release.tmpl"
+			],
+			[
+				"10",
+				"messages\\1.0.0.txt"
+			],
+			[
+				"licen",
+				"LICENSE"
+			],
+			[
+				"1.",
+				"messages\\1.0.0.txt"
+			],
+			[
+				"readm",
+				"README.md"
+			],
+			[
+				".15",
+				"messages\\0.3500.15.txt"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 599.0,
+		"selected_items":
+		[
+			[
+				"fshar",
+				"C:\\Users\\guillermo\\Documents\\Dev\\fsharpbinding\\sublimetext\\FSharp.sublime-project"
+			],
+			[
+				"dart",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle\\Dart.sublime-project"
+			],
+			[
+				"dar",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle\\Dart.sublime-project"
+			],
+			[
+				"fsnew",
+				"C:\\Users\\guillermo\\Documents\\Dev\\fsharpbinding-newfsac\\FSharp New Fsac Server.sublime-project"
+			],
+			[
+				"trop",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\tropa5000\\tropa5000.sublime-project"
+			],
+			[
+				"viplda",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Dart\\Vintageous_Plugin_Dart.sublime-project"
+			],
+			[
+				"gote",
+				"C:\\Users\\guillermo\\Documents\\Dev\\go-source\\src\\pkg\\text\\template\\Go - Template Package.sublime-project"
+			],
+			[
+				"ivu",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous\\Vintageous.sublime-project"
+			],
+			[
+				"gotete",
+				"C:\\Users\\guillermo\\Documents\\Dev\\go-source\\src\\pkg\\text\\template\\Go - Template Package.sublime-project"
+			],
+			[
+				"vius",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous\\Vintageous.sublime-project"
+			],
+			[
+				"trop1000",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\tropa1000\\tropa1000.sublime-project"
+			],
+			[
+				"trop200",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\tropa200\\tropa200.sublime-workspace"
+			],
+			[
+				"wea",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\tropa200\\tropa200.sublime-workspace"
+			],
+			[
+				"py",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\python\\Sublime - Python Package.sublime-project"
+			],
+			[
+				"undocs",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\python\\Sublime - Python Package.sublime-project"
+			],
+			[
+				"vinta",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous\\Vintageous.sublime-project"
+			],
+			[
+				"t",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\tropa1000\\tropa1000.sublime-project"
+			],
+			[
+				"tro",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\tropa1000\\tropa1000.sublime-project"
+			],
+			[
+				"trpa",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\tropa1000\\tropa1000.sublime-project"
+			],
+			[
+				"vkplu",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Dart\\Vintageous_Plugin_Dart.sublime-project"
+			],
+			[
+				"vipl",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Dart\\Vintageous_Plugin_Dart.sublime-project"
+			],
+			[
+				"troa10",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\tropa10\\tropa10.sublime-workspace"
+			],
+			[
+				"tr20",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\tropa200\\tropa200.sublime-workspace"
+			],
+			[
+				"ivus",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous\\Vintageous.sublime-project"
+			],
+			[
+				"webapp",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"web app",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"samapp",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"daasweb",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"weba pp",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"undo",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\sublime-undocs\\sublime-undocs.sublime-project"
+			],
+			[
+				"dart web",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"weapp",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"webap",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"web",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous-Wiki-New\\Vintageous Wiki.sublime-workspace"
+			],
+			[
+				"web ",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous-Wiki-New\\Vintageous Wiki.sublime-workspace"
+			],
+			[
+				"template",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-gotexttemplate\\Dart - Go Text Template.sublime-project"
+			],
+			[
+				"daweap",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"darweapp",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"power",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\PowerShell\\PowerShell.sublime-project"
+			],
+			[
+				"vita",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous\\Vintageous.sublime-project"
+			],
+			[
+				"dawap",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"dsi",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"vipda",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Dart\\Vintageous_Plugin_Dart.sublime-project"
+			],
+			[
+				"vipdar",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Dart\\Vintageous_Plugin_Dart.sublime-project"
+			],
+			[
+				"vipludar",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Dart\\Vintageous_Plugin_Dart.sublime-project"
+			],
+			[
+				"vipldar",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Dart\\Vintageous_Plugin_Dart.sublime-project"
+			],
+			[
+				"pludar",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Dart\\Vintageous_Plugin_Dart.sublime-project"
+			],
+			[
+				"vintage",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous\\Vintageous.sublime-project"
+			],
+			[
+				"sude",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Default\\Sublime - Default.sublime-project"
+			],
+			[
+				"dawiki",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle.wiki\\Dart - Wiki.sublime-project"
+			],
+			[
+				"darwi",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle.wiki\\Dart - Wiki.sublime-project"
+			],
+			[
+				"dart wiki",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle.wiki\\Dart - Wiki.sublime-project"
+			],
+			[
+				"webv",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous-Wiki-New\\Vintageous Wiki.sublime-workspace"
+			],
+			[
+				"simple",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"simpl",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"sim",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"sime",
+				"C:\\Users\\Guillermo\\Documents\\Dev\\Sublime Packages\\Sublime\\Sublime.sublime-workspace"
+			],
+			[
+				"simpk",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\vintageous-keys\\Vintageous 3.sublime-workspace"
+			],
+			[
+				"dawi",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle.wiki\\Dart - Wiki.sublime-project"
+			],
+			[
+				"dawik",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle.wiki\\Dart - Wiki.sublime-project"
+			],
+			[
+				"sudef",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Default\\Sublime - Default.sublime-project"
+			],
+			[
+				"wiki",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle.wiki\\Dart - Wiki.sublime-project"
+			],
+			[
+				"app",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"buil",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle\\lib\\Dart - Wiki.sublime-workspace"
+			],
+			[
+				"wev",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous-Wiki-New\\Vintageous Wiki.sublime-workspace"
+			],
+			[
+				"undoc",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\sublime-undocs-git\\sublime-undocs.sublime-project"
+			],
+			[
+				"weap",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"wep",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"we",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"simwe",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"dawe",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"sida",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-simple-web-app\\Dart - Simple Web App.sublime-project"
+			],
+			[
+				"sem",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"seme",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"semver",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"subdef",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Default\\Sublime - Default.sublime-project"
+			],
+			[
+				"semve",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"pol",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\dart\\poly\\poly.sublime-workspace"
+			],
+			[
+				"poly",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\dart\\poly\\poly.sublime-project"
+			],
+			[
+				"oly",
+				"C:\\Users\\guillermo\\Documents\\Dev\\samples\\dart\\poly\\poly.sublime-project"
+			],
+			[
+				"sudefa",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Default\\Sublime - Default.sublime-project"
+			],
+			[
+				"aapacka",
+				"C:\\Users\\Guillermo\\Documents\\Dev\\sublime-packages\\AAAPackageDev\\AAAPackageDev - ST3.sublime-project"
+			],
+			[
+				"semv",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"semvbe",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"defa",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Default\\Sublime - Default.sublime-project"
+			],
+			[
+				"seve",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"go text te",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-gotexttemplate\\Dart - Go Text Template.sublime-project"
+			],
+			[
+				"viu",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous\\Vintageous.sublime-project"
+			],
+			[
+				"semn",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"darwik",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle.wiki\\Dart - Wiki.sublime-project"
+			],
+			[
+				"vinus",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous\\Vintageous.sublime-project"
+			],
+			[
+				"vin",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous\\Vintageous.sublime-project"
+			],
+			[
+				"anal",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-analysis\\Dart Analysis.sublime-project"
+			],
+			[
+				"dasem",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"darsem",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"darse",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"semna",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"dartsem",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"dago",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-gotexttemplate\\Dart - Go Text Template.sublime-project"
+			],
+			[
+				"darsema",
+				"C:\\Users\\guillermo\\Documents\\Dev\\dart-semver\\Dart - Semantic Version.sublime-project"
+			],
+			[
+				"darsubli",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\dart-sublime-bundle\\Dart.sublime-project"
+			],
+			[
+				"tipoexper",
+				"C:\\Users\\guillermo\\Documents\\Dev\\tipofino-proj\\experiments\\Tipofino - Experiments.sublime-project"
+			],
+			[
+				"tiex",
+				"C:\\Users\\guillermo\\Documents\\Dev\\tipofino-proj\\experiments\\Tipofino - Experiments.sublime-project"
+			],
+			[
+				"tipex",
+				"C:\\Users\\guillermo\\Documents\\Dev\\tipofino-proj\\experiments\\Tipofino - Experiments.sublime-project"
+			],
+			[
+				"tipoex",
+				"C:\\Users\\guillermo\\Documents\\Dev\\tipofino-proj\\experiments\\Tipofino - Experiments.sublime-project"
+			],
+			[
+				"tiexp",
+				"C:\\Users\\guillermo\\Documents\\Dev\\tipofino-proj\\experiments\\Tipofino - Experiments.sublime-project"
+			],
+			[
+				"tipo",
+				"C:\\Users\\guillermo\\Documents\\Dev\\Tipofino\\tipofino.sublime-workspace"
+			],
+			[
+				"vinsurr",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Surround\\Vintageous_Plugin_Surround.sublime-project"
+			],
+			[
+				"visur",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Surround-git\\Vintageous_Plugin_Surround.sublime-workspace"
+			],
+			[
+				"defaul",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Default\\Sublime - Default.sublime-project"
+			],
+			[
+				"default",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Default\\Sublime - Default.sublime-project"
+			],
+			[
+				"plug",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Surround\\Vintageous_Plugin_Surround.sublime-project"
+			],
+			[
+				"surr",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Surround\\Vintageous_Plugin_Surround.sublime-project"
+			],
+			[
+				"surro",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Surround\\Vintageous_Plugin_Surround.sublime-project"
+			],
+			[
+				"surrou",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Surround\\Vintageous_Plugin_Surround.sublime-project"
+			],
+			[
+				"surroud",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Surround\\Vintageous_Plugin_Surround.sublime-project"
+			],
+			[
+				"surround",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Surround\\Vintageous_Plugin_Surround.sublime-project"
+			],
+			[
+				"vinplug",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Surround\\Vintageous_Plugin_Surround.sublime-project"
+			],
+			[
+				"vintplug",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Surround\\Vintageous_Plugin_Surround.sublime-project"
+			],
+			[
+				"viplu",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Surround\\Vintageous_Plugin_Surround.sublime-project"
+			],
+			[
+				"vinsurroun",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Plugin_Surround\\Vintageous_Plugin_Surround.sublime-project"
+			],
+			[
+				"fsha",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\fsharpbinding-new-new-new\\sublimetext\\FSharp.sublime-project"
+			],
+			[
+				"ela",
+				"C:\\Users\\guillermo\\Documents\\Dev\\elas\\Elastic Search Driver (Go).sublime-project"
+			],
+			[
+				"viwi",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Wiki\\Vintageous Wiki.sublime-project"
+			],
+			[
+				"viwik",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous_Wiki\\Vintageous Wiki.sublime-project"
+			],
+			[
+				"viold",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous-old\\Vintageous.sublime-project"
+			],
+			[
+				"wi",
+				"C:\\Users\\guillermo\\Documents\\Dev\\sublime-packages\\Vintageous-Wiki-New\\Vintageous Wiki.sublime-project"
+			]
+		],
+		"width": 455.0
+	},
+	"select_symbol":
+	{
+		"height": 58.0,
+		"selected_items":
+		[
+			[
+				"circulararr",
+				"CircularArray"
+			],
+			[
+				"cili",
+				"Test_CircularList"
+			],
+			[
+				"cicarr",
+				"CircularArray"
+			],
+			[
+				"cir",
+				"CircularArray"
+			],
+			[
+				"joio",
+				"join_on_win"
+			],
+			[
+				"push",
+				"pushd"
+			],
+			[
+				"dartfile",
+				"DartFile"
+			],
+			[
+				"gener",
+				"GenericBinary"
+			],
+			[
+				"asy",
+				"AsyncStreamReader"
+			],
+			[
+				"darfile",
+				"DartFile"
+			],
+			[
+				"darview",
+				"DartView"
+			],
+			[
+				"daruinbo",
+				"DartRunInObservatoryCommand"
+			],
+			[
+				"obser",
+				"DartRunInObservatoryCommand"
+			],
+			[
+				"findpub",
+				"find_pubspec"
+			],
+			[
+				"darf",
+				"DartFormat"
+			],
+			[
+				"dasal",
+				"DartStopAllCommand"
+			],
+			[
+				"dasall",
+				"DartStopAllCommand"
+			],
+			[
+				"stopserv",
+				"DartStopServicesCommand"
+			],
+			[
+				"outpupanl",
+				"OutputPanel"
+			],
+			[
+				"darvi",
+				"DartView"
+			],
+			[
+				"opendared",
+				"DartOpenDartEditorCommand"
+			],
+			[
+				"finpub",
+				"find_pubspec_path"
+			],
+			[
+				"darrun",
+				"DartRunCommand"
+			],
+			[
+				"dartopenseti",
+				"DartOpenSettingsCommand"
+			],
+			[
+				"daropenset",
+				"DartOpenSettingsCommand"
+			],
+			[
+				"darchec",
+				"DartCheckConfigCommand"
+			],
+			[
+				"buildcobase",
+				"DartBuildCommandBase"
+			],
+			[
+				"outputpan",
+				"OutputPanel"
+			],
+			[
+				"dartexec",
+				"DartExecCommand"
+			],
+			[
+				"darexe",
+				"DartExecCommand"
+			],
+			[
+				"outpu",
+				"OutputPanel"
+			],
+			[
+				"fipub",
+				"find_pubspec"
+			],
+			[
+				"opense",
+				"OpenDartSettings"
+			],
+			[
+				"supre",
+				"supress_window"
+			],
+			[
+				"anala",
+				"path_to_analysis_snapshot"
+			],
+			[
+				"oupu",
+				"OutputPanel"
+			],
+			[
+				"edcon",
+				"EditorContext"
+			],
+			[
+				"edicon",
+				"EditorContext"
+			],
+			[
+				"edicontext",
+				"EditorContext"
+			],
+			[
+				"edito",
+				"EditorContext"
+			],
+			[
+				"edico",
+				"EditorContext"
+			],
+			[
+				"result",
+				"ResultsResponse"
+			],
+			[
+				"repose",
+				"Response"
+			],
+			[
+				"editcon",
+				"EditorContext"
+			],
+			[
+				"after",
+				"after"
+			],
+			[
+				"make",
+				"make"
+			],
+			[
+				"erroincol",
+				"ErrorInfoCollection"
+			],
+			[
+				"diseror",
+				"display_error"
+			],
+			[
+				"outpan",
+				"OutputPanel"
+			],
+			[
+				"darfinrefe",
+				"DartFindReferences"
+			],
+			[
+				"taskp",
+				"TaskPriority"
+			],
+			[
+				"task",
+				"TaskPriority"
+			],
+			[
+				"wpeui",
+				"wipe_ui"
+			],
+			[
+				"envisualmo",
+				"_enter_visual_mode"
+			],
+			[
+				"_entervisual",
+				"_enter_visual_mode"
+			],
+			[
+				"mousetra",
+				"ViMouseTracker"
+			],
+			[
+				"viworend",
+				"ViMoveByWordEnds"
+			],
+			[
+				"enterinsermode",
+				"ViEnterInserMode"
+			],
+			[
+				"entervisualmde",
+				"ViEnterVisualMode"
+			],
+			[
+				"entervisual",
+				"ViEnterVisualMode"
+			],
+			[
+				"reset",
+				"ResetVintageous"
+			],
+			[
+				"upxpo",
+				"update_xpos"
+			],
+			[
+				"_enter_insert_mode",
+				"_enter_insert_mode"
+			],
+			[
+				"ViEnterinsermo",
+				"ViEnterInserMode"
+			],
+			[
+				"updatexpo",
+				"update_xpos"
+			],
+			[
+				"xpos",
+				"update_xpos"
+			],
+			[
+				"_vi_a",
+				"_vi_a"
+			],
+			[
+				"presskeys",
+				"PressKeys"
+			],
+			[
+				"search",
+				"ViSearchForward"
+			],
+			[
+				"transcha",
+				"translate_char"
+			],
+			[
+				"transchar",
+				"translate_char"
+			],
+			[
+				"translate",
+				"translate"
+			],
+			[
+				"_enternormal",
+				"_enter_normal_mode"
+			],
+			[
+				"_enter_normal",
+				"_enter_normal_mode"
+			],
+			[
+				"_vi_dot",
+				"_vi_dot"
+			],
+			[
+				"sequence",
+				"Sequence"
+			],
+			[
+				"sequece",
+				"Sequence"
+			],
+			[
+				"_enternormalmode",
+				"_enter_normal_mode"
+			],
+			[
+				"vienternormal",
+				"ViEnterNormalMode"
+			],
+			[
+				"vi_dot",
+				"_vi_dot"
+			],
+			[
+				"inaftech",
+				"ViInsertAfterChar"
+			],
+			[
+				"viinsertafterchar",
+				"ViInsertAfterChar"
+			],
+			[
+				"vienterinsermode",
+				"ViEnterInserMode"
+			],
+			[
+				"viinserchar",
+				"ViInsertAfterChar"
+			],
+			[
+				"vienterinsermo",
+				"ViEnterInserMode"
+			],
+			[
+				"vichangeby",
+				"ViChangeByChars"
+			],
+			[
+				"_vi_gcc",
+				"_vi_gcc_action"
+			],
+			[
+				"_vi_dd_action",
+				"_vi_dd_action"
+			],
+			[
+				"runvinta",
+				"RunVintageousTests"
+			],
+			[
+				"_vi_u",
+				"_vi_u"
+			],
+			[
+				"ViUpper",
+				"ViChangeToUpperCaseByChars"
+			],
+			[
+				"restorevisual",
+				"ViRestoreVisualSelections"
+			],
+			[
+				"sqre",
+				"vi_left_square_bracket"
+			],
+			[
+				"_vi_p",
+				"_vi_p"
+			],
+			[
+				"_vi_big_p",
+				"_vi_big_p"
+			],
+			[
+				"enternorma",
+				"_enter_normal_mode_impl"
+			],
+			[
+				"_vi_enter_nor",
+				"Test_vi_enter_normal_mode__SingleSelection__LeftRoRight"
+			],
+			[
+				"_vi_c",
+				"_vi_c"
+			],
+			[
+				"_vi_w",
+				"_vi_w"
+			],
+			[
+				"enter visual line mode",
+				"ViEnterVisualLineMode"
+			],
+			[
+				"viundin",
+				"ViUnindent"
+			],
+			[
+				"viindent",
+				"ViIndentLine"
+			],
+			[
+				"_vi_gq",
+				"_vi_gq"
+			],
+			[
+				"viin",
+				"ViIndent"
+			],
+			[
+				"vibiga",
+				"_vi_big_a"
+			],
+			[
+				"viinden",
+				"ViIndent"
+			],
+			[
+				"viIndenli",
+				"ViIndentLine"
+			],
+			[
+				"vipaster",
+				"ViPasteAfter"
+			],
+			[
+				"vipastebef",
+				"ViPasteBefore"
+			],
+			[
+				"yank",
+				"ViYankByChars"
+			],
+			[
+				"viyank",
+				"ViYankLine"
+			],
+			[
+				"vipastafter",
+				"ViPasteAfter"
+			],
+			[
+				"paste",
+				"ViPasteAfter"
+			],
+			[
+				"gotomark",
+				"ViGotoMark"
+			],
+			[
+				"vimark",
+				"ViSetMark"
+			],
+			[
+				"upxpos",
+				"update_xpos"
+			],
+			[
+				"_vi_j",
+				"_vi_j"
+			],
+			[
+				"update_xpos",
+				"update_xpos"
+			],
+			[
+				"irreve",
+				"IrreversibleTextCommand"
+			],
+			[
+				"enternormalmode",
+				"_enter_normal_mode"
+			],
+			[
+				"exmap",
+				"ExMap"
+			],
+			[
+				"Vimotiondef",
+				"ViMotionDef"
+			],
+			[
+				"Vimotiodef",
+				"ViMotionDef"
+			],
+			[
+				"_vi_o",
+				"_vi_o"
+			],
+			[
+				"updaxpos",
+				"update_xpos"
+			],
+			[
+				"vicommabase",
+				"ViTextCommandBase"
+			],
+			[
+				"updatexpos",
+				"update_xpos"
+			],
+			[
+				"_vi_yy",
+				"_vi_yy"
+			]
+		],
+		"width": 440.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+		"_vintageous_last_buffer_search": "is_running",
+		"_vintageous_last_char_search_command": "vi_f",
+		"_vintageous_last_character_search": " ",
+		"_vintageous_reset_during_init": true,
+		"vintage":
+		{
+			"_cmdline_cd": "C:\\Users\\guillermo\\Documents\\Dev\\fsharpbinding-newfsac"
+		}
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 343.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
