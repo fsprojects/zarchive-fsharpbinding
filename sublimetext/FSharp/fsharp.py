@@ -12,12 +12,15 @@ from FSharp.fsac.request import DataRequest
 from FSharp.fsac.request import DeclarationsRequest
 from FSharp.fsac.request import ParseRequest
 from FSharp.fsac.request import ProjectRequest
+from FSharp.fsac.request import FindDeclRequest
 from FSharp.fsac.response import CompilerLocationResponse
 from FSharp.fsac.response import CompilerLocationResponse
 from FSharp.fsac.response import DeclarationsResponse
 from FSharp.fsac.response import ProjectResponse
 from FSharp.lib.editor import Editor
+from FSharp.lib.project import FSharpFile
 from FSharp.sublime_plugin_lib import PluginLogger
+from FSharp.sublime_plugin_lib.context import ContextProviderMixin
 from FSharp.sublime_plugin_lib.panels import OutputPanel
 
 
@@ -36,12 +39,12 @@ def process_resp(data):
         return
 
     if data['Kind'] == 'project':
-        r = ProjectResponse(data)
-        panel = OutputPanel (name='fs.out')
-        panel.write ("Files in project:\n")
-        panel.write ("\n")
-        panel.write ('\n'.join(r.files))
-        panel.show()
+        # r = ProjectResponse(data)
+        # panel = OutputPanel (name='fs.out')
+        # panel.write ("Files in project:\n")
+        # panel.write ("\n")
+        # panel.write ('\n'.join(r.files))
+        # panel.show()
         return
 
     if data['Kind'] == 'errors' and data['Data']:
@@ -53,6 +56,16 @@ def process_resp(data):
 
     if data['Kind'] == 'INFO' and data['Data']:
         print(str(data))
+        return
+
+    if data['Kind'] == 'finddecl' and data['Data']:
+        fname = data['Data']['File']
+        row = data['Data']['Line'] - 1
+        col = data['Data']['Column']
+        w = sublime.active_window()
+        # todo: don't open file if we are looking at the requested file
+        target = '{0}:{1}:{2}'.format(fname, row, col)
+        w.open_file(target, sublime.ENCODED_POSITION)
         return
 
     if data['Kind'] == 'declarations' and data['Data']:
@@ -84,12 +97,26 @@ class fs_run_fsac(sublime_plugin.WindowCommand):
             self.do_compiler_location()
             return
 
+        if cmd == 'finddecl':
+            self.do_find_decl()
+            return
+
     def get_active_file_name(self):
         try:
             fname = self.window.active_view ().file_name ()
         except AttributeError as e:
             return
         return fname
+
+    def get_insertion_point(self):
+        view = self.window.active_view()
+        if not view:
+            return None
+        try:
+            sel = view.sel()[0]
+        except IndexError as e:
+            return None
+        return view.rowcol(sel.b)
 
     def do_project(self):
         fname = self.get_active_file_name ()
@@ -113,6 +140,18 @@ class fs_run_fsac(sublime_plugin.WindowCommand):
 
     def do_compiler_location(self):
         editor_context.fsac.send_request(CompilerLocationRequest())
+
+    def do_find_decl(self):
+        fname = self.get_active_file_name ()
+        if not fname:
+            return
+
+        try:
+            (row, col) = self.get_insertion_point()
+        except TypeError as e:
+            return
+        else:
+            editor_context.fsac.send_request(FindDeclRequest(fname, row + 1, col))
 
 
 class fs_go_to_location (sublime_plugin.WindowCommand):
@@ -142,10 +181,8 @@ class fs_show_options(sublime_plugin.WindowCommand):
     """Displays the main menu for F#.
     """
     OPTIONS = {
-        'F#: Get Compiler Location': 'compilerlocation',
-        'F#: Parse Active File': 'parse',
-        'F#: Set Active File as Project': 'project',
         'F#: Show Declarations': 'declarations',
+        'F#: Go To Declaration': 'finddecl',
     }
     def run(self):
         self.window.show_quick_panel(
@@ -158,6 +195,15 @@ class fs_show_options(sublime_plugin.WindowCommand):
         key = list (sorted (fs_show_options.OPTIONS.keys()))[idx]
         cmd = fs_show_options.OPTIONS[key]
         self.window.run_command ('fs_run_fsac', {'cmd': cmd})
+
+
+class ContextProvider(sublime_plugin.EventListener, ContextProviderMixin):
+    '''Implements contexts for .sublime-keymap files.
+    '''
+    def on_query_context(self, view, key, operator, operand, match_all):
+        if key == 'fs_is_code_file':
+            value = FSharpFile(view).is_code
+            return self._check(value, operator, operand, match_all)
 
 
 _logger.debug('starting editor context...')
