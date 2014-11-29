@@ -18,7 +18,9 @@ build: off
 
 test_script:
   # - ps: FSharp.AutoComplete\fake.cmd Test
-  - ps: '[void] (new-item -itemtype directory -force "c:\st\Data\Packages\$env:PACKAGE\fsac\fsac")'
-  # - ps: copy-item -force ".\FSharp.AutoComplete\bin\Debug\*" "c:\st\Data\Packages\$env:PACKAGE\fsac\fsac\"
-  - ps: copy-item -force -recurse ".\sublimetext\$env:PACKAGE\*" "c:\st\Data\Packages\$env:PACKAGE\"
-  - ps: .\appveyor.ps1 "run_tests" -verbose
+  - ps: |
+    [void] (new-item -itemtype directory -force "c:\st\Data\Packages\$env:PACKAGE\fsac\fsac")
+    copy-item -force ".\FSharp.AutoComplete\bin\Debug\*" "c:\st\Data\Packages\$env:PACKAGE\fsac\fsac\"
+    copy-item -force -recurse ".\sublimetext\$env:PACKAGE\*" "c:\st\Data\Packages\$env:PACKAGE\"
+    .\appveyor.ps1 "run_tests" -verbose
+    write-verbose ""
