@@ -1,10 +1,27 @@
 environment:
-  EMACSBIN: emacs-24.4-bin-i686-pc-mingw32.7z
-matrix:
-  fast_finish: true
+  global:
+    PACKAGE: FSharp
+    SUBLIME_TEXT_VERSION: "3"
+    EMACSBIN: emacs-24.4-bin-i686-pc-mingw32.7z
+
 install:
-  - ps: Start-FileDownload "http://downloads.sourceforge.net/project/emacs-bin/releases/$env:EMACSBIN"
-  - ps: 7z x $env:EMACSBIN -oemacs-local | FIND /V "ing  "
-build_script:
-  - cmd: FSharp.AutoComplete\fake.cmd Test
-test: off
+  - ps: |
+      # Start-FileDownload "http://downloads.sourceforge.net/project/emacs-bin/releases/$env:EMACSBIN"
+      # & 7z x -y $env:EMACSBIN -oemacs-local | select-string -notmatch "^Extracting "
+      # ======================================================================
+      # Set up Sublime Text for testing...
+      start-filedownload "https://raw.githubusercontent.com/randy3k/UnitTesting/master/sbin/appveyor.ps1"
+      .\appveyor.ps1 "bootstrap" -verbose
+      remove-item -force -recurse "c:\st\Data\Packages\$env:PACKAGE\"
+
+build: off
+
+test_script:
+  - ps: |
+      # FSharp.AutoComplete\fake.cmd Test
+      # ======================================================================
+      # Test Sublime Text...
+      [void] (new-item -itemtype directory -force "c:\st\Data\Packages\$env:PACKAGE\fsac\fsac")
+      # copy-item -force ".\FSharp.AutoComplete\bin\Debug\*" "c:\st\Data\Packages\$env:PACKAGE\fsac\fsac\"
+      copy-item -force -recurse ".\sublimetext\$env:PACKAGE\*" "c:\st\Data\Packages\$env:PACKAGE\"
+      .\appveyor.ps1 "run_tests" -verbose
