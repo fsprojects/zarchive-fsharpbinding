@@ -6,8 +6,9 @@ environment:
 
 install:
   - ps: |
-      Start-FileDownload "http://downloads.sourceforge.net/project/emacs-bin/releases/$env:EMACSBIN"
-      & 7z x -y $env:EMACSBIN -oemacs-local | select-string -notmatch "^Extracting "
+      write-output "DUMMY"
+      # Start-FileDownload "http://downloads.sourceforge.net/project/emacs-bin/releases/$env:EMACSBIN"
+      # & 7z x -y $env:EMACSBIN -oemacs-local | select-string -notmatch "^Extracting "
       # ======================================================================
       # Set up Sublime Text for testing...
       start-filedownload "https://raw.githubusercontent.com/randy3k/UnitTesting/master/sbin/appveyor.ps1"
@@ -18,9 +19,9 @@ build: off
 
 test_script:
   - ps: |
-      FSharp.AutoComplete\fake.cmd Test
+      write-output "DUMMY"
+      # FSharp.AutoComplete\fake.cmd Test
       new-item -itemtype directory -force "c:\st\Data\Packages\$env:PACKAGE\fsac\fsac" > $null
-      copy-item -force ".\FSharp.AutoComplete\bin\Debug\*" "c:\st\Data\Packages\$env:PACKAGE\fsac\fsac\"
+      # copy-item -force ".\FSharp.AutoComplete\bin\Debug\*" "c:\st\Data\Packages\$env:PACKAGE\fsac\fsac\"
       copy-item -force -recurse ".\sublimetext\$env:PACKAGE\*" "c:\st\Data\Packages\$env:PACKAGE\"
       .\appveyor.ps1 "run_tests" -verbose
-      write-verbose ""
