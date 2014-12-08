@@ -38,9 +38,10 @@ fsautocomplete.project(vim.eval("a:1"))
 EOF
     else
     python << EOF
-v = vim.current.buffer.vars
-if "proj_file" in v:
-    fsautocomplete.project(v["proj_file"])
+has_proj_file = vim.eval("exists('b:proj_file')")
+if has_proj_file:
+    proj_file = vim.eval("b:proj_file")
+    fsautocomplete.project(proj_file)
 EOF
     endif
 endfunction
@@ -208,7 +209,7 @@ EOF
 endfunction
 
 function! fsharpbinding#python#OnInsertLeave()
-    if exists ("b:fsharp_buffer_changed") != 0 
+    if exists ("b:fsharp_buffer_changed") != 0
         if b:fsharp_buffer_changed == 1
     python << EOF
 fsautocomplete.parse(vim.current.buffer.name, True, vim.current.buffer)
@@ -218,8 +219,8 @@ EOF
 endfunction
 
 function! fsharpbinding#python#OnCursorHold()
-    if exists ("g:fsharp_only_check_errors_on_write") != 0 
-        if g:fsharp_only_check_errors_on_write != 1 
+    if exists ("g:fsharp_only_check_errors_on_write") != 0
+        if g:fsharp_only_check_errors_on_write != 1
             exec "SyntasticCheck"
         endif
     endif
@@ -243,9 +244,10 @@ function! fsharpbinding#python#OnBufEnter()
 python << EOF
 file_dir = vim.eval("expand('%:p:h')")
 fsi.cd(file_dir)
-v = vim.current.buffer.vars
-if "proj_file" in v:
-    fsautocomplete.project(v["proj_file"])
+has_proj_file = vim.eval("exists('b:proj_file')")
+if has_proj_file:
+    proj_file = vim.eval('b:proj_file')
+    fsautocomplete.project(proj_file)
 EOF
     "set makeprg
     if !filereadable(expand("%:p:h")."/Makefile")
@@ -294,7 +296,7 @@ function! fsharpbinding#python#FsiEval(text)
             echom l
         endfor
     catch
-        echohl WarningMsg "fsi eval failure" 
+        echohl WarningMsg "fsi eval failure"
     endtry
 endfunction
 
