@@ -86,8 +86,10 @@ EOF
         " closing the scratch window after leaving insert mode
         " is common practice
         au BufWritePre  *.fs,*.fsi,*fsx call fsharpbinding#python#OnBufWritePre()
-        au TextChanged  *.fs,*.fsi,*fsx call fsharpbinding#python#OnTextChanged()
-        au TextChangedI *.fs,*.fsi,*fsx call fsharpbinding#python#OnTextChangedI()
+        if version > 703
+            au TextChanged  *.fs,*.fsi,*fsx call fsharpbinding#python#OnTextChanged()
+            au TextChangedI *.fs,*.fsi,*fsx call fsharpbinding#python#OnTextChangedI()
+        endif
         au CursorHold   *.fs,*.fsi,*fsx call fsharpbinding#python#OnCursorHold()
         au BufEnter     *.fs,*.fsi,*fsx call fsharpbinding#python#OnBufEnter()
         au InsertLeave  *.fs,*.fsi,*fsx call fsharpbinding#python#OnInsertLeave()
