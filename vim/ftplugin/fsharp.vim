@@ -37,7 +37,7 @@ file_dir = vim.eval("expand('%:p:h')")
 sys.path.append(fsharp_dir)
 
 from fsharpvim import FSAutoComplete,Statics
-from fsi import FSharpInteractive 
+from fsi import FSharpInteractive
 import pyvim
 
 if Statics.fsac == None:
@@ -57,7 +57,7 @@ if '.fs' == ext or '.fsi' == ext:
     projs = filter(lambda f: '.fsproj' == os.path.splitext(f)[1], os.listdir(dir))
     if len(projs):
         proj_file = os.path.join(dir, projs[0])
-        b.vars["proj_file"] = proj_file
+        vim.command("let b:proj_file = '%s'"% proj_file)
         fsautocomplete.project(proj_file)
 fsautocomplete.parse(b.name, True, b)
 EOF
@@ -70,7 +70,7 @@ EOF
     com! -buffer -nargs=* -complete=file ParseProject call fsharpbinding#python#ParseProject(<f-args>)
     com! -buffer -nargs=* -complete=file BuildProject call fsharpbinding#python#BuildProject(<f-args>)
     com! -buffer -nargs=* -complete=file RunProject call fsharpbinding#python#RunProject(<f-args>)
-    
+
     "fsi
     com! -buffer FsiRead call fsharpbinding#python#FsiPurge()
     com! -buffer FsiReset call fsharpbinding#python#FsiReset(g:fsharp_interactive_bin)
@@ -85,9 +85,11 @@ EOF
         au!
         " closing the scratch window after leaving insert mode
         " is common practice
-        au BufWritePre  *.fs,*.fsi,*fsx call fsharpbinding#python#OnBufWritePre() 
-        au TextChanged  *.fs,*.fsi,*fsx call fsharpbinding#python#OnTextChanged()
-        au TextChangedI *.fs,*.fsi,*fsx call fsharpbinding#python#OnTextChangedI()
+        au BufWritePre  *.fs,*.fsi,*fsx call fsharpbinding#python#OnBufWritePre()
+        if version > 703
+            au TextChanged  *.fs,*.fsi,*fsx call fsharpbinding#python#OnTextChanged()
+            au TextChangedI *.fs,*.fsi,*fsx call fsharpbinding#python#OnTextChangedI()
+        endif
         au CursorHold   *.fs,*.fsi,*fsx call fsharpbinding#python#OnCursorHold()
         au BufEnter     *.fs,*.fsi,*fsx call fsharpbinding#python#OnBufEnter()
         au InsertLeave  *.fs,*.fsi,*fsx call fsharpbinding#python#OnInsertLeave()
