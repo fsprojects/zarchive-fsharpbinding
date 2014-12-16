@@ -182,6 +182,7 @@ the following to your `init.el` may be a good start:
 ```lisp
 (add-hook 'fsharp-mode-hook
  (lambda ()
+   (define-key fsharp-mode-map (kbd "M-'")   'fsharp-eval-block-move)
    (define-key fsharp-mode-map (kbd "M-RET") 'fsharp-eval-region)
    (define-key fsharp-mode-map (kbd "C-SPC") 'fsharp-ac/complete-at-point)))
 ```
