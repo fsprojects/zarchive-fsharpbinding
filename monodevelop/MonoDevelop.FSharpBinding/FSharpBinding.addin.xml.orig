@@ -122,13 +122,6 @@
     <Import file="Templates/Xamarin.iOS/Project/Empty/ProjectIPad.xpt.xml" />
     <Import file="Templates/Xamarin.iOS/Project/Empty/ProjectIPhone.xpt.xml" />
     <Import file="Templates/Xamarin.iOS/Project/Empty/ProjectUniversal.xpt.xml" />
-    <Import file="Templates/Xamarin.iOS/Project/SingleView/Common/AppDelegate.fs" />
-    <Import file="Templates/Xamarin.iOS/Project/SingleView/IPad/ViewController.fs" />
-    <Import file="Templates/Xamarin.iOS/Project/SingleView/IPhone/ViewController.fs" />
-    <Import file="Templates/Xamarin.iOS/Project/SingleView/Universal/ViewController.fs" />
-    <Import file="Templates/Xamarin.iOS/Project/SingleView/ProjectIPad.xpt.xml" />
-    <Import file="Templates/Xamarin.iOS/Project/SingleView/ProjectIPhone.xpt.xml" />
-    <Import file="Templates/Xamarin.iOS/Project/SingleView/ProjectUniversal.xpt.xml" />
     <Import file="Templates/Xamarin.iOS/Project/LibraryProject.xpt.xml" />
     <Import file="Templates/Xamarin.iOS/Project/UnitTests/UnitTestAppDelegate.fs" />
     <Import file="Templates/Xamarin.iOS/Project/UnitTests/UnitTestsProject.xpt.xml" />
@@ -455,9 +448,6 @@
         <ProjectTemplate file="Templates/Xamarin.iOS/Project/Empty/ProjectIPad.xpt.xml"/>
         <ProjectTemplate file="Templates/Xamarin.iOS/Project/Empty/ProjectIPhone.xpt.xml"/>
         <ProjectTemplate file="Templates/Xamarin.iOS/Project/Empty/ProjectUniversal.xpt.xml"/>
-        <ProjectTemplate file="Templates/Xamarin.iOS/Project/SingleView/ProjectIPad.xpt.xml"/>
-        <ProjectTemplate file="Templates/Xamarin.iOS/Project/SingleView/ProjectIPhone.xpt.xml"/>
-        <ProjectTemplate file="Templates/Xamarin.iOS/Project/SingleView/ProjectUniversal.xpt.xml"/>
         <ProjectTemplate file="Templates/Xamarin.iOS/Project/LibraryProject.xpt.xml"/>
         <ProjectTemplate file="Templates/Xamarin.iOS/Project/UnitTests/UnitTestsProject.xpt.xml"/>
         <ProjectTemplate file="Templates/Xamarin.iOS/Project/CustomKeyboardExtension/Project.xpt.xml"/>
