@@ -229,15 +229,6 @@
     <None Include="Templates\Xamarin.iOS\Project\UnitTests\UnitTestsProject.xpt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Xamarin.iOS\Project\SingleView\ProjectIPad.xpt.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\Xamarin.iOS\Project\SingleView\ProjectIPhone.xpt.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\Xamarin.iOS\Project\SingleView\ProjectUniversal.xpt.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Templates\Xamarin.iOS\Project\Empty\AppDelegate.fs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -281,18 +272,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Templates\Xamarin.iOS\Project\LibraryProject.xpt.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\Xamarin.iOS\Project\SingleView\Common\AppDelegate.fs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\Xamarin.iOS\Project\SingleView\IPad\ViewController.fs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\Xamarin.iOS\Project\SingleView\IPhone\ViewController.fs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\Xamarin.iOS\Project\SingleView\Universal\ViewController.fs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Templates\Xamarin.iOS\Project\UnitTests\UnitTestAppDelegate.fs">
