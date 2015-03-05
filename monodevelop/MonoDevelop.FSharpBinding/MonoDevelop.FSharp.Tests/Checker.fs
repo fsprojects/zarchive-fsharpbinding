@@ -16,7 +16,7 @@ type TestPlatform =
 type CompilerArgumentsTests() =
     inherit TestBase()
 
-    member private x.``Run Only mscorlib referenced`` (assemblyName) =
+    member private x.RunOnlyMscorlibReferenced (assemblyName) =
         use testProject = new DotNetAssemblyProject() :> DotNetProject
         let assemblyName = match assemblyName with Fqn a -> fromFqn a | File a -> a
         let _ = testProject.AddReference assemblyName
@@ -40,7 +40,7 @@ type CompilerArgumentsTests() =
         | [one; two; three] -> ()//one |> should equal three
         | _ -> Assert.Fail("Too many references returned")
 
-    member private x.``Run Only FSharp.Core referenced``(assemblyName) =
+    member private x.RunOnlyFSharpCoreReferenced (assemblyName) =
         use testProject = new DotNetAssemblyProject() :> DotNetProject
         let assemblyName = match assemblyName with Fqn a -> fromFqn a | File a -> a
         let reference = testProject.AddReference assemblyName
@@ -78,9 +78,9 @@ type CompilerArgumentsTests() =
     member x.``Only mscorlib referenced`` (platform, assemblyName:string) =
         match platform with
             | TestPlatform.Mono when MonoDevelop.Core.Platform.IsWindows -> ()
-            | TestPlatform.Mono -> x.``Run Only mscorlib referenced`` (assemblyName)
+            | TestPlatform.Mono -> x.RunOnlyMscorlibReferenced (assemblyName)
             | TestPlatform.Windows when not MonoDevelop.Core.Platform.IsWindows -> ()
-            | TestPlatform.Windows -> x.``Run Only mscorlib referenced`` (assemblyName)
+            | TestPlatform.Windows -> x.RunOnlyMscorlibReferenced (assemblyName)
             | _ -> ()
         
 
@@ -92,8 +92,8 @@ type CompilerArgumentsTests() =
     member x.``Only FSharp.Core referenced`` (platform: TestPlatform, assemblyName:string) =
         match platform with
         | TestPlatform.Mono when MonoDevelop.Core.Platform.IsWindows -> ()
-        | TestPlatform.Mono -> x.``Run Only FSharp.Core referenced``(assemblyName)
+        | TestPlatform.Mono -> x.RunOnlyFSharpCoreReferenced(assemblyName)
         | TestPlatform.Windows when not MonoDevelop.Core.Platform.IsWindows -> ()
-        | TestPlatform.Windows -> x.``Run Only FSharp.Core referenced``(assemblyName)
+        | TestPlatform.Windows -> x.RunOnlyFSharpCoreReferenced(assemblyName)
         | _ -> ()
         
