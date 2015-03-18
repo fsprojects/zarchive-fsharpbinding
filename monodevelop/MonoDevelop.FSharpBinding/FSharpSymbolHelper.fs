@@ -206,6 +206,11 @@ type TooltipResults =
 
 module SymbolTooltips =
 
+    type NestedFunctionParams =
+    | GenericParam of FSharpGenericParameter
+    | TupleParam of IList<FSharpType>
+    | NamedType of FSharpType
+
     let internal escapeText = GLib.Markup.EscapeText
 
     /// Concat two strings with a space between if both a and b are not IsNullOrWhiteSpace
@@ -280,7 +285,17 @@ module SymbolTooltips =
             |> Seq.map Seq.toList 
             |> Seq.toList 
 
-        let retType = asType UserType (escapeText(func.ReturnParameter.Type.Format displayContext))
+        let retType =
+            //This try block will be removed when FCS updates
+            try 
+                asType UserType (escapeText(func.ReturnParameter.Type.Format displayContext))
+            with _ex ->
+                try
+                    if func.FullType.GenericArguments.Count > 0 then
+                        let lastArg = func.FullType.GenericArguments |> Seq.last
+                        asType UserType (escapeText(lastArg.Format displayContext))
+                    else "Unknown"
+                with _ -> "Unknown"
 
         let padLength = 
             let allLengths = argInfos |> List.concat |> List.map (fun p -> p.DisplayName.Length)
@@ -350,11 +365,16 @@ module SymbolTooltips =
             asType Symbol " =" + "\n" +
             "   " + asType Keyword "delegate" + " of\n" + invokerSig
                                  
-        let typeDisplay = modifier + asType Keyword typeName ++ asType UserType fse.DisplayName
+        let typeDisplay =
+            let basicName = modifier + asType Keyword typeName ++ asType UserType fse.DisplayName
+            //TODO: add generic constraint display
+            basicName 
+
         let fullName =
             match fse.TryGetFullName () with
             | Some fullname -> "\n\nFull name: " + fullname
             | None -> "\n\nFull name: " + fse.QualifiedName
+
         match fse.IsFSharpUnion, fse.IsEnum, fse.IsDelegate with
         | true, false, false -> typeDisplay + uniontip () + fullName
         | false, true, false -> typeDisplay + enumtip () + fullName
@@ -407,8 +427,8 @@ module SymbolTooltips =
             ToolTip(signature, getSummaryFromSymbol func backUpSig)
 
         | ClosureOrNestedFunction func ->
-            //represents a closure or nested function, needs FCS support
-            let signature = escapeText <|func.FullType.Format symbol.DisplayContext
+            //represents a closure or nested function
+            let signature = getFuncSignature symbol.DisplayContext func 3 false
             let summary = getSummaryFromSymbol func backUpSig
             ToolTip(signature, summary)
 
@@ -430,7 +450,8 @@ module SymbolTooltips =
             ToolTip(signature, getSummaryFromSymbol uc backUpSig)
 
         | ActivePatternCase _apc ->
-            //Theres not enough information to build this?
+            //There is actually enough information, but we need a sane way of presenting FSharpType in
+            //rather than using the Format method.  E.g. Like CurriedParameterGroups
             ToolTips.EmptyTip
            
         | _ ->
