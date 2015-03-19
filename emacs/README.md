@@ -160,7 +160,7 @@ a few useful bindings:
 - <kbd>C-c C-a</kbd>:       Open alternate file (.fsi or .fs)
 - <kbd>C-c l</kbd>:         Shift region to left
 - <kbd>C-c r</kbd>:         Shift region to right
-- <kbd>C-c <up></kbd>:      Move cursor to the beginning of the block
+- <kbd>C-c &lt;up&gt;</kbd>:      Move cursor to the beginning of the block
 - <kbd>C-c C-p</kbd>:       Load a project for autocompletion and tooltips
 - <kbd>C-c C-d</kbd>:       Jump to definition of symbol at point
 - <kbd>C-c C-t</kbd>:       Request a tooltip for symbol at point
