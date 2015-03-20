@@ -92,6 +92,8 @@ be sent from another buffer in fsharp mode.
   (setq comment-start-skip "(\\*+ *")
   (make-local-variable 'parse-sexp-ignore-comments)
   (setq parse-sexp-ignore-comments nil)
+  (make-local-variable 'comint-process-echoes)
+  (setq comint-process-echoes nil)
   (use-local-map inferior-fsharp-mode-map)
   (run-hooks 'inferior-fsharp-mode-hooks)
 
