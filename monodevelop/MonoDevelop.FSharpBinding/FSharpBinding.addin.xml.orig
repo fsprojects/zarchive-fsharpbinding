@@ -308,49 +308,4 @@
     </ComplexCondition>
   </Extension>
 
-  <!--- F# Android -->
-  <Module>
-    <Dependencies>
-      <Addin id="Xamarin.Ide" version="5.0"/>
-      <Addin id="MonoAndroid" version="5.0"/>
-    </Dependencies>
-
-    <Extension path="/MonoDevelop/Ide/FileTemplates">
-      <FileTemplate id= "FSharp.MonoDroidView" file ="Templates/Android/MonoDroidView.xft.xml"/>
-      <FileTemplate id= "FSharp.MonoDroidActivity" file ="Templates/Android/MonoDroidActivity.xft.xml"/>
-      <FileTemplate id= "FSharp.MonoDroidBroadcastReceiver" file ="Templates/Android/MonoDroidBroadcastReceiver.xft.xml"/>
-      <FileTemplate id= "FSharp.MonoDroidClass" file ="Templates/Android/MonoDroidClass.xft.xml"/>
-      <FileTemplate id= "FSharp.MonoDroidFragment" file ="Templates/Android/MonoDroidFragment.xft.xml"/>
-      <FileTemplate id= "FSharp.MonoDroidInterface" file ="Templates/Android/MonoDroidInterface.xft.xml"/>
-    </Extension>
-
-    <Extension path="/MonoDevelop/Ide/ProjectTemplates">
-      <ProjectTemplate id="FSharp.MonoDroidLibraryProject" file ="Templates/Android/MonoDroidLibraryProject.xpt.xml" />
-      <ProjectTemplate id="FSharp.MonoDroidApplicationProject" file ="Templates/Android/MonoDroidApplicationProject.xpt.xml"/>
-      <ProjectTemplate id="FSharp.MonoDroidOpenGLProject" file ="Templates/Android/MonoDroidOpenGLProject.xpt.xml"/>
-      <ProjectTemplate id="FSharp.MonoDroidUnitTestProject" file ="Templates/Android/MonoDroidUnitTestProject.xpt.xml"/>
-    </Extension>
-
-<!--     <Extension path = "/MonoDevelop/ProjectModel/MSBuildItemTypes">
-      <DotNetProjectSubtype
-        guid="{F278D4AB-4730-4720-B08E-FE5E31564D9E}"
-        type="MonoDevelop.MonoDroid.MonoDroidProject"
-        useXBuild="true">
-        <AddImport language="F#" projects="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.FSharp.targets" />
-        <RemoveImport language="F#" projects="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" />
-          <RemoveImport language="F#" projects="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" />
-          <RemoveImport language="F#" projects="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
-        <RemoveImport language="F#" projects="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" />
-      </DotNetProjectSubtype>
-    </Extension> -->
-    <Extension path = "/MonoDevelop/ProjectModel/MSBuildItemTypes/MonoDevelop.MonoDroid.MonoDroidProject">
-      <AddImport language="F#" projects="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.FSharp.targets" />
-      <RemoveImport language="F#" projects="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" />
-      <RemoveImport language="F#" projects="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" />
-      <RemoveImport language="F#" projects="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
-      <RemoveImport language="F#" projects="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" />
-    </Extension>
-
-  </Module>
-
 </Addin>
