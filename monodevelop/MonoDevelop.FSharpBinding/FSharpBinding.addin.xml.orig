@@ -29,34 +29,6 @@
     <Import file = "Templates/FSharpNUnitLibraryProject.xpt.xml" />
     <Import file = "Templates/FSharpNUnitTestType.xft.xml" />
 
-    <!--- F# Android templates -->
-    <Import file = "Templates/Android/MonoDroidActivity.xft.xml" />
-    <Import file = "Templates/Android/MonoDroidApplication/AboutAssets.txt" />
-    <Import file = "Templates/Android/MonoDroidApplication/AboutResources.txt" />
-    <Import file = "Templates/Android/MonoDroidApplication/AndroidManifest.xml" />
-    <Import file = "Templates/Android/MonoDroidApplication/MainActivity.fs" />
-    <Import file = "Templates/Android/MonoDroidApplication/AssemblyInfo.fs" />
-    <Import file = "Templates/Android/MonoDroidApplication/Resource.fs" />
-    <Import file = "Templates/Android/MonoDroidApplication/Icon-hd.png" />
-    <Import file = "Templates/Android/MonoDroidApplication/Icon-ld.png" />
-    <Import file = "Templates/Android/MonoDroidApplication/Icon-md.png" />
-    <Import file = "Templates/Android/MonoDroidApplication/Main.axml" />
-    <Import file = "Templates/Android/MonoDroidApplicationProject.xpt.xml" />
-    <Import file = "Templates/Android/MonoDroidBroadcastReceiver.xft.xml" />
-    <Import file = "Templates/Android/MonoDroidClass.xft.xml" />
-    <Import file = "Templates/Android/MonoDroidFragment.xft.xml" />
-    <Import file = "Templates/Android/MonoDroidInterface.xft.xml" />
-    <Import file = "Templates/Android/MonoDroidLibraryProject.xpt.xml" />
-    <Import file = "Templates/Android/MonoDroidOpenGLProject.xpt.xml" />
-    <Import file = "Templates/Android/MonoDroidUnitTestProject.xpt.xml" />
-    <Import file = "Templates/Android/MonoDroidView.xft.xml" />
-    <Import file = "Templates/Android/OpenGLApplication/MainActivity.fs" />
-    <Import file = "Templates/Android/OpenGLApplication/GLView1.fs" />
-    <Import file = "Templates/Android/OpenGLApplication/Main.axml" />
-    <Import file = "Templates/Android/OpenGLApplication/Resource.fs" />
-    <Import file = "Templates/Android/UnitTestProject/MainActivity.fs" />
-    <Import file = "Templates/Android/UnitTestProject/TestsSample.fs" />
-
     <!-- Code templates -->
     <Import file = "Templates/FSharp-templates.xml" />
 
