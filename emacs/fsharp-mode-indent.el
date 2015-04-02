@@ -1477,12 +1477,13 @@ does not include blank lines, comments, or continuation lines."
         (progn (goto-char start) nil)
       t)))
 
-;; On multiline statements, these operators are often found at the beginning of the line
-(defvar fsharp-infix-operators-that-begin-lines
+;; On multiline statements, these symbols are often found at the beginning of the line
+(defvar fsharp-tokens-that-cannot-begin-statements
   '("%" "&&" "&&&" "||" "|||" "^^^"
     "\\+" "-" "\\*" "/" "::" ":>" ":\\?" ":\\?>"
     "<<" "<<<" "<|" "<||" "<|||"
-    ">>" "<<<" "|>" "||>" "|||>"))
+    ">>" "<<<" "|>" "||>" "|||>"
+    "|" "and" "done" "then" "else" "with" "finally" "when"))
 
 (defun fsharp-goto-beyond-multiline-statement ()
   "Jump after the last statement contiguous to the current one, only
@@ -1494,7 +1495,7 @@ does not include blank lines, comments, or continuation lines."
     (or (fsharp-goto-statement-below) (forward-line 1))
     (while (and
             (or
-             (looking-at (concat "[ \t]*\\(" (mapconcat 'identity fsharp-infix-operators-that-begin-lines "\\|") "\\)"))
+             (looking-at (concat "[ \t]*\\(" (mapconcat 'identity fsharp-tokens-that-cannot-begin-statements "\\|") "\\)"))
              (> (current-indentation) indent))      ; statement indented further
             (>= (current-indentation) indent)
             (not (eobp)))
@@ -1513,9 +1514,7 @@ does not include blank lines, comments, or continuation lines."
   (let ((p1) (p2))
     (fsharp-goto-initial-line)
     (setq p1 (point))
-    (if (fsharp-statement-opens-block-p)
-        (fsharp-goto-beyond-block)
-        (fsharp-goto-beyond-multiline-statement))
+    (fsharp-goto-beyond-multiline-statement)
     (setq p2 (point))
     (fsharp-eval-region p1 p2))
   (forward-line -1)
