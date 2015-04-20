@@ -28,6 +28,7 @@
 (require 'dash)
 (require 'auto-complete)
 (require 'json)
+(require 'etags)
 
 (autoload 'pos-tip-fill-string "pos-tip")
 (autoload 'pos-tip-show "pos-tip")
@@ -465,6 +466,11 @@ prevent usage errors being displayed by FSHARP-DOC-MODE."
                                 (line-number-at-pos)
                                 (current-column))))
 
+(defun fsharp-ac/pop-gotodefn-stack ()
+  "Go back to where point was before jumping to definition."
+  (interactive)
+  (pop-tag-mark))
+
 (defun fsharp-ac--ac-start (&rest ac-start-args)
   "Start completion, using only the F# completion source for intellisense."
   (interactive)
@@ -713,6 +719,7 @@ around to the start of the buffer."
   (let* ((file (gethash "File" data))
          (line (gethash "Line" data))
          (col (gethash "Column" data)))
+    (ring-insert find-tag-marker-ring (point-marker))
     (find-file file)
     (goto-char (fsharp-ac-line-column-to-pos line col))))
 

@@ -78,7 +78,7 @@
      (should (search-forward "X.func")))))
 
 (ert-deftest check-gotodefn ()
-  "Check jump to definition works"
+  "Check jump to (and back from) definition works"
   (fsharp-mode-wrapper '("Program.fs")
    (lambda ()
      (find-file-and-wait-for-project-load "test/Test1/Program.fs")
@@ -87,7 +87,9 @@
      (fsharp-ac-parse-current-buffer t)
      (fsharp-ac/gotodefn-at-point)
      (wait-for-condition (lambda () (/= (point) 88)))
-     (should= (point) 18))))
+     (should= (point) 18)
+     (fsharp-ac/pop-gotodefn-stack)
+     (should= (point) 88))))
 
 (ert-deftest check-tooltip ()
   "Check tooltip request works"
