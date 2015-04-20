@@ -460,6 +460,7 @@ prevent usage errors being displayed by FSHARP-DOC-MODE."
   (interactive)
   (when (fsharp-ac-can-make-request)
     (fsharp-ac-parse-current-buffer)
+    (push-mark)
     (fsharp-ac-send-pos-request "finddecl"
                                 (fsharp-ac--buffer-truename)
                                 (line-number-at-pos)
