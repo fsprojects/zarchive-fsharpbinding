@@ -3,12 +3,14 @@
 	
 	<!-- Template Header -->
 	<TemplateConfiguration>
-		<_Name>F# NUnit Library Project</_Name>
-		<_Category>F#/NUnit</_Category>
+		<_Name>NUnit Library Project</_Name>
+		<Category>other/net/general</Category>
 		<Icon>md-project|res:project-nunit-overlay-light-32.png</Icon>
+		<Image id="md-nunit-library-project" />
 		<_Description>Creates an F# NUnit library</_Description>
 		<LanguageName>F#</LanguageName>
 		<DefaultFilename>NUnitProject</DefaultFilename>
+		<GroupId>md-nunit-library</GroupId>
 	</TemplateConfiguration>
 	
 	<!-- Actions -->
@@ -34,8 +36,8 @@
 			</References>
 		
 			<Files>
-				<File name="Test.fs">
-<![CDATA[namespace ${ProjectName}
+				<UnformattedFile name="Test.fs">
+<![CDATA[namespace ${Namespace}
 open System
 open NUnit.Framework
 
@@ -46,7 +48,7 @@ type Test() =
     member x.TestCase() =
         Assert.IsTrue(true)
 ]]>
-             	</File>
+             	</UnformattedFile>
 			</Files>
 		</Project>
 	</Combine>

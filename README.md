@@ -1,11 +1,14 @@
 # F# Language Support for Open Editors
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fsharp/fsharpbinding?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This project contains advanced editing support for F# for a number of open editors. It is made up of the following projects:
 * [F# mode for Emacs](emacs/README.md)
-* [F# addin for MonoDevelop and Xamarin Studio](monodevelop/README.md)
+* [F# mode for Vim](vim/README.mkd)
+* [F# mode for Sublime Text](sublimetext/README.md)
 * [FSharp.AutoComplete](FSharp.AutoComplete/README.md)
+* An old copy of the [F# addin for MonoDevelop and Xamarin Studio 5.0](monodevelop/README.md).  The latest development branch of this code is now hosted at [FSharpMDXS](https://github.com/fsharp/FSharpMDXS)
 
-Rich editing (intellisense) support for [Sublime Text](sublimetext/) and [Vim](vim/README.mkd) is also under development.
 
 If you are interested in adding rich editor support for another editor, please open an [issue](https://github.com/fsharp/fsharpbinding/issues) to kick-start the discussion.
 
@@ -34,9 +37,10 @@ The configuration is contained in [appveyor.yml](appveyor.yml). Currently the em
 
 See the README for each individual component:
 
-* [monodevelop/README.md](monodevelop/README.md)
 * [fsautocomplete](FSharp.AutoComplete/README.md)
 * [emacs](emacs/README.md)
+* [vim](vim/README.mkd)
+* [Sublime Text](sublimetext/README.md)
 
 ## Shared Components
 
@@ -45,4 +49,4 @@ community [FSharp.Compiler.Service](https://github.com/fsharp/FSharp.Compiler.Se
 This is used by both [fsautocomplete.exe](https://github.com/fsharp/fsharpbinding/tree/master/FSharp.AutoComplete), 
 a command-line utility to sit behind Emacs, Vim and other editing environments components. 
 
-For more information about F# see [The F# Software Foundation](http://fsharp.org). Join [The F# Open Source Group](http://fsharp.github.com). We use [github](https://github.com/fsharp/fsharpbinding) for tracking work items and suggestions.
+For more information about F# see [The F# Software Foundation](http://fsharp.org). Join [The F# Open Source Group](http://fsharp.github.io). We use [github](https://github.com/fsharp/fsharpbinding) for tracking work items and suggestions.

@@ -17,6 +17,8 @@ dest_bin  = $(dest_root)/ftplugin/bin/
 
 # Building
 
+fsautocomplete : $(ac_exe)
+
 $(ac_exe) : $(bin_d) ~/.config/.mono/certs
 	xbuild $(ac_fsproj) /property:OutputPath="$(bin_d)"
 
@@ -37,6 +39,7 @@ install : $(ac_exe) $(dest_root) $(dest_bin)
 	cp ftplugin/pyvim.py $(dest_root)/ftplugin/pyvim.py
 	cp ftplugin/fsharpvim.py $(dest_root)/ftplugin/fsharpvim.py
 	cp ftplugin/fsi.py $(dest_root)/ftplugin/fsi.py
+	cp ftplugin/hidewin.py $(dest_root)/ftplugin/hidewin.py
 	cp autoload/fsharpbinding/python.vim $(dest_root)/autoload/fsharpbinding/python.vim
 	cp syntax_checkers/fsharp/syntax.vim $(dest_root)/syntax_checkers/fsharp/syntax.vim
 	cp -R ftplugin/bin $(dest_root)/ftplugin
@@ -49,3 +52,5 @@ $(bin_d)     :; mkdir -p $(bin_d)
 
 clean :
 	rm -rf $(bin_d)
+
+.PHONY: fsautocomplete

@@ -3,11 +3,13 @@
 <Template originator="Ihor Sihuta" created="2012/08/05">
 
 	<TemplateConfiguration>
-		<_Name>F# Desktop Application (Gtk# 2.0)</_Name>
+		<_Name>Gtk# 2.0 Project</_Name>
 		<_Description>Create an F# desktop application (using Gtk# 2.0 and .NET 4.0)</_Description>
-		<_Category>F#</_Category>
+		<Category>other/net/general</Category>
 		<Icon>md-project-gui</Icon>
+		<Image id="md-gtk2-project" />
 		<LanguageName>F#</LanguageName>
+		<GroupId>md-gtk-project</GroupId>
 	</TemplateConfiguration>
 	
 	<Actions>
@@ -40,8 +42,8 @@
 			<!-- A window template -->
 
 				<FileTemplateReference TemplateID="FSharpAssemblyInfo" name="AssemblyInfo.fs" />
-                <File name="MainWindow.fs">
-<![CDATA[namespace ${ProjectName}
+                <UnformattedFile name="MainWindow.fs">
+<![CDATA[namespace ${Namespace}
 
     module MainWindow =
     
@@ -58,9 +60,9 @@
             member this.OnDeleteEvent(o,e:DeleteEventArgs) = 
                 Application.Quit ()
                 e.RetVal <- true]]>
-				</File>
+				</UnformattedFile>
              
-             <File name="Main.fs">
+             <UnformattedFile name="Main.fs">
                 <![CDATA[namespace ${ProjectName}
     module Main =
         
@@ -75,7 +77,7 @@
             Application.Run()
             0
 ]]>
-             </File>
+             </UnformattedFile>
 			</Files>
 		</Project>
 	</Combine>

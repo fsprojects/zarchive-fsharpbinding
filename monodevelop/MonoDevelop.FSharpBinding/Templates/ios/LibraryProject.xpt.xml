@@ -2,10 +2,12 @@
 <Template>
 	<TemplateConfiguration>
 		<_Name>iOS Library Project</_Name>
-		<_Category>F#/iOS/Classic API</_Category>
+		<Category>ios/library/classic</Category>
 		<Icon>md-project-library</Icon>
+		<Image id="md-library-project" />
 		<LanguageName>F#</LanguageName>
 		<_Description>Creates a iOS library project.</_Description>
+		<GroupId>md-library-project-ios-classic</GroupId>
 	</TemplateConfiguration>
 	
 	<Actions>
@@ -30,20 +32,18 @@
 			<Files>
 				<Directory name="Resources" />
 				<FileTemplateReference TemplateID="FSharpAssemblyInfo" name="AssemblyInfo.fs" />
-        		<File name = "Component1.fs" AddStandardHeader="True">
+        		<UnformattedFile name = "Component1.fs" AddStandardHeader="True">
         		<![CDATA[namespace ${ProjectName}
 
 type Class1() = 
-    member this.X = "F#"
-]]>
-				</File>
-				<File name = "Script.fsx" AddStandardHeader="True">
+    member this.X = "F#"]]></UnformattedFile>
+				<UnformattedFile name = "Script.fsx" AddStandardHeader="True">
 				<![CDATA[// Learn more about F# at http://fsharp.net. See the 'F# Tutorial' project
 // for more guidance on F# programming.
 
 #load "Component1.fs"
 open ${ProjectName}]]>
-				</File>
+				</UnformattedFile>
 			</Files>
 		</Project>
 	</Combine>

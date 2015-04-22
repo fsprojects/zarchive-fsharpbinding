@@ -18,12 +18,12 @@ let integrationTestDir = "./test/integration/"
 let emacsBinDir = "../emacs/bin/"
 
 Target "BuildDebug" (fun _ ->
-  MSBuildDebug buildDir "Build" ["./FSharp.AutoComplete.fsproj"]
+  MSBuildDebug buildDir "Build" ["./FSharp.AutoComplete.sln"]
   |> Log "Build-Output: "
 )
 
 Target "BuildRelease" (fun _ ->
-  MSBuildRelease buildReleaseDir "Build" ["./FSharp.AutoComplete.fsproj"]
+  MSBuildRelease buildReleaseDir "Build" ["./FSharp.AutoComplete.sln"]
   |> Log "Build-Output: "
 )
 
@@ -92,7 +92,7 @@ Target "IntegrationTest" (fun _ ->
 
 
 Target "BuildEmacs" (fun _ ->
-  MSBuildDebug emacsBinDir "Build" ["./FSharp.AutoComplete.fsproj"]
+  MSBuildDebug emacsBinDir "Build" ["./FSharp.AutoComplete.sln"]
   |> Log "Build-Output: "
 )
 
@@ -134,7 +134,8 @@ Target "EmacsTest" (fun _ ->
   let loadFiles = Emacs.makeLoad Emacs.utils
 
   let tests =
-    [ yield Emacs.exe, loadFiles + " --batch -f run-fsharp-unit-tests"
+    [ yield Emacs.exe, loadFiles + " --batch --eval \"(progn (set-default-coding-systems 'utf-8) (load-packages))\""
+      yield Emacs.exe, loadFiles + " --batch -f run-fsharp-unit-tests"
       // AppVeyor doesn't currently run the integration tests
       if buildServer <> AppVeyor then
         yield Emacs.exe, loadFiles + " --batch -f run-fsharp-integration-tests"

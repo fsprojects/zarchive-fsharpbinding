@@ -3,10 +3,12 @@
 	
 	<!-- Template Header -->
 	<TemplateConfiguration>
-		<_Name>MonoMac Project</_Name>
-		<_Category>F#/Mac (open source)</_Category>
+		<_Name>Cocoa App</_Name>
+		<Category>other/misc/monomac</Category>
+		<Image id="md-mac-application" />
 		<LanguageName>F#</LanguageName>
-		<_Description>Creates a MonoMac project.</_Description>
+		<_Description>A basic Cocoa Mac App.</_Description>
+		<GroupId>md-monomac-project</GroupId>
 	</TemplateConfiguration>
 	
 	<!-- Actions -->
@@ -35,7 +37,7 @@
 			</References>
 			<Files>
 				<Directory name="Resources" />
-				<FileTemplateReference TemplateID="FSharpMonoMacApplicationManifest" />
+				<FileTemplateReference TemplateID="MonoMacApplicationManifest" />
 				<FileTemplateReference TemplateID="FSharpMonoMacWindowWithControllerXib" name="MainWindow" />
 				<File name="AppDelegate.fs" >
 <![CDATA[
@@ -51,9 +53,6 @@ open MonoMac.AppKit
 [<Register ("AppDelegate")>]
 type AppDelegate () =
     inherit NSApplicationDelegate ()
-
-    [<DefaultValue>]
-    val mutable mainWindowController : ${Namespace}.MainWindowController
 
     override x.FinishedLaunching (notification) =
         let mainWindowController = new ${Namespace}.MainWindowController ()

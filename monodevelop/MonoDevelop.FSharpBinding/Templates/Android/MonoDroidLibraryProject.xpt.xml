@@ -2,10 +2,12 @@
 <Template>
 	<TemplateConfiguration>
 		<_Name>Android Library Project</_Name>
-		<_Category>F#/Android</_Category>
+		<Category>android/library/general</Category>
 		<Icon>monodroid-project|md-library-overlay</Icon>
+		<Image id="md-library-project" />
 		<LanguageName>F#</LanguageName>
 		<_Description>Creates an Android library project.</_Description>
+		<GroupId>monodroid-library-project</GroupId>
 	</TemplateConfiguration>
 	
 	<Actions>
@@ -31,7 +33,7 @@
 			</References>
 			<Files>
 				<Directory name="Resources">
-					<File name="Resource.designer.fs" src="MonoDroidApplication/Resource.fs" />
+					<UnformattedFile name="Resource.designer.fs" src="MonoDroidApplication/Resource.fs" />
 					<RawFile name="AboutResources.txt" src="MonoDroidApplication/AboutResources.txt" />
 					<Directory name="values">
 						<File name="Strings.xml"><![CDATA[<?xml version="1.0" encoding="utf-8"?>

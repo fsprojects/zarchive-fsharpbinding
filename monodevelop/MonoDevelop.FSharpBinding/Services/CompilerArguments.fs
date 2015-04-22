@@ -25,7 +25,7 @@ open FSharp.CompilerBinding
 module CompilerArguments = 
 
   /// Wraps the given string between double quotes
-  let wrapFile (s:string) = if s.StartsWith "\"" then s else "\"" + s + "\""  
+  let wrapFile (s:string) = if s.StartsWith "\"" then s else "\"" + s + "\"" 
   
   // Translate the target framework to an enum used by FSharp.CompilerBinding
   let getTargetFramework (targetFramework:TargetFrameworkMoniker) = 
@@ -131,16 +131,32 @@ module CompilerArguments =
         for file in projectReferences do 
           yield "-r:" + wrapf(file) ]
 
+  let getCurrentConfigurationOrDefault (proj:Project) =
+     match IdeApp.Workspace with
+     | ws when ws <> null && ws.ActiveConfiguration <> null -> ws.ActiveConfiguration
+     | _ -> ConfigurationSelector.Default
+
+  let generateDebug (config:FSharpCompilerParameters) =
+      match config.DebugSymbols, config.DebugType with
+      | true, typ ->
+        match typ with
+        | "full" -> "--debug:full"
+        | "pdbonly" -> "--debug:pdbonly"
+        | _ -> "--debug+"
+      | false, _ -> "--debug-"
 
   /// Generates command line options for the compiler specified by the 
   /// F# compiler options (debugging, tail-calls etc.), custom command line
   /// parameters and assemblies referenced by the project ("-r" options)
-  let generateCompilerOptions (project:DotNetProject, fsconfig:FSharpCompilerParameters, reqLangVersion, targetFramework, configSelector, shouldWrap) =
+  let generateCompilerOptions (project: DotNetProject, fsconfig:FSharpCompilerParameters, reqLangVersion, targetFramework, configSelector, shouldWrap) =
     let dashr = generateReferences (project, reqLangVersion, targetFramework, configSelector, shouldWrap) |> Array.ofSeq
     let defines = fsconfig.DefineConstants.Split([| ';'; ','; ' ' |], StringSplitOptions.RemoveEmptyEntries)
+    let currentProjectConfig = getCurrentConfigurationOrDefault project
+    let outputFilename = project.GetOutputFileName(currentProjectConfig).ToString ()
     [  yield "--noframework"
+       yield "-o:" + outputFilename
        for symbol in defines do yield "--define:" + symbol
-       yield if fsconfig.DebugSymbols then  "--debug+" else  "--debug-"
+       yield generateDebug fsconfig
        yield if fsconfig.Optimize then "--optimize+" else "--optimize-"
        yield if fsconfig.GenerateTailCalls then "--tailcalls+" else "--tailcalls-"
        // TODO: This currently ignores escaping using "..."
@@ -285,12 +301,29 @@ module CompilerArguments =
     | _ -> None
 
   let getArgumentsFromProject (proj:DotNetProject) =
-        let config =
-            match MonoDevelop.Ide.IdeApp.Workspace with
-            | ws when ws <> null && ws.ActiveConfiguration <> null -> ws.ActiveConfiguration
-            | _ -> MonoDevelop.Projects.ConfigurationSelector.Default
-
+        let config = getCurrentConfigurationOrDefault proj
         let projConfig = proj.GetConfiguration(config) :?> DotNetProjectConfiguration
         let fsconfig = projConfig.CompilationParameters :?> FSharpCompilerParameters
         generateCompilerOptions (proj, fsconfig, None, getTargetFramework projConfig.TargetFramework.Id, config, false) |> Array.ofList
 
+  let getDefineSymbols (fileName:string) (project: Project option) =
+    [if (fileName.EndsWith(".fsx") || fileName.EndsWith(".fsscript"))
+     then yield "INTERACTIVE"
+     else yield "COMPILED"
+    
+     let workspace = IdeApp.Workspace |> Option.ofNull
+     let configuration =
+        match workspace, project with
+         | None, Some proj ->
+             //as there is no workspace use the default configuration for the project
+             Some (proj.GetConfiguration(proj.DefaultConfiguration.Selector))
+         | Some workspace, Some project ->
+             Some (project.GetConfiguration(workspace.ActiveConfiguration))
+         | _ -> None
+
+     match configuration with
+     | Some config  ->
+         match config with
+         | :? DotNetProjectConfiguration as config -> yield! config.GetDefineSymbols() 
+         | _ -> ()
+     | None -> () ]

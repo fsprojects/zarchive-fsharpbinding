@@ -2,10 +2,12 @@
 <Template>
 	<TemplateConfiguration>
 		<_Name>Android Unit Test Project</_Name>
-		<_Category>F#/Android</_Category>
+		<Category>android/tests/general</Category>
 		<Icon>monodroid-project</Icon>
+		<Image id="md-nunit-library-project" />
 		<LanguageName>F#</LanguageName>
-		<_Description>Creates an Android Unit Test Application.</_Description>
+		<_Description>Creates an Android Unit Test Project.</_Description>
+		<GroupId>monodroid-unit-test-project</GroupId>
 	</TemplateConfiguration>
 	
 	<Actions>
@@ -35,14 +37,14 @@
 				<File name="MainActivity.fs" src="UnitTestProject/MainActivity.fs" />
 				<File name="TestsSample.fs" src="UnitTestProject/TestsSample.fs" />
 				<Directory name="Resources">
-					<File name="Resource.designer.fs" src="MonoDroidApplication/Resource.fs" />
+					<UnformattedFile name="Resource.designer.fs" src="MonoDroidApplication/Resource.fs" />
 					<RawFile name="AboutResources.txt" src="MonoDroidApplication/AboutResources.txt" />
 					<Directory name ="drawable">
 						<RawFile name="Icon.png" src="MonoDroidApplication/Icon-md.png" />
 					</Directory>
 				</Directory>
 				<Directory name="Properties">
-					<File name="AssemblyInfo.fs" src="MonoDroidApplication/AssemblyInfo.fs" />
+					<UnformattedFile name="AssemblyInfo.fs" src="MonoDroidApplication/AssemblyInfo.fs" />
 				</Directory>
 				<Directory name="Assets">
 					<RawFile name="AboutAssets.txt" src="MonoDroidApplication/AboutAssets.txt" />
