@@ -149,24 +149,27 @@ If you are new to Emacs, you might want to use the menu (call
 menu-bar-mode if you don't see it). However, it's usually faster to learn
 a few useful bindings:
 
-- <kbd>C-c C-r</kbd>:       Evaluate region
-- <kbd>C-c C-f</kbd>:       Load current buffer into toplevel
-- <kbd>C-c C-e</kbd>:       Evaluate current toplevel phrase
-- <kbd>C-M-x</kbd>:         Evaluate current toplevel phrase
-- <kbd>C-M-h</kbd>:         Mark current toplevel phrase
-- <kbd>C-c C-s</kbd>:       Show interactive buffer
-- <kbd>C-c C-c</kbd>:       Compile with fsc
-- <kbd>C-c x</kbd>:         Run the executable
-- <kbd>C-c C-a</kbd>:       Open alternate file (.fsi or .fs)
-- <kbd>C-c l</kbd>:         Shift region to left
-- <kbd>C-c r</kbd>:         Shift region to right
-- <kbd>C-c &lt;up&gt;</kbd>:      Move cursor to the beginning of the block
-- <kbd>C-c C-p</kbd>:       Load a project for autocompletion and tooltips
-- <kbd>C-c C-d</kbd>:       Jump to definition of symbol at point
-- <kbd>C-c C-t</kbd>:       Request a tooltip for symbol at point
-- <kbd>C-c C-q</kbd>:       Quit current background compiler process
-- <kbd>M-n</kbd>:           Go to next error
-- <kbd>M-p</kbd>:           Go to previous error
+ Key binding                         | Description
+-------------------------------------|----------------------------------------
+<kbd>C-c C-r</kbd>                   | Evaluate region
+<kbd>C-c C-f</kbd>                   | Load current buffer into toplevel
+<kbd>C-c C-e</kbd>                   | Evaluate current toplevel phrase
+<kbd>C-M-x</kbd>                     | Evaluate current toplevel phrase
+<kbd>C-M-h</kbd>                     | Mark current toplevel phrase
+<kbd>C-c C-s</kbd>                   | Show interactive buffer
+<kbd>C-c C-c</kbd>                   | Compile with fsc
+<kbd>C-c x</kbd>                     | Run the executable
+<kbd>C-c C-a</kbd>                   | Open alternate file (.fsi or .fs)
+<kbd>C-c l</kbd>                     | Shift region to left
+<kbd>C-c r</kbd>                     | Shift region to right
+<kbd>C-c &lt;up&gt;</kbd>            | Move cursor to the beginning of the block
+<kbd>C-c C-p</kbd>                   | Load a project for autocompletion and tooltips
+<kbd>C-c C-d</kbd>, <kbd>M-.</kbd>   | Jump to definition of symbol at point
+<kbd>C-c C-b</kbd>, <kbd>M-,</kbd>   | Return to where point was before jump.
+<kbd>C-c C-t</kbd>                   | Request a tooltip for symbol at point
+<kbd>C-c C-q</kbd>                   | Quit current background compiler process
+<kbd>M-n</kbd>                       | Go to next error
+<kbd>M-p</kbd>                       | Go to previous error
 
 To interrupt the interactive mode, use <kbd>C-c C-c</kbd>. This is useful if your
 code does an infinite loop or a very long computation.
