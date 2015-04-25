@@ -149,9 +149,6 @@ as indentation hints, unless the comment character is in column zero."
           "\\)$")
   "Regular expression matching unterminated expressions.")
 
-
-;(defconst fsharp-blank-or-comment-re "[ \t]*\\($\\|#\\)"
-;(defconst fsharp-blank-or-comment-re "[ \t]*\\(//.*\\)?"
 (defconst fsharp-blank-or-comment-re "[ \t]*\\($\\|//.*\\)"
   "Regular expression matching a blank or comment line.")
 
@@ -1500,8 +1497,6 @@ does not include blank lines, comments, or continuation lines."
             (>= (current-indentation) indent)
             (not (eobp)))
       (or (fsharp-goto-statement-below) (forward-line 1)))))
-;;    (if (eobp)
-;;        (fsharp-goto-beyond-final-line)))
 
 (defun fsharp-eval-block-move ()
   "Send the block to the interactive mode, and move the point to the next
