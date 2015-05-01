@@ -29,6 +29,8 @@ The Unified API also removes namespace prefixes to allow better code sharing bet
 				<Reference type="Gac" refto="System"/>
 				<Reference type="Gac" refto="System.Core"/>
 				<Reference type="Gac" refto="Xamarin.Mac"/>
+				<Reference type="Gac" refto="mscorlib" />
+				<Reference type="Gac" refto="FSharp.Core" />
 			</References>
 			<Files>
 				<Directory name="Resources"/>

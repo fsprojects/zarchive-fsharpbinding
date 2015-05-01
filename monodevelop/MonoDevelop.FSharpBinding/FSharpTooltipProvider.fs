@@ -39,6 +39,10 @@ type FSharpTooltipProvider() =
         if activeDoc = null then null else
 
         let fileName = activeDoc.FileName.FullPath.ToString()
+
+        let supported = MDLanguageService.SupportedFileName (fileName)
+        if supported <> true then null else
+
         let extEditor = editor :?> ExtensibleTextEditor
 
         let docText = editor.Text

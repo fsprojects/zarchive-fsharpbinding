@@ -1,3 +1,8 @@
+## 1.5.2 (2015-03-20)
+
+Bugfixes:
+  - #973: Force comint-process-echoes to nil to avoid hangs
+
 ## 1.5.1 (2015-01-14)
 
 Bugfixes:
