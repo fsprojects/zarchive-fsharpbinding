@@ -10,13 +10,58 @@ This software is still alpha quality and was adapted from http://github.com/timr
 
 fsharpbinding-vim requires mono and fsharp installed. To build and install you will need to be able to xbuild any .fsproj file. 
 
-#####OSX and linux
+####OSX and linux
+
+#####Installing with pathogen
 
 1. Install [pathogen][pathogen] and [syntastic][syntastic]
 
 2. Run *make install* inside the vim directory. This will copy the necessary contents to your ~/.vim/bundle directory.
 
-#####Windows
+#####Installing with [vim-plug][vim-plug]
+
+~~~.vim
+Plug 'fsharp/fsharpbinding', {
+      \ 'for': 'fsharp',
+      \ 'rtp': 'vim',
+      \ 'do':  'make -C vim fsautocomplete',
+      \}
+~~~
+
+#####Installing with [NeoBundle][NeoBundle]
+
+By VimL way:
+~~~.vim
+NeoBundle 'fsharp/fsharpbinding', {
+           \ 'description': 'F# support for Vim',
+           \ 'rtp': 'vim',
+           \ 'lazy': 1,
+           \ 'autoload': {'filetypes': 'fsharp'},
+           \ 'build': {
+           \   'mac':   'make -C vim fsautocomplete',
+           \   'linux': 'make -C vim fsautocomplete',
+           \   'unix':  'make -C vim fsautocomplete',
+           \ },
+           \ 'build_commands': ['make', 'mozroots', 'xbuild'],
+           \}
+~~~
+
+By using TOML configuration:
+~~~.toml
+[[plugins]]
+description = 'F# support for Vim'
+repository = 'fsharp/fsharpbinding'
+rtp = 'vim'
+lazy = 1
+filetypes = 'fsharp'
+build_commands = ['make', 'mozroots', 'xbuild']
+  [plugins.build]
+  mac   = 'make -C vim fsautocomplete'
+  unix  = 'make -C vim fsautocomplete'
+  linux = 'make -C vim fsautocomplete'
+~~~
+
+####Windows
 
 1. Install [pathogen][pathogen] and [syntastic][syntastic]
 
@@ -24,7 +69,7 @@ fsharpbinding-vim requires mono and fsharp installed. To build and install you w
 
 3. Currently you will most likely need to set g:fsharp_xbuild_path and g:fsharp_interactive_bin to approapriate values. 
 
-#####Syntastic
+####Syntastic
 
 The fsharpbindings for vim utilize the [syntastic][syntastic] plugin in order to
 supply interactive syntax and type checking. You may want to install that plugin
@@ -99,3 +144,5 @@ let g:fsharp_test_runner = "/path/to/test/runner"
 [syntastic]: https://github.com/scrooloose/syntastic
 [airline]: https://github.com/bling/vim-airline
 [pathogen]: https://github.com/tpope/vim-pathogen
+[vim-plug]: https://github.com/junegunn/vim-plug
+[NeoBundle]: https://github.com/Shougo/neobundle.vim

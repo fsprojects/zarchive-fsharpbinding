@@ -307,7 +307,7 @@
 						</dict>
 					</dict>
 					<key>match</key>
-					<string>\b(let!?)\s+([_a-zA-Z][a-zA-Z_]*)\s+(=)</string>
+					<string>\b(let!?)\s+(?:[_a-zA-Z][a-zA-Z_,]*|``.*``)(?:\s*,\s*(?:[_a-zA-Z][a-zA-Z_,]*|``.*``))*\s*(=)</string>
 					<key>name</key>
 					<string>meta.expression.fsharp</string>
 				</dict>
