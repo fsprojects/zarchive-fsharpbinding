@@ -39,3 +39,48 @@
                                                         "noproj/"
                                                         "test.fs"))))
 
+;;; Test correct construction of compile commands
+
+(check "Should use make if Makefile present"
+       (should-match "make -k"
+        (fsharp-mode-choose-compile-command (concat test-dir
+                                                    "CompileCommandData/"
+                                                    "proj/"
+                                                    "test.fs"))))
+
+(check "Should use xbuild if fsproj present"
+       (should-match "\\(x\\|ms\\)build.* /nologo .*Test1.fsproj"
+        (fsharp-mode-choose-compile-command (concat test-dir
+                                                    "Test1/"
+                                                    "Program.fs"))))
+
+(check "Should use fsc if no fsproj present"
+       (should-match "fs\\(harp\\)?c.* --nologo .*test.fs"
+        (fsharp-mode-choose-compile-command (concat test-dir
+                                                    "CompileCommandData/"
+                                                    "noproj/"
+                                                    "test.fs"))))
+
+(check "Should quote filenames in xbuild mode"
+       (should-match "\\(x\\|ms\\)build.* /nologo .*\".*Directory With Spaces/proj/test.fsproj\""
+        (fsharp-mode-choose-compile-command (concat test-dir
+                                                    "CompileCommandData/"
+                                                    "Directory With Spaces/"
+                                                    "proj/"
+                                                    "empty.fs"))))
+
+(check "Should quote filenames in fsc mode"
+       (should-match "fs\\(harp\\)?c.* --nologo .*\".*Directory With Spaces/noproj/test.fs\""
+        (fsharp-mode-choose-compile-command (concat test-dir
+                                                    "CompileCommandData/"
+                                                    "Directory With Spaces/"
+                                                    "noproj/"
+                                                    "test.fs"))))
+(check "Should quote builder in xbuild mode"
+       (let ((fsharp-build-command "/path with spaces/xbuild"))
+         (should-match "\"/path with spaces/xbuild\""
+                       (fsharp-mode-choose-compile-command (concat test-dir
+                                                                   "CompileCommandData/"
+                                                                   "Directory With Spaces/"
+                                                                   "proj/"
+                                                                   "test.fs")))))
