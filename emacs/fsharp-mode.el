@@ -35,19 +35,13 @@
 
 (defvar fsharp-compile-command
   (or (executable-find "fsharpc")
-      (executable-find "fsc"))
+      (fsharp-mode--executable-find "fsc"))
   "The program used to compile F# source files.")
 
 (defvar fsharp-build-command
   (or (executable-find "xbuild")
       (executable-find "msbuild"))
   "The command used to build F# projects and solutions.")
-
-(defvar fsharp-compiler nil
-  "The command used to compile an individual F# buffer.
-This will be set to a sane default, depending the type of file
-and whether it is in a project directory.")
-(make-variable-buffer-local 'fsharp-compiler)
 
 ;;; ----------------------------------------------------------------------------
 
@@ -385,6 +379,19 @@ passed to `mono'."
                                     nil
                                     'fsharp-run-executable-file-history)))
     (start-process-shell-command cmd nil cmd)))
+
+(defun fsharp-mode--executable-find (exe)
+    (if fsharp-ac-using-mono
+        (executable-find exe)
+      (let* ((programfiles (file-name-as-directory
+                            (car (-drop-while 'not
+                                              (list (getenv "ProgramFiles(x86)")
+                                                    (getenv "ProgramFiles")
+                                                    "C:\\Program Files (x86)")))))
+             (searchdirs (--map (concat programfiles "Microsoft SDKs/F#/" it "/Framework/v4.0")
+                                '("3.0" "3.1" "4.0")))
+             (exec-path (append searchdirs exec-path)))
+        (executable-find exe))))
 
 ;;; Project
 

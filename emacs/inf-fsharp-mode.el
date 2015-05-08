@@ -28,6 +28,8 @@
 (require 'fsharp-mode-completion)
 (with-no-warnings (require 'cl))
 
+(declare-function fsharp-mode--executable-find "fsharp-mode.el" (exe))
+
 ;; User modifiable variables
 
 ;; Whether you want the output buffer to be diplayed when you send a phrase
@@ -38,16 +40,7 @@
 (defvar inferior-fsharp-program
   (if fsharp-ac-using-mono
       "fsharpi --readline-"
-    (let* ((programfiles (file-name-as-directory
-                          (car (-drop-while 'not
-                                            (list (getenv "ProgramFiles(x86)")
-                                                  (getenv "ProgramFiles")
-                                                  "C:\\Program Files (x86)")))))
-           (searchdirs (--map (concat programfiles it)
-                                '("Microsoft SDKs/F#/3.1/Framework/v4.0"
-                                  "Microsoft SDKs/F#/3.0/Framework/v4.0")))
-           (exec-path (append searchdirs exec-path)))
-    (concat "\"" (executable-find "fsi.exe") "\"")))
+    (shell-quote-argument (fsharp-mode--executable-find "fsi.exe")))
   "*Program name for invoking an inferior fsharp from Emacs.")
 
 ;; End of User modifiable variables
