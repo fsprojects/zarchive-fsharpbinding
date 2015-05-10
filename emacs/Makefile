@@ -30,7 +30,7 @@ dest_bin  = $(HOME)/.emacs.d/fsharp-mode/bin/
 
 # ----------------------------------------------------------------------------
 
-.PHONY : test unit-test integration-test packages clean-elc install byte-compile check-compile check-compile run
+.PHONY : test unit-test integration-test packages clean-elc install byte-compile check-compile run
 
 # Building
 

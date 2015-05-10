@@ -29,25 +29,19 @@
 (require 'fsharp-mode-completion)
 (require 'fsharp-doc)
 (require 'inf-fsharp-mode)
+(require 'fsharp-mode-util)
 (require 'compile)
+(require 'dash)
 
 ;;; Compilation
 
 (defvar fsharp-compile-command
-  (or (executable-find "fsharpc")
-      (executable-find "fsc"))
+  (-any #'fsharp-mode--executable-find '("fsharpc" "fsc"))
   "The program used to compile F# source files.")
 
 (defvar fsharp-build-command
-  (or (executable-find "xbuild")
-      (executable-find "msbuild"))
+  (-any #'fsharp-mode--msbuild-find '("xbuild" "msbuild"))
   "The command used to build F# projects and solutions.")
-
-(defvar fsharp-compiler nil
-  "The command used to compile an individual F# buffer.
-This will be set to a sane default, depending the type of file
-and whether it is in a project directory.")
-(make-variable-buffer-local 'fsharp-compiler)
 
 ;;; ----------------------------------------------------------------------------
 
@@ -284,15 +278,17 @@ Otherwise, treat as a stand-alone file."
 3. The file's type.
 "
   (let* ((fname    (file-name-nondirectory file))
+         (dname    (file-name-directory file))
          (ext      (file-name-extension file))
          (proj     (fsharp-mode/find-sln-or-fsproj file))
-         (makefile (or (file-exists-p "Makefile") (file-exists-p "makefile"))))
+         (makefile (or (file-exists-p (concat dname "/Makefile"))
+                       (file-exists-p (concat dname "/makefile")))))
     (cond
      (makefile          compile-command)
-     (proj              (concat fsharp-build-command " /nologo " proj))
-     ((equal ext "fs")  (concat fsharp-compile-command " --nologo " file))
-     ((equal ext "fsl") (concat "fslex "  file))
-     ((equal ext "fsy") (concat "fsyacc " file))
+     (proj              (combine-and-quote-strings (list fsharp-build-command "/nologo" proj)))
+     ((equal ext "fs")  (combine-and-quote-strings (list fsharp-compile-command "--nologo" file)))
+     ((equal ext "fsl") (combine-and-quote-strings (list "fslex" file)))
+     ((equal ext "fsy") (combine-and-quote-strings (list "fsyacc" file)))
      (t                 compile-command))))
 
 (defun fsharp-find-alternate-file ()

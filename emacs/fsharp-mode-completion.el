@@ -29,6 +29,7 @@
 (require 'auto-complete)
 (require 'json)
 (require 'etags)
+(require 'fsharp-mode-util)
 
 (autoload 'pos-tip-fill-string "pos-tip")
 (autoload 'pos-tip-show "pos-tip")
@@ -38,13 +39,6 @@
 (declare-function fsharp-mode/find-fsproj "fsharp-mode.el" (dir-or-file))
 
 ;;; User-configurable variables
-
-(defvar fsharp-ac-using-mono
-  (case system-type
-    ((windows-nt cygwin msdos) nil)
-    (otherwise t))
-  "Whether the .NET runtime in use is mono. Defaults to `nil' for
-  Microsoft platforms (including Cygwin), `t' for all *nix.")
 
 (defvar fsharp-ac-executable "fsautocomplete.exe")
 
