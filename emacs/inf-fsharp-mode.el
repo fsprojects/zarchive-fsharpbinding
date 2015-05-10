@@ -25,10 +25,9 @@
 ;; Boston, MA 02110-1301, USA.
 
 (require 'comint)
+(require 'fsharp-mode-util)
 (require 'fsharp-mode-completion)
 (with-no-warnings (require 'cl))
-
-(declare-function fsharp-mode--executable-find "fsharp-mode.el" (exe))
 
 ;; User modifiable variables
 
