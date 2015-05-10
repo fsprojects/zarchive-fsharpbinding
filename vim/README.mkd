@@ -100,6 +100,7 @@ Omnicomplete triggers the fsharp autocomplete process. (suggestion: install [sup
 
 #####FSharp Interactive
 * `:FsiEval` Evaluates an fsharp expression in the fsi 
+* `:FsiEvalBuffer` Evaluates the entire buffer in the fsi 
 * `:FsiReset` Resets the current fsharp interactive
 * `:FsiRead` Outputs any lines written by the fsi but not yet output as vim messages 
 * `:FsiShow` Opens the _fsi-out_ buffer in a split window. 

@@ -77,6 +77,7 @@ EOF
     com! -buffer FsiRead call fsharpbinding#python#FsiRead(0.5) "short timeout as there may not be anything to read
     com! -buffer FsiReset call fsharpbinding#python#FsiReset(g:fsharp_interactive_bin)
     com! -buffer -nargs=1 FsiEval call fsharpbinding#python#FsiEval(<q-args>)
+    com! -buffer FsiEvalBuffer call fsharpbinding#python#FsiSendAll()
 
     nnoremap  :<C-u>call fsharpbinding#python#FsiSendLine()<cr>
     vnoremap  :<C-u>call fsharpbinding#python#FsiSendSel()<cr>
