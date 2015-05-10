@@ -22,6 +22,10 @@ function! s:get_visual_selection()
   return join(lines, "\n")
 endfunction
 
+function! s:get_complete_buffer()
+    return join(getline(1, '$'), "\n")
+endfunction
+
 " Vim73-compatible version of pyeval
 " taken from: http://stackoverflow.com/questions/13219111/how-to-embed-python-expression-into-s-command-in-vim
 function s:pyeval(expr)
@@ -383,6 +387,11 @@ endfunction
 
 function! fsharpbinding#python#FsiSendSel()
     let text = s:get_visual_selection()
+    call fsharpbinding#python#FsiEval(text)
+endfunction
+
+function! fsharpbinding#python#FsiSendAll()
+    let text = s:get_complete_buffer()
     call fsharpbinding#python#FsiEval(text)
 endfunction
 
