@@ -7,4 +7,4 @@ This repository previously contained the advanced editing support for F# for a n
 * [F# mode for Sublime Text](https://github.com/fsharp/sublime-fsharp-package)
 * [F# mode for Atom](https://github.com/fsprojects/FSharp.Atom)
 * Shared backend component [FSharp.AutoComplete](https://github.com/fsharp/FSharp.AutoComplete)
-* Monodevelop/Xamarin Studio support [FSharpMDXS](https://github.com/fsharp/FSharpMDXS)
+* Monodevelop/Xamarin Studio support [FSharpMDXS](https://github.com/fsharp/xamarin-monodevelop-fsharp-addin)
