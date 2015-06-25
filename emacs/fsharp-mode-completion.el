@@ -674,8 +674,10 @@ around to the start of the buffer."
   (with-current-buffer (process-buffer proc)
     (save-excursion
       (goto-char (process-mark proc))
-      (insert-before-markers str)))
-
+      ;; Remove BOM, if present
+      (insert-before-markers (if (string-prefix-p "\ufeff" str)
+				 (substring str 1)
+			       str))))
   (let ((msg (fsharp-ac--get-msg proc)))
     (while msg
       (let ((kind (gethash "Kind" msg))
