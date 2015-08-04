@@ -131,7 +131,7 @@ module CompilerArguments =
         for file in projectReferences do 
           yield "-r:" + wrapf(file) ]
 
-  let getCurrentConfigurationOrDefault (proj:Project) =
+  let getCurrentConfigurationOrDefault (_: Project) =
      match IdeApp.Workspace with
      | ws when ws <> null && ws.ActiveConfiguration <> null -> ws.ActiveConfiguration
      | _ -> ConfigurationSelector.Default
