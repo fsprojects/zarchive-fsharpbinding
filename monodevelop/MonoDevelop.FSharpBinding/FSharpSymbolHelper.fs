@@ -124,7 +124,12 @@ module ExtendedPatterns =
                     else
                         if not symbol.IsModuleValueOrMember then ClosureOrNestedFunction symbol
                         else Function symbol                       
-                | Some _fullType -> Val symbol
+                | Some _fullType ->
+                  if FSharpTypeExt.isOperatorOrActivePattern symbol.DisplayName then
+                    if symbolUse.IsFromPattern then Pattern symbol
+                    else Operator symbol
+                  else Val symbol 
+
                 | None -> Unknown
         | _ -> Unknown
 
