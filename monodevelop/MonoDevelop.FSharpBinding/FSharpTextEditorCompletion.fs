@@ -133,7 +133,7 @@ type ParameterDataProvider(nameStart: int, name, meths : FSharpMethodGroupItem a
             textL.[0] + "(" + String.Join(",", text10L) + ")" + text11
 
         let tooltipInfo = TooltipInformation(SummaryMarkup   = description,
-                                             SignatureMarkup = heading,
+                                             SignatureMarkup = String.wrapText heading 80,
                                              FooterMarkup    = paramDescription)
         tooltipInfo
 
