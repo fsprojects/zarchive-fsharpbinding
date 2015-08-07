@@ -28,7 +28,7 @@ type FSharpParser() =
         let errorType = 
             if error.Severity = FSharpErrorSeverity.Error then ErrorType.Error
             else ErrorType.Warning
-        Error(errorType, wrapText error.Message 80, DomRegion(error.StartLineAlternate, error.StartColumn + 1, error.EndLineAlternate, error.EndColumn + 1))
+        Error(errorType, String.wrapText error.Message 80, DomRegion(error.StartLineAlternate, error.StartColumn + 1, error.EndLineAlternate, error.EndColumn + 1))
 
     override x.Parse(storeAst : bool, fileName : string, content : System.IO.TextReader, proj : MonoDevelop.Projects.Project) = 
         if fileName = null || not (MDLanguageService.SupportedFileName (fileName)) then null
