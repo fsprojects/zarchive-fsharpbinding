@@ -7,8 +7,8 @@ open MonoTouch.UIKit
 open MonoTouch.Foundation
 
 [<Register ("${SafeProjectName}ViewController")>]
-type ${SafeProjectName}ViewController () =
-    inherit UIViewController ()
+type ${SafeProjectName}ViewController (handle:IntPtr) =
+    inherit UIViewController (handle)
 
     // Release any cached data, images, etc that aren't in use.
     override this.DidReceiveMemoryWarning () =
