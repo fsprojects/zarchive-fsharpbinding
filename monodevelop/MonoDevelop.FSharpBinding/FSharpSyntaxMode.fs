@@ -160,57 +160,52 @@ module internal Patterns =
         if ts.TokenInfo.ColorClass = FSharpTokenColorKind.PreprocessorKeyword then Some PreprocessorKeyword
         else None
 
-    let (|Punctuation|_|) (ts:TokenSymbol) =
-        let token = Parser.tokenTagToTokenId ts.TokenInfo.Tag
-        match token with
-        | Parser.tokenId.TOKEN_PLUS_MINUS_OP
-        | Parser.tokenId.TOKEN_MINUS
-        | Parser.tokenId.TOKEN_STAR
-        | Parser.tokenId.TOKEN_INFIX_STAR_DIV_MOD_OP
-        | Parser.tokenId.TOKEN_PERCENT_OP
-        | Parser.tokenId.TOKEN_INFIX_AT_HAT_OP
-        | Parser.tokenId.TOKEN_QMARK
-        | Parser.tokenId.TOKEN_COLON
-        | Parser.tokenId.TOKEN_EQUALS
-        | Parser.tokenId.TOKEN_SEMICOLON
-        | Parser.tokenId.TOKEN_COMMA
-        | Parser.tokenId.TOKEN_DOT
-        | Parser.tokenId.TOKEN_DOT_DOT
-        | Parser.tokenId.TOKEN_INT32_DOT_DOT
-        | Parser.tokenId.TOKEN_UNDERSCORE
-        | Parser.tokenId.TOKEN_BAR
-        | Parser.tokenId.TOKEN_BAR_RBRACK
-        | Parser.tokenId.TOKEN_LBRACK_LESS
-        | Parser.tokenId.TOKEN_COLON_GREATER
-        | Parser.tokenId.TOKEN_COLON_QMARK_GREATER
-        | Parser.tokenId.TOKEN_COLON_QMARK
-        | Parser.tokenId.TOKEN_INFIX_BAR_OP
-        | Parser.tokenId.TOKEN_INFIX_COMPARE_OP
-        | Parser.tokenId.TOKEN_COLON_COLON
-        | Parser.tokenId.TOKEN_AMP_AMP
-        | Parser.tokenId.TOKEN_PREFIX_OP
-        | Parser.tokenId.TOKEN_COLON_EQUALS
-        | Parser.tokenId.TOKEN_BAR_BAR
-        | Parser.tokenId.TOKEN_RARROW
-            -> Some Punctuation
-        | _ -> None
+    let (|Punctuation|_|) (ts : TokenSymbol) = 
+      if ts.TokenInfo.Tag = FSharpTokenTag.PLUS_MINUS_OP
+         || ts.TokenInfo.Tag = FSharpTokenTag.MINUS
+         || ts.TokenInfo.Tag = FSharpTokenTag.STAR 
+         || ts.TokenInfo.Tag = FSharpTokenTag.INFIX_STAR_DIV_MOD_OP
+         || ts.TokenInfo.Tag = FSharpTokenTag.PERCENT_OP 
+         || ts.TokenInfo.Tag = FSharpTokenTag.INFIX_AT_HAT_OP
+         || ts.TokenInfo.Tag = FSharpTokenTag.QMARK 
+         || ts.TokenInfo.Tag = FSharpTokenTag.COLON
+         || ts.TokenInfo.Tag = FSharpTokenTag.EQUALS
+         || ts.TokenInfo.Tag = FSharpTokenTag.SEMICOLON 
+         || ts.TokenInfo.Tag = FSharpTokenTag.COMMA
+         || ts.TokenInfo.Tag = FSharpTokenTag.DOT
+         || ts.TokenInfo.Tag = FSharpTokenTag.DOT_DOT 
+         || ts.TokenInfo.Tag = FSharpTokenTag.INT32_DOT_DOT
+         || ts.TokenInfo.Tag = FSharpTokenTag.UNDERSCORE 
+         || ts.TokenInfo.Tag = FSharpTokenTag.BAR
+         || ts.TokenInfo.Tag = FSharpTokenTag.COLON_GREATER 
+         || ts.TokenInfo.Tag = FSharpTokenTag.COLON_QMARK_GREATER
+         || ts.TokenInfo.Tag = FSharpTokenTag.COLON_QMARK 
+         || ts.TokenInfo.Tag = FSharpTokenTag.INFIX_BAR_OP
+         || ts.TokenInfo.Tag = FSharpTokenTag.INFIX_COMPARE_OP 
+         || ts.TokenInfo.Tag = FSharpTokenTag.COLON_COLON
+         || ts.TokenInfo.Tag = FSharpTokenTag.AMP_AMP 
+         || ts.TokenInfo.Tag = FSharpTokenTag.PREFIX_OP
+         || ts.TokenInfo.Tag = FSharpTokenTag.COLON_EQUALS 
+         || ts.TokenInfo.Tag = FSharpTokenTag.BAR_BAR
+         || ts.TokenInfo.Tag = FSharpTokenTag.RARROW
+      then Some Punctuation
+      else None
 
-    let (|PunctuationBrackets|_|) (ts:TokenSymbol) =
-        let token = Parser.tokenTagToTokenId ts.TokenInfo.Tag
-        match token with
-        | Parser.tokenId.TOKEN_LPAREN
-        | Parser.tokenId.TOKEN_RPAREN
-        | Parser.tokenId.TOKEN_LBRACK
-        | Parser.tokenId.TOKEN_RBRACK
-        | Parser.tokenId.TOKEN_LBRACE
-        | Parser.tokenId.TOKEN_RBRACE 
-        | Parser.tokenId.TOKEN_LBRACK_LESS
-        | Parser.tokenId.TOKEN_GREATER_RBRACK
-        | Parser.tokenId.TOKEN_LESS
-        | Parser.tokenId.TOKEN_GREATER
-        | Parser.tokenId.TOKEN_LBRACK_BAR
-        | Parser.tokenId.TOKEN_BAR_RBRACK -> Some PunctuationBrackets
-        | _ -> None
+    let (|PunctuationBrackets|_|) (ts : TokenSymbol) = 
+      if ts.TokenInfo.Tag = FSharpTokenTag.LPAREN
+         || ts.TokenInfo.Tag = FSharpTokenTag.RPAREN
+         || ts.TokenInfo.Tag = FSharpTokenTag.LBRACK 
+         || ts.TokenInfo.Tag = FSharpTokenTag.RBRACK
+         || ts.TokenInfo.Tag = FSharpTokenTag.LBRACE
+         || ts.TokenInfo.Tag = FSharpTokenTag.RBRACE 
+         || ts.TokenInfo.Tag = FSharpTokenTag.LBRACK_LESS
+         || ts.TokenInfo.Tag = FSharpTokenTag.GREATER_RBRACK 
+         || ts.TokenInfo.Tag = FSharpTokenTag.LESS
+         || ts.TokenInfo.Tag = FSharpTokenTag.GREATER 
+         || ts.TokenInfo.Tag = FSharpTokenTag.LBRACK_BAR
+         || ts.TokenInfo.Tag = FSharpTokenTag.BAR_RBRACK
+      then Some PunctuationBrackets
+      else None
 
     let private isIdentifier =
         function

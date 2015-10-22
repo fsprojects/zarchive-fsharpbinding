@@ -32,7 +32,7 @@ module ServiceSettings =
 /// various IntelliSense functions (such as completion & tool tips). Provides default
 /// empty/negative results if information is missing.
 type ParseAndCheckResults private (infoOpt: (FSharpCheckFileResults * FSharpParseFileResults) option) =
-    let token = Parser.tagOfToken(Parser.token.IDENT("")) 
+    let token = FSharpTokenTag.IDENT 
 
     new (checkResults, parseResults) = ParseAndCheckResults(Some (checkResults, parseResults))
 

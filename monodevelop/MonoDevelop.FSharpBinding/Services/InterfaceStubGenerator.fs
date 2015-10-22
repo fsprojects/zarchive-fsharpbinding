@@ -26,6 +26,14 @@ type InterfaceData =
         match x with
         | InterfaceData.Interface(typ, _)
         | InterfaceData.ObjExpr(typ, _) ->
+            let rec (|RationalConst|) = function
+                | SynRationalConst.Integer i ->
+                    string i
+                | SynRationalConst.Rational(numerator, denominator, _) ->
+                    sprintf "(%i/%i)" numerator denominator
+                | SynRationalConst.Negate (RationalConst s) ->
+                    sprintf "- %s" s
+
             let rec (|TypeIdent|_|) = function
                 | SynType.Var(SynTypar.Typar(s, req , _), _) ->
                     match req with
@@ -58,8 +66,8 @@ type InterfaceData =
                     Some (ts |> Seq.choose (snd >> (|TypeIdent|_|)) |> String.concat " * ")
                 | SynType.Array(dimension, TypeIdent typeName, _) ->
                     Some (sprintf "%s [%s]" typeName (new String(',', dimension-1)))
-                | SynType.MeasurePower(TypeIdent typeName, power, _) ->
-                    Some (sprintf "%s^%i" typeName power)
+                | SynType.MeasurePower(TypeIdent typeName, RationalConst power, _) ->
+                    Some (sprintf "%s^%s" typeName power)
                 | SynType.MeasureDivide(TypeIdent numerator, TypeIdent denominator, _) ->
                     Some (sprintf "%s/%s" numerator denominator)
                 | _ -> 
@@ -121,7 +129,7 @@ module InterfaceStubGenerator =
             | Some x -> x
         
         let nm, namesWithIndices = normalizeArgName namesWithIndices nm
-        
+
         // Detect an optional argument
         let isOptionalArg = hasAttribute<OptionalArgumentAttribute> arg.Attributes
         let argName = if isOptionalArg then "?" + nm else nm
