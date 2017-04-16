@@ -42,6 +42,9 @@
     (shell-quote-argument (fsharp-mode--executable-find "fsi.exe")))
   "*Program name for invoking an inferior fsharp from Emacs.")
 
+(defvar inferior-fsharp-directory "."
+  "The default-directory of the `inferior-fsharp-program'.")
+
 ;; End of User modifiable variables
 
 
@@ -112,7 +115,8 @@ be sent from another buffer in fsharp mode.
                                           inferior-fsharp-program))))
     (setq inferior-fsharp-program cmd)
     (let ((cmdlist (inferior-fsharp-args-to-list cmd))
-          (process-connection-type nil))
+          (process-connection-type nil)
+          (default-directory inferior-fsharp-directory))
       (set-buffer (apply (function make-comint)
                          inferior-fsharp-buffer-subname
                          (car cmdlist) nil (cdr cmdlist)))
