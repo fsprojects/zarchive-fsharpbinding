@@ -149,9 +149,7 @@ as indentation hints, unless the comment character is in column zero."
           "\\)$")
   "Regular expression matching unterminated expressions.")
 
-
-;(defconst fsharp-blank-or-comment-re "[ \t]*\\($\\|#\\)"
-(defconst fsharp-blank-or-comment-re "[ \t]*\\(//.*\\)?"
+(defconst fsharp-blank-or-comment-re "[ \t]*\\($\\|//.*\\)"
   "Regular expression matching a blank or comment line.")
 
 (defconst fsharp-outdent-re
@@ -1475,6 +1473,47 @@ does not include blank lines, comments, or continuation lines."
     (if (eobp)
         (progn (goto-char start) nil)
       t)))
+
+;; On multiline statements, these symbols are often found at the beginning of the line
+(defvar fsharp-tokens-that-cannot-begin-statements
+  '("%" "&&" "&&&" "||" "|||" "^^^"
+    "\\+" "-" "\\*" "/" "::" ":>" ":\\?" ":\\?>"
+    "<<" "<<<" "<|" "<||" "<|||"
+    ">>" "<<<" "|>" "||>" "|||>"
+    "|" "and" "done" "then" "else" "with" "finally" "when"))
+
+(defun fsharp-goto-beyond-multiline-statement ()
+  "Jump after the last statement contiguous to the current one, only
+  jumping over those statements that are indented deeper to the
+  current one, or those starting with an infix operator (i.e. think |>
+  on beginning of line)"
+  (interactive)
+  (let ((indent (current-indentation)))
+    (or (fsharp-goto-statement-below) (forward-line 1))
+    (while (and
+            (or
+             (looking-at (concat "[ \t]*\\(" (mapconcat 'identity fsharp-tokens-that-cannot-begin-statements "\\|") "\\)"))
+             (> (current-indentation) indent))      ; statement indented further
+            (>= (current-indentation) indent)
+            (not (eobp)))
+      (or (fsharp-goto-statement-below) (forward-line 1)))))
+
+(defun fsharp-eval-block-move ()
+  "Send the block to the interactive mode, and move the point to the next
+  block.
+
+  Can evaluate let statements that are nested into top level definitions,
+  or deeper. Can evaluate one-liners. Can evaluate multiline sequences of
+  'piped' statements (|>)"
+  (interactive)
+  (let ((p1) (p2))
+    (fsharp-goto-initial-line)
+    (setq p1 (point))
+    (fsharp-goto-beyond-multiline-statement)
+    (setq p2 (point))
+    (fsharp-eval-region p1 p2))
+  (forward-line -1)
+  (fsharp-goto-statement-below))
 
 (defun fsharp-go-up-tree-to-keyword (key)
   "Go to begining of statement starting with KEY, at or preceding point.
